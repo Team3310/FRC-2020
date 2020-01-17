@@ -1,0 +1,48 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Shooter Supply Current" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="227" y="576"/>
+		<width>1181</width>
+		<height>315</height>
+	</widget>
+	<widget field="Shooter Stator Current" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="226" y="291"/>
+		<width>1179</width>
+		<height>284</height>
+	</widget>
+	<widget field="Shooter RPM" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="225" y="7"/>
+		<width>1177</width>
+		<height>280</height>
+	</widget>
+	<widget field="Set Shooter Speed 1.0" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="1" y="109"/>
+	</widget>
+	<widget field="Set Shooter RPM 500" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="2" y="178"/>
+	</widget>
+	<widget field="Reset Shooter Position" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="5" y="305"/>
+	</widget>
+	<widget field="Set Shooter Speed Off" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="6" y="7"/>
+	</widget>
+	<widget field="Set Shooter Speed 0.5" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="2" y="79"/>
+	</widget>
+	<widget field="Shooter Rotations" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="7" y="282"/>
+	</widget>
+	<widget field="Shooter Velocity Native" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="7" y="256"/>
+	</widget>
+</dashboard>
+<live-window>
+	<widget field="Ungrouped" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="11" y="19"/>
+	</widget>
+	<widget field="Shooter" type="LW Subsystem" class="edu.wpi.first.smartdashboard.livewindow.elements.LWSubsystem">
+		<location x="23" y="16"/>
+	</widget>
+</live-window>
+</xml>

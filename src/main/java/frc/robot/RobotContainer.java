@@ -51,7 +51,10 @@ public class RobotContainer
         SmartDashboard.putData("Set Shooters Speed 0.6",  new InstantCommand(()-> shooterSubsystem.setShooterSpeed(0.6)));
         SmartDashboard.putData("Set Shooters Speed 0.5",  new InstantCommand(()-> shooterSubsystem.setShooterSpeed(0.5)));
         SmartDashboard.putData("Set Shooters Speed Off",  new InstantCommand(()-> shooterSubsystem.setShooterSpeed(0.0)));
-        SmartDashboard.putData("Set Shooters RPM 500",    new InstantCommand(()-> shooterSubsystem.setShooterRPM(500)));
+        SmartDashboard.putData("Set Shooters RPM 7500",    new InstantCommand(()-> shooterSubsystem.setShooterRPM(7500)));
+        SmartDashboard.putData("Set Shooters RPM 7200",    new InstantCommand(()-> shooterSubsystem.setShooterRPM(7200)));
+        SmartDashboard.putData("Set Shooters RPM 7100",    new InstantCommand(()-> shooterSubsystem.setShooterRPM(7100)));
+        SmartDashboard.putData("Set Shooters RPM 7000",    new InstantCommand(()-> shooterSubsystem.setShooterRPM(7000)));
         SmartDashboard.putData("Reset Shooters Position", new InstantCommand(()-> shooterSubsystem.resetShooterPosition()));
         SmartDashboard.putData("Set Kicker Speed 1.0",  new InstantCommand(()-> shooterSubsystem.setKickerSpeed(1.0)));
         SmartDashboard.putData("Set Kicker Speed 0.95",  new InstantCommand(()-> shooterSubsystem.setKickerSpeed(0.95)));
@@ -62,7 +65,10 @@ public class RobotContainer
         SmartDashboard.putData("Set Kicker Speed 0.6",  new InstantCommand(()-> shooterSubsystem.setKickerSpeed(0.6)));
         SmartDashboard.putData("Set Kicker Speed 0.5",  new InstantCommand(()-> shooterSubsystem.setKickerSpeed(0.5)));
         SmartDashboard.putData("Set Kicker Speed Off",  new InstantCommand(()-> shooterSubsystem.setKickerSpeed(0.0)));
-        SmartDashboard.putData("Set Kicker RPM 500",    new InstantCommand(()-> shooterSubsystem.setKickerRPM(500)));
+        SmartDashboard.putData("Set Kicker RPM 7500",    new InstantCommand(()-> shooterSubsystem.setKickerRPM(7500)));
+        SmartDashboard.putData("Set Kicker RPM 7200",    new InstantCommand(()-> shooterSubsystem.setKickerRPM(7200)));
+        SmartDashboard.putData("Set Kicker RPM 7100",    new InstantCommand(()-> shooterSubsystem.setKickerRPM(7100)));
+        SmartDashboard.putData("Set Kicker RPM 7000",    new InstantCommand(()-> shooterSubsystem.setKickerRPM(7000)));
         SmartDashboard.putData("Reset Kicker Position", new InstantCommand(()-> shooterSubsystem.resetKickerPosition()));
     }
 

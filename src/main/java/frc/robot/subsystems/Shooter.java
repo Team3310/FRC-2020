@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,26 +17,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase
 {
-    private TalonSRX shooter1;
-    private TalonSRX shooter2;
+    private TalonFX shooter1;
+    private TalonFX shooter2;
     private TalonFX kicker1;
 
+    private final double KICKER_OUTPUT_TO_ENCODER_RATIO = 24.0/36.0;
     private final double SHOOTER_OUTPUT_TO_ENCODER_RATIO = 24.0/36.0;
-    private final double TICKS_PER_ROTATION = 4096.0;
+    private final double TICKS_PER_ROTATION = 2048.0;
 
     public Shooter()
     {
-        shooter1 = new TalonSRX(14);
-        shooter2 = new TalonSRX(15);
+        shooter1 = new TalonFX(18);
+        shooter2 = new TalonFX(17);
         kicker1 = new TalonFX(16);
-
-
-  //      shooter2.setInverted(true);
-   //     shooter2.follow(shooter1);
 
         shooter1.configFactoryDefault();
         shooter2.configFactoryDefault();
- //       shooter1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        kicker1.configFactoryDefault();
+
+        shooter1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        kicker1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+        shooter2.setInverted(true);
+        shooter2.follow(shooter1);
 
 //        shooter1.configPeakCurrentLimit(2);
 //        shooter1.configContinuousCurrentLimit(2);
@@ -50,15 +52,19 @@ public class Shooter extends SubsystemBase
 //        shooter1.configClosedLoopPeakOutput(0, 0.5);
 //        shooter1.enableCurrentLimit(true);
 
-//        shooter1.config_kF(0, 0.03);
-//        shooter1.config_kP(0, 0.02);
-//        shooter1.config_kI(0, 0.0001);
-//        shooter1.config_kD(0, 0.0);
+        shooter1.config_kF(0, 0.053);
+        shooter1.config_kP(0, 0.05);
+        shooter1.config_kI(0, 0.0);
+        shooter1.config_kD(0, 0.0);
+
+        kicker1.config_kF(0, 0.053);
+        kicker1.config_kP(0, 0.05);
+        kicker1.config_kI(0, 0.0);
+        kicker1.config_kD(0, 0.0);  // 0.6
     }
 
     public void setShooterSpeed(double speed) {
-        shooter1.set(ControlMode.PercentOutput, -speed);
-        shooter2.set(ControlMode.PercentOutput, speed);
+        shooter1.set(ControlMode.PercentOutput, speed);
         System.out.println("Set Shooter Speed");
     }
 
@@ -91,11 +97,11 @@ public class Shooter extends SubsystemBase
     }
 
     public double getKickerRotations() {
-        return kicker1.getSelectedSensorPosition() / SHOOTER_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 2.0;
+        return kicker1.getSelectedSensorPosition() / TICKS_PER_ROTATION / KICKER_OUTPUT_TO_ENCODER_RATIO;
     }
 
     public double getKickerRPM() {
-        return kicker1.getSelectedSensorVelocity() / SHOOTER_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return kicker1.getSelectedSensorVelocity() / KICKER_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setKickerRPM(double rpm) {
@@ -103,18 +109,21 @@ public class Shooter extends SubsystemBase
     }
 
     public double KickerRPMToNativeUnits(double rpm) {
-        return rpm * SHOOTER_OUTPUT_TO_ENCODER_RATIO * TICKS_PER_ROTATION / 10.0 / 60.0;
+        return rpm * KICKER_OUTPUT_TO_ENCODER_RATIO * TICKS_PER_ROTATION / 10.0 / 60.0;
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooters Rotations", getShooterRotations());
         SmartDashboard.putNumber("Shooters RPM", getShooterRPM());
+        SmartDashboard.putNumber("Shooters RPM Graph", getShooterRPM());
         SmartDashboard.putNumber("Shooters Velocity Native", shooter1.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Shooters input", shooter1.getMotorOutputPercent());
         SmartDashboard.putNumber("Shooters Stator Current", shooter1.getStatorCurrent());
         SmartDashboard.putNumber("Shooters Supply Current", shooter1.getSupplyCurrent());
         SmartDashboard.putNumber("Kicker Rotations", getKickerRotations());
         SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
+        SmartDashboard.putNumber("Kicker RPM Graph", getKickerRPM());
         SmartDashboard.putNumber("Kicker Velocity Native", kicker1.getSelectedSensorVelocity());
         SmartDashboard.putNumber("Kicker Stator Current", kicker1.getStatorCurrent());
         SmartDashboard.putNumber("Kicker Supply Current", kicker1.getSupplyCurrent());

@@ -50,7 +50,7 @@ public class Shooter extends SubsystemBase
         kicker1.setInverted(true);
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 40;
+        supplyCurrentConfigs.currentLimit = 30;
         supplyCurrentConfigs.enable = true;
        // kicker1.configSupplyCurrentLimit(supplyCurrentConfigs);
         shooter1.configSupplyCurrentLimit(supplyCurrentConfigs);

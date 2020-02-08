@@ -18,6 +18,7 @@ import frc.robot.SubsystemManager;
 public class LimelightManager extends Subsystem {
 
     private static LimelightManager sInstance = null;
+
     private final Limelight mLimelight;
     private List<Limelight> mAllLimelights;
 
@@ -50,15 +51,9 @@ public class LimelightManager extends Subsystem {
             @Override
             public void onLoop(final double timestamp) {
                 synchronized (LimelightManager.this) {
-                    final Limelight limelight;
-
-                    // if (mActiveLimelight == ActiveLimelight.mLimelight) {
-                    //     RobotState.getInstance().addVisionUpdate(timestamp - limelight.getLatency(), null,
-                    //             getActiveLimelightObject());
-                    // } else {
-                    //     RobotState.getInstance().addVisionUpdate(timestamp - limelight.getLatency(),
-                    //             limelight.getTarget(), getActiveLimelightObject());
-                    // }
+                 RobotState.getInstance().addVisionUpdate(timestamp - mLimelight.getLatency(), mLimelight.getTarget(), 
+                 getActiveLimelightObject());
+                    
                 }
 
             }

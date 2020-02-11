@@ -6,15 +6,15 @@ import java.util.List;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Limelight;
-import frc.robot.utilities.geometry.MovingAverageTwist2d;
-import frc.robot.utilities.geometry.Pose2d;
-import frc.robot.utilities.geometry.Rotation2d;
-import frc.robot.utilities.geometry.Translation2d;
-import frc.robot.utilities.geometry.Twist2d;
-import frc.robot.utilities.util.InterpolatingDouble;
-import frc.robot.utilities.util.InterpolatingTreeMap;
-import frc.robot.utilities.vision.GoalTracker;
-import frc.robot.utilities.vision.TargetInfo;
+import frc.utilities.geometry.MovingAverageTwist2d;
+import frc.utilities.geometry.Pose2d;
+import frc.utilities.geometry.Rotation2d;
+import frc.utilities.geometry.Translation2d;
+import frc.utilities.geometry.Twist2d;
+import frc.utilities.util.InterpolatingDouble;
+import frc.utilities.util.InterpolatingTreeMap;
+import frc.utilities.vision.GoalTracker;
+import frc.utilities.vision.TargetInfo;
 
 
 public final class RobotState {

@@ -6,10 +6,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.Constants;
-import frc.robot.utilities.drivers.TalonSRXChecker;
-import frc.robot.utilities.drivers.TalonSRXUtil;
-import frc.robot.utilities.motion.MotorChecker;
-import frc.robot.utilities.util.LatchedBoolean;
+import frc.utilities.drivers.TalonSRXChecker;
+import frc.utilities.drivers.TalonSRXUtil;
+import frc.utilities.motion.MotorChecker;
+import frc.utilities.util.LatchedBoolean;
 
 import java.util.ArrayList;
 

@@ -9,15 +9,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.loops.ILooper;
 import frc.robot.loops.Loop;
-import frc.robot.utilities.drivers.TalonSRXFactory;
-import frc.robot.utilities.drivers.TalonSRXUtil;
-import frc.robot.utilities.motion.MotionProfileConstraints;
-import frc.robot.utilities.motion.MotionProfileGoal;
-import frc.robot.utilities.motion.MotionState;
-import frc.robot.utilities.motion.SetpointGenerator;
-import frc.robot.utilities.motion.SetpointGenerator.Setpoint;
-import frc.robot.utilities.util.ReflectingCSVWriter;
-import frc.robot.utilities.util.Util;
+import frc.utilities.drivers.TalonSRXFactory;
+import frc.utilities.drivers.TalonSRXUtil;
+import frc.utilities.motion.MotionProfileConstraints;
+import frc.utilities.motion.MotionProfileGoal;
+import frc.utilities.motion.MotionState;
+import frc.utilities.motion.SetpointGenerator;
+import frc.utilities.motion.SetpointGenerator.Setpoint;
+import frc.utilities.util.ReflectingCSVWriter;
+import frc.utilities.util.Util;
 
 /**
  * Abstract base class for a subsystem with a single sensored servo-mechanism.

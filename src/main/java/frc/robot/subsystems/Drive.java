@@ -703,7 +703,11 @@ public class Drive extends Subsystem {
 		if (controlMode == DriveControlMode.HOLD) {
 			mpStraightController.setPID(mpHoldPIDParams, kPositionControlSlot);
 			leftDrive1.set(ControlMode.Position, 0);
+			leftDrive2.set(ControlMode.Position, 0);
+			leftDrive3.set(ControlMode.Position, 0);
 			rightDrive1.set(ControlMode.Position, 0);
+			rightDrive2.set(ControlMode.Position, 0);
+			rightDrive3.set(ControlMode.Position, 0);
 		}
 		setFinished(false);
 	}
@@ -800,9 +804,17 @@ public class Drive extends Subsystem {
   
 	  public synchronized void setVelocityNativeUnits(double left_velocity_ticks_per_100ms,
 			  double right_velocity_ticks_per_100ms) {
-		  leftDrive1.set(ControlMode.Velocity, mPeriodicIO.left_demand, DemandType.ArbitraryFeedForward,
+		  	leftDrive1.set(ControlMode.Velocity, mPeriodicIO.left_demand, DemandType.ArbitraryFeedForward,
 				  mPeriodicIO.left_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.left_accel / 1023.0);
-		  rightDrive1.set(ControlMode.Velocity, mPeriodicIO.right_demand, DemandType.ArbitraryFeedForward,
+			leftDrive2.set(ControlMode.Velocity, mPeriodicIO.left_demand, DemandType.ArbitraryFeedForward,
+				  mPeriodicIO.left_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.left_accel / 1023.0);
+			leftDrive3.set(ControlMode.Velocity, mPeriodicIO.left_demand, DemandType.ArbitraryFeedForward,
+				  mPeriodicIO.left_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.left_accel / 1023.0);
+		  	rightDrive1.set(ControlMode.Velocity, mPeriodicIO.right_demand, DemandType.ArbitraryFeedForward,
+				  mPeriodicIO.right_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.right_accel / 1023.0);
+			rightDrive2.set(ControlMode.Velocity, mPeriodicIO.right_demand, DemandType.ArbitraryFeedForward,
+				  mPeriodicIO.right_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.right_accel / 1023.0);
+			rightDrive3.set(ControlMode.Velocity, mPeriodicIO.right_demand, DemandType.ArbitraryFeedForward,
 				  mPeriodicIO.right_feedforward + Constants.kDriveVelocityKd * mPeriodicIO.right_accel / 1023.0);
 	  }
   

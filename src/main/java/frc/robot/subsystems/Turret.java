@@ -2,111 +2,138 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import frc.robot.Constants;
-import frc.utilities.drivers.TalonSRXChecker;
-import frc.utilities.drivers.TalonSRXUtil;
-import frc.utilities.motion.MotorChecker;
-import frc.utilities.util.LatchedBoolean;
+import frc.utilities.util.Util;
 
-import java.util.ArrayList;
 
-public class Turret extends ServoMotorSubsystem {
+
+
+public class Turret extends Subsystem {
     private static Turret mInstance;
-    private AnalogInput mBannerInput = new AnalogInput(1);
-    private LatchedBoolean mJustReset = new LatchedBoolean();
-    private boolean mHoming = false;
-    public static final boolean kUseManualHomingRoutine = false;
 
-    public synchronized static Turret getInstance() {
-        if (mInstance == null) {
-            mInstance = new Turret(Constants.kTurretConstants);
-        }
+    public static enum TurretControlMode {
+		MOTION_MAGIC
+	};
 
-        return mInstance;
+    private final TalonFX turretTalon;
+
+    private final double TURRET_OUTPUT_TO_ENCODER_RATIO = 48.0/48.0;
+    private final double TICKS_PER_ROTATION = 2048.0;
+    public static final double DEGREES_TO_ENCODER_TICKS_TURRET = 0.0; // Unknown
+
+	// Motion Magic
+    private static final int kTurretMotionMagicSlot = 1;
+    private TurretControlMode turretControlMode = TurretControlMode.MOTION_MAGIC;
+    
+    // Misc
+    private double homePosition = Constants.AUTO_HOME_POSITION_DEGREES;
+    private double targetPositionTicks = 0;
+	
+
+
+    public Turret() {
+        turretTalon = new TalonFX(0);
+
+        turretTalon.configFactoryDefault();
+        turretTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
+        final SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
+        supplyCurrentConfigs.currentLimit = 30;
+        supplyCurrentConfigs.enable = true;
+        turretTalon.configSupplyCurrentLimit(supplyCurrentConfigs);
+
+        turretTalon.config_kF(0, 0.053);
+        turretTalon.config_kP(0, 0.50);
+        turretTalon.config_kI(0, 0.00001);
+        turretTalon.config_kD(0, 0.0);
     }
 
-    private Turret(final ServoMotorSubsystemConstants constants) {
-        super(constants);
-        TalonSRXUtil.checkError(
-                mMaster.configClosedLoopPeakOutput(1, 0.8, Constants.kLongCANTimeoutMs),
-                "Unable to configure close loop peak output for turret!");
+    // Turret Talon Speed Control
+    private synchronized void setTurretControlMode(TurretControlMode controlMode) {
+		this.turretControlMode = controlMode;
+	}
+
+	private synchronized TurretControlMode getTurretControlMode() {
+		return this.turretControlMode;
+    }
+    
+    public void setTurretSpeed(final double speed) {
+        turretTalon.set(ControlMode.PercentOutput, speed);
+        System.out.println("Set Shooter Speed");
     }
 
-    // Syntactic sugar.
-    public synchronized double getAngle() {
-        return getPosition();
+    public double getTurretRotations() {
+        return turretTalon.getSelectedSensorPosition() / TURRET_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
-    @Override
-    public boolean atHomingLocation() {
-        // Banner seems to sway between 3.2 and 5.0
-        return mBannerInput.getAverageVoltage() > 4.0;
+    public double getTurretRPM() {
+        return turretTalon.getSelectedSensorVelocity() / TURRET_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
-    @Override
-    public synchronized void handleMasterReset(boolean reset) {
-        if (mJustReset.update(reset) && kUseManualHomingRoutine) {
-            System.out.println("Turret going into home mode!");
-            mHoming = true;
-            //LED.getInstance().setTurretFault();
-            mMaster.overrideSoftLimitsEnable(false);
-        }
+    public void setTurretRPM(final double rpm) {
+        turretTalon.set(ControlMode.Velocity, TurretRPMToNativeUnits(rpm));
     }
 
-    public synchronized boolean isHoming() {
-        return mHoming;
+    public double TurretRPMToNativeUnits(final double rpm) {
+        return rpm * TURRET_OUTPUT_TO_ENCODER_RATIO * TICKS_PER_ROTATION / 10.0 / 60.0;
     }
 
-    // @Override
-    public synchronized void writePeriodicOutputs() {
-        if (mHoming) {
-            if (atHomingLocation()) {
-                if (mPeriodicIO.demand > 0) {
-                    mMaster.setSelectedSensorPosition((int) unitsToTicks(-2.0));
-                } else {
-                    mMaster.setSelectedSensorPosition((int) unitsToTicks(0.26));
-                }
-                mMaster.overrideSoftLimitsEnable(true);
-                System.out.println("Homed!!!");
-                // LED.getInstance().clearTurretFault();
-                mHoming = false;
-            }
+    // Motion Magic
+    public synchronized void resetEncoders() {
+        turretTalon.setSelectedSensorPosition(0);
+	}
 
-            if (mControlState == ControlState.OPEN_LOOP) {
-                mMaster.set(ControlMode.PercentOutput, mPeriodicIO.demand, DemandType.ArbitraryFeedForward,
-                        0.0);
-            } else {
-                mMaster.set(ControlMode.PercentOutput, 0.0, DemandType.ArbitraryFeedForward,
-                        0.0);
-            }
-        } else {
-            super.writePeriodicOutputs();
-        }
-
+	public synchronized void resetEncoders(double homePosition) {
+        turretTalon.setSelectedSensorPosition(0);
+		this.homePosition = homePosition;
     }
+    
+    public synchronized void setTurretMotionMagicPosition(double angle) {
+		if (getTurretControlMode() != TurretControlMode.MOTION_MAGIC) {
+			setTurretControlMode(TurretControlMode.MOTION_MAGIC);
+		}
+		turretTalon.selectProfileSlot(kTurretMotionMagicSlot, 0);
+		targetPositionTicks = getTurretEncoderTicks(angle);
+		turretTalon.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, angle);
+    }
+    
+    private int getTurretEncoderTicks(double angle) {
+		double positionDegreesFromHome = angle - homePosition;
+		return (int) (positionDegreesFromHome * DEGREES_TO_ENCODER_TICKS_TURRET);
+    }
+    
+    public synchronized boolean hasFinishedTrajectory() {
+		return turretControlMode == TurretControlMode.MOTION_MAGIC
+				&& Util.epsilonEquals(turretTalon.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+    }
+
+    public synchronized double getTurretSetpointAngle() {
+		return turretControlMode == TurretControlMode.MOTION_MAGIC
+				? targetPositionTicks / DEGREES_TO_ENCODER_TICKS_TURRET + homePosition
+				: Double.NaN;
+	}
+    
 
     @Override
     public boolean checkSystem() {
-        return TalonSRXChecker.checkMotors(this,
-                new ArrayList<MotorChecker.MotorConfig<TalonSRX>>() {
-                    private static final long serialVersionUID = 1636612675181038895L;
-
-					{
-                        add(new MotorChecker.MotorConfig<>("master", mMaster));
-                    }
-                }, new MotorChecker.CheckerConfig() {
-                    {
-                        mRunOutputPercentage = 0.1;
-                        mRunTimeSec = 1.0;
-                        mCurrentFloor = 0.1;
-                        mRPMFloor = 90;
-                        mCurrentEpsilon = 2.0;
-                        mRPMEpsilon = 200;
-                        mRPMSupplier = mMaster::getSelectedSensorVelocity;
-                    }
-                });
+        // TODO Auto-generated method stub
+        return false;
     }
+
+    @Override
+    public void stop() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void outputTelemetry() {
+        // TODO Auto-generated method stub
+
+    }
+    
 }

@@ -2,7 +2,7 @@ package frc.utilities.physics;
 
 import java.util.List;
 
-import frc.utilities.util.PolynomialRegression;
+
 import frc.utilities.util.Util;
 
 public class DriveCharacterization {
@@ -48,34 +48,34 @@ public class DriveCharacterization {
         }
     }
 
-    public static CharacterizationConstants characterizeDrive(List<VelocityDataPoint> velocityData, List<AccelerationDataPoint> accelerationData) {
-        CharacterizationConstants rv = getVelocityCharacterization(getVelocityData(velocityData));
-        getAccelerationCharacterization(getAccelerationData(accelerationData, rv), rv);
-        return rv;
-    }
+    // public static CharacterizationConstants characterizeDrive(List<VelocityDataPoint> velocityData, List<AccelerationDataPoint> accelerationData) {
+    //     CharacterizationConstants rv = getVelocityCharacterization(getVelocityData(velocityData));
+    //     getAccelerationCharacterization(getAccelerationData(accelerationData, rv), rv);
+    //     return rv;
+    // }
 
-    private static CharacterizationConstants getVelocityCharacterization(double[][] points) {
-        CharacterizationConstants constants = new CharacterizationConstants();
-        if (points == null) {
-            return constants;
-        }
-        PolynomialRegression p = new PolynomialRegression(points, 1);
-        System.out.println("r^2: " + p.R2());
-        constants.ks = p.beta(0);
-        constants.kv = p.beta(1);
-        return constants;
-    }
+    // private static CharacterizationConstants getVelocityCharacterization(double[][] points) {
+    //     CharacterizationConstants constants = new CharacterizationConstants();
+    //     if (points == null) {
+    //         return constants;
+    //     }
+    //     // PolynomialRegression p = new PolynomialRegression(points, 1);
+    //     // System.out.println("r^2: " + p.R2());
+    //     // constants.ks = p.beta(0);
+    //     // constants.kv = p.beta(1);
+    //     // return constants;
+    // }
 
-    private static CharacterizationConstants getAccelerationCharacterization(double[][] points, CharacterizationConstants velocityChacterization) {
-        if (points == null) {
-            return velocityChacterization;
-        }
+    // private static CharacterizationConstants getAccelerationCharacterization(double[][] points, CharacterizationConstants velocityChacterization) {
+    //     if (points == null) {
+    //         return velocityChacterization;
+    //     }
 
-        PolynomialRegression p = new PolynomialRegression(points, 1);
-        System.out.println("r^2: " + p.R2());
-        velocityChacterization.ka = p.beta(1);
-        return velocityChacterization;
-    }
+    //     // PolynomialRegression p = new PolynomialRegression(points, 1);
+    //     // System.out.println("r^2: " + p.R2());
+    //     // velocityChacterization.ka = p.beta(1);
+    //     // return velocityChacterization;
+    // }
 
     /**
      * removes data points with a velocity of zero to get a better line fit

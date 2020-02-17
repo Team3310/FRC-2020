@@ -10,7 +10,6 @@ package frc.robot;
 import frc.utilities.geometry.Rotation2d;
 import frc.utilities.geometry.Translation2d;
 import frc.robot.subsystems.Limelight.LimelightConstants;
-import frc.robot.subsystems.ServoMotorSubsystem.ServoMotorSubsystemConstants;
 import frc.utilities.geometry.Pose2d;
 
 /**
@@ -25,6 +24,9 @@ import frc.utilities.geometry.Pose2d;
  */
 public final class Constants {
     public static final double kLooperDt = 0.01;
+
+    // Turret
+    public static final double AUTO_HOME_POSITION_DEGREES = 0.0; // Unknown
 
     // Wheels
     // 2019 Robot Values
@@ -102,49 +104,7 @@ public final class Constants {
       public static final double kDriveSpinMoveKa = 0.001;
       public static final double kDriveSpinMovekTurn = 0.02;
 
-    // turret
-    public static final ServoMotorSubsystemConstants kTurretConstants = new ServoMotorSubsystemConstants();
-    static {
-        kTurretConstants.kName = "Turret";
-
-        kTurretConstants.kMasterConstants.id = 10;
-        kTurretConstants.kMasterConstants.invert_motor = false;
-        kTurretConstants.kMasterConstants.invert_sensor_phase = true;
-
-        // Unit == Degrees
-        kTurretConstants.kHomePosition = 0.0;  // CCW degrees from forward
-        kTurretConstants.kTicksPerUnitDistance = 4096.0 * 72.0 / 18.0 * 54.0 / 16.0 / 360.0;
-        kTurretConstants.kKp = 2.0;
-        kTurretConstants.kKi = 0;
-        kTurretConstants.kKd = 10.0;
-        kTurretConstants.kKf = 0.08;
-        kTurretConstants.kKa = 0.0;
-        kTurretConstants.kMaxIntegralAccumulator = 0;
-        kTurretConstants.kIZone = 0; // Ticks
-        kTurretConstants.kDeadband = 0; // Ticks
-
-        kTurretConstants.kPositionKp = 0.35;
-        kTurretConstants.kPositionKi = 0.0;
-        kTurretConstants.kPositionKd = 0.0;
-        kTurretConstants.kPositionKf = 0.0;
-        kTurretConstants.kPositionMaxIntegralAccumulator = 0;
-        kTurretConstants.kPositionIZone = 0; // Ticks
-        kTurretConstants.kPositionDeadband = 0; // Ticks
-
-        kTurretConstants.kMinUnitsLimit = -135.0;
-        kTurretConstants.kMaxUnitsLimit = 315.0;
-
-        kTurretConstants.kCruiseVelocity = 5000; // Ticks / 100ms
-        kTurretConstants.kAcceleration = 16000; // Ticks / 100ms / s
-        kTurretConstants.kRampRate = 0.0; // s
-        kTurretConstants.kContinuousCurrentLimit = 20; // amps
-        kTurretConstants.kPeakCurrentLimit = 30; // amps
-        kTurretConstants.kPeakCurrentDuration = 10; // milliseconds
-        kTurretConstants.kMaxVoltage = 12.0;
-
-        kTurretConstants.kStastusFrame8UpdateRate = 50;
-        kTurretConstants.kRecoverPositionOnReset = true;
-    }
+    
 
 
     public static final LimelightConstants kLimelightConstants = new LimelightConstants();

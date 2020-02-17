@@ -10,8 +10,6 @@ import frc.robot.Constants;
 import frc.utilities.util.Util;
 
 
-
-
 public class Turret extends Subsystem {
     private static Turret mInstance;
 

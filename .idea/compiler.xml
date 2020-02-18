@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="SingleWheelShooter.main" target="11" />
-      <module name="SingleWheelShooter.test" target="11" />
+      <module name="FRC-2020V2.main" target="11" />
+      <module name="FRC-2020V2.test" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

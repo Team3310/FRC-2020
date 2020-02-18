@@ -1,137 +1,153 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.utilities.util.Util;
+import frc.robot.Utilities.Util;
 
-
-public class Turret extends Subsystem {
-    private static Turret mInstance;
+public class Turret extends SubsystemBase {
 
     public static enum TurretControlMode {
-		MOTION_MAGIC
-	};
+        MOTION_MAGIC, VELOCITY, MANUAL
+    };
 
-    private final TalonFX turretTalon;
+    // Conversions
+    private static final double TURRET_OUTPUT_TO_ENCODER_RATIO = 168.0 / 28.0;
+    public static final double TURRET_REVOLUTIONS_TO_ENCODER_TICKS = TURRET_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    public static final double TURRET_DEGREES_TO_ENCODER_TICKS = TURRET_REVOLUTIONS_TO_ENCODER_TICKS / 360.0;
 
-    private final double TURRET_OUTPUT_TO_ENCODER_RATIO = 48.0/48.0;
-    private final double TICKS_PER_ROTATION = 2048.0;
-    public static final double DEGREES_TO_ENCODER_TICKS_TURRET = 0.0; // Unknown
+    // Motion Magic
+    private static final int kTurretMotionMagicSlot = 0;
+    private TurretControlMode turretControlMode = TurretControlMode.MANUAL;
 
-	// Motion Magic
-    private static final int kTurretMotionMagicSlot = 1;
-    private TurretControlMode turretControlMode = TurretControlMode.MOTION_MAGIC;
-    
+    // Motor Controllers
+    private final TalonFX turretMotor;
+
     // Misc
-    private double homePosition = Constants.AUTO_HOME_POSITION_DEGREES;
+    private double homePosition = Constants.TURRET_AUTO_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
-	
 
+    // Subsystem Instance
+    private final static Turret INSTANCE = new Turret();
 
-    public Turret() {
-        turretTalon = new TalonFX(0);
+    // Constructor
+    private Turret() {
+        turretMotor = new TalonFX(Constants.TURRET_MOTOR_CAN_ID);
 
-        turretTalon.configFactoryDefault();
-        turretTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        TalonFXConfiguration configs = new TalonFXConfiguration();
+        configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        turretMotor.configAllSettings(configs);
+
+        turretMotor.setInverted(TalonFXInvertType.Clockwise);
+        turretMotor.setNeutralMode(NeutralMode.Brake);
 
         final SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
         supplyCurrentConfigs.currentLimit = 30;
         supplyCurrentConfigs.enable = true;
-        turretTalon.configSupplyCurrentLimit(supplyCurrentConfigs);
+        turretMotor.configSupplyCurrentLimit(supplyCurrentConfigs);
 
-        turretTalon.config_kF(0, 0.053);
-        turretTalon.config_kP(0, 0.50);
-        turretTalon.config_kI(0, 0.00001);
-        turretTalon.config_kD(0, 0.0);
+        turretMotor.config_kF(kTurretMotionMagicSlot, 0.0);
+        turretMotor.config_kP(kTurretMotionMagicSlot, 0.0);
+        turretMotor.config_kI(kTurretMotionMagicSlot, 0.0);
+        turretMotor.config_kD(kTurretMotionMagicSlot, 0.0);
     }
 
-    // Turret Talon Speed Control
+    public static Turret getInstance() {
+        return INSTANCE;
+    }
+
+    // Turret Control Mode
     private synchronized void setTurretControlMode(TurretControlMode controlMode) {
-		this.turretControlMode = controlMode;
-	}
-
-	private synchronized TurretControlMode getTurretControlMode() {
-		return this.turretControlMode;
+        this.turretControlMode = controlMode;
     }
-    
+
+    private synchronized TurretControlMode getTurretControlMode() {
+        return this.turretControlMode;
+    }
+
+    // Manual Control
     public void setTurretSpeed(final double speed) {
-        turretTalon.set(ControlMode.PercentOutput, speed);
-        System.out.println("Set Shooter Speed");
+        setTurretControlMode(TurretControlMode.MANUAL);
+        turretMotor.set(ControlMode.PercentOutput, speed);
     }
 
-    public double getTurretRotations() {
-        return turretTalon.getSelectedSensorPosition() / TURRET_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
-    }
-
+    // Velocity Control
     public double getTurretRPM() {
-        return turretTalon.getSelectedSensorVelocity() / TURRET_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return turretMotor.getSelectedSensorVelocity() / TURRET_REVOLUTIONS_TO_ENCODER_TICKS  * 10.0 * 60.0;
     }
 
     public void setTurretRPM(final double rpm) {
-        turretTalon.set(ControlMode.Velocity, TurretRPMToNativeUnits(rpm));
-    }
-
-    public double TurretRPMToNativeUnits(final double rpm) {
-        return rpm * TURRET_OUTPUT_TO_ENCODER_RATIO * TICKS_PER_ROTATION / 10.0 / 60.0;
+        setTurretControlMode(TurretControlMode.VELOCITY);
+        turretMotor.set(ControlMode.Velocity, TurretRPMToNativeUnits(rpm));
     }
 
     // Motion Magic
-    public synchronized void resetEncoders() {
-        turretTalon.setSelectedSensorPosition(0);
-	}
-
-	public synchronized void resetEncoders(double homePosition) {
-        turretTalon.setSelectedSensorPosition(0);
-		this.homePosition = homePosition;
-    }
-    
     public synchronized void setTurretMotionMagicPosition(double angle) {
-		if (getTurretControlMode() != TurretControlMode.MOTION_MAGIC) {
-			setTurretControlMode(TurretControlMode.MOTION_MAGIC);
-		}
-		turretTalon.selectProfileSlot(kTurretMotionMagicSlot, 0);
-		targetPositionTicks = getTurretEncoderTicks(angle);
-		turretTalon.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, angle);
+        if (getTurretControlMode() != TurretControlMode.MOTION_MAGIC) {
+            setTurretControlMode(TurretControlMode.MOTION_MAGIC);
+        }
+        turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
+        targetPositionTicks = getTurretEncoderTicks(limitTurretAngle(angle));
+        turretMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, angle);
     }
-    
-    private int getTurretEncoderTicks(double angle) {
-		double positionDegreesFromHome = angle - homePosition;
-		return (int) (positionDegreesFromHome * DEGREES_TO_ENCODER_TICKS_TURRET);
-    }
-    
+
     public synchronized boolean hasFinishedTrajectory() {
-		return turretControlMode == TurretControlMode.MOTION_MAGIC
-				&& Util.epsilonEquals(turretTalon.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+        return turretControlMode == TurretControlMode.MOTION_MAGIC
+                && Util.epsilonEquals(turretMotor.getActiveTrajectoryPosition(), targetPositionTicks, 5);
     }
 
     public synchronized double getTurretSetpointAngle() {
-		return turretControlMode == TurretControlMode.MOTION_MAGIC
-				? targetPositionTicks / DEGREES_TO_ENCODER_TICKS_TURRET + homePosition
-				: Double.NaN;
-	}
-    
-
-    @Override
-    public boolean checkSystem() {
-        // TODO Auto-generated method stub
-        return false;
+        return turretControlMode == TurretControlMode.MOTION_MAGIC
+                ? targetPositionTicks / TURRET_DEGREES_TO_ENCODER_TICKS + homePosition
+                : Double.NaN;
     }
 
-    @Override
-    public void stop() {
-        // TODO Auto-generated method stub
-
+    // Reset methods
+    public synchronized void resetEncoders() {
+        turretMotor.setSelectedSensorPosition(0);
     }
 
-    @Override
-    public void outputTelemetry() {
-        // TODO Auto-generated method stub
-
+    public synchronized void resetEncoders(double homePosition) {
+        turretMotor.setSelectedSensorPosition(0);
+        this.homePosition = homePosition;
     }
-    
+
+    // Getters and Converters
+    public double getTurretAngleDegrees() {
+        return turretMotor.getSelectedSensorPosition() / TURRET_DEGREES_TO_ENCODER_TICKS;
+    }
+
+    public double TurretRPMToNativeUnits(final double rpm) {
+        return rpm * TURRET_REVOLUTIONS_TO_ENCODER_TICKS / 10.0 / 60.0;
+    }
+
+    private int getTurretEncoderTicks(double angle) {
+        double positionDegreesFromHome = angle - homePosition;
+        return (int) (positionDegreesFromHome * TURRET_DEGREES_TO_ENCODER_TICKS);
+    }
+
+    public static double toTurretSafeAngleDegrees(double angle) {
+        double result = angle % 360.0;
+        if (result > 270) {
+            result -= 360;
+        } else if (result < -90) {
+            result += 360;
+        }
+        return result;
+    }
+
+    private double limitTurretAngle(double targetAngle) {
+        if (targetAngle < Constants.TURRET_MIN_ANGLE_DEGREES) {
+            return Constants.TURRET_MIN_ANGLE_DEGREES;
+        } else if (targetAngle > Constants.TURRET_MAX_ANGLE_DEGREES) {
+            return Constants.TURRET_MAX_ANGLE_DEGREES;
+        }
+
+        return targetAngle;
+    }
+
 }
+

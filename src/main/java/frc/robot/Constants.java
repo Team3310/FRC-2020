@@ -7,119 +7,46 @@
 
 package frc.robot;
 
-import frc.utilities.geometry.Rotation2d;
-import frc.utilities.geometry.Translation2d;
-import frc.robot.subsystems.Limelight.LimelightConstants;
-import frc.utilities.geometry.Pose2d;
-
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide
- * numerical or boolean constants. This class should not be used for any other
- * purpose. All constants should be declared globally (i.e. public static). Do
- * not put anything functional in this class.
- *
- * <p>
- * It is advised to statically import this class (or one of its inner classes)
- * wherever the constants are needed, to reduce verbosity.
- */
-public final class Constants {
+public final class Constants
+{
     public static final double kLooperDt = 0.01;
+    public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 2048.0;
+
+    // USB Port IDs
+    public static final int DRIVER_JOYSTICK_1_USB_ID = 0;
+    public static final int OPERATOR_JOYSTICK_1_USB_ID = 1;
+
+    // Motors
+    public static final int DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID = 0;
+    public static final int DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID = 1;
+    public static final int DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID = 2;
+    public static final int DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID = 15;
+    public static final int DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID = 14;
+    public static final int DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID = 13;
+    public static final int SHOOTER_MAIN_MOTOR_MASTER_CAN_ID = 15;
+    public static final int SHOOTER_MAIN_MOTOR_SLAVE_CAN_ID = 15;
+    public static final int SHOOTER_KICKER_MOTOR_CAN_ID = 15;
+    public static final int SHOOTER_INTAKE_MOTOR_CAN_ID = 15;
+    public static final int SHOOTER_HOOD_MOTOR_CAN_ID = 15;
+    public static final int TURRET_MOTOR_CAN_ID = 3;
+    public static final int MAGAZINE_MOTOR_CAN_ID = 12;
+    public static final int INTAKE_MOTOR_CAN_ID = 10;
+    public static final int CLIMB_MOTOR_CAN_ID = 9;
+
+    // Pneumatics
+    public static final int INTAKE_OUTER_ARM_PCM_ID = 1;
+    public static final int INTAKE_INNER_ARM_PCM_ID = 2;
+    public static final int CLIMB_MOTOR_PTO_PCM_ID = 3;
+    public static final int CLIMB_ARM_RELEASE_PCM_ID = 4;
+    public static final int BUDDY_LEG_RELEASE_PCM_ID = 5;
+
+    // DIO
+    public static final int TURRET_MAX_REV_SENSOR_DIO_ID = 8;
+    public static final int TURRET_MIN_REV_SENSOR_DIO_ID = 9;
 
     // Turret
-    public static final double AUTO_HOME_POSITION_DEGREES = 0.0; // Unknown
-
-    // Wheels
-    // 2019 Robot Values
-    public static final double kDriveWheelTrackWidthInches = 28.00; // 22.61;
-    public static final double kDriveWheelDiameterInches = 3.922; // 3.875
-    public static final double kDriveWheelRadiusInches = kDriveWheelDiameterInches / 2.0;
-    public static final double kTrackScrubFactor = 0.9; // 0.924; // Tune me!
-
-    // limelight
-    public static final double kHorizontalFOV = 59.6; // degrees
-    public static final double kVerticalFOV = 49.7; // degrees
-    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV / 2.0));
-    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV / 2.0));
-    public static final double kImageCaptureLatency = 11.0 / 1000.0; // seconds
-
-    public static final double kMaxTrackerDistance = 9.0;
-    public static final double kMaxGoalTrackAge = 2.5;
-    public static final double kMaxGoalTrackAgeNotTracking = 0.1;
-    public static final double kMaxGoalTrackSmoothingTime = 0.5;
-    public static final double kTrackStabilityWeight = 0.0;
-    public static final double kTrackAgeWeight = 10.0;
-    public static final double kTrackSwitchingWeight = 100.0;
-
-   
-
-    public static final double kCameraFrameRate = 90.0;
-    public static final double kMinStability = 0.5;
-    public static final int kPortPipeline = 0;
-    public static final int kBallPipeline = 2;
-    public static final double kPortTargetHeight = 39.125;
-    public static final double kHatchTargetHeight = 31.5;
-
-    public static final double kTurretToArmOffset = -2.5;  // in
-    public static final double kWristToTremorsEnd = 15.75;  // in
-
-    // Tuned dynamics
-    public static final double kRobotLinearInertia = 48.0; // kg TODO tune
-    public static final double kRobotAngularInertia = 10.0; // kg m^2 TODO tune
-    public static final double kRobotAngularDrag = 12.0; // N*m / (rad/sec) TODO tune
-    public static final double kDriveVIntercept = 0.928112644250295; // V
-    public static final double kDriveKv = 0.10305; // 0.14242500692715937; // V per rad/s
-    public static final double kDriveKa = 0.01; // 0.011505866811140018; // V per rad/s^2
-
-    public static final double finishedAtRocketLimeY = -6;
-    public static final double finishedAtCargoLimeY = -8;
-    public static final double finshedAtLoadingLimeY = -12;
-    public static final double finishedAtRocketUlt = 8.5;
-    public static final double finishedAtLoadingUlt = 10.75;
-    public static final double finishedAtCargoUlt = 12;
-
-      // Gearing and mechanical constants.
-      public static final double kDriveDownShiftVelocity = 9.5 * 12.0; // inches per second
-      public static final double kDriveDownShiftAngularVelocity = Math.PI / 2.0; // rad/sec
-      public static final double kDriveUpShiftVelocity = 11.0 * 12.0; // inches per second
-  
-      public static final double kPathKX = 4.0;// 4.0; // units/s per unit of error
-      public static final double kPathLookaheadTime = 0.4; // seconds to look ahead along the path for steering
-      public static final double kPathMinLookaheadDistance = 24.0; // inches
-  
-      public static final double kDriveVelocityKp = 0.7; // 0.9;
-      public static final double kDriveVelocityKi = 0.0;
-      public static final double kDriveVelocityKd = 3.0; // 10.0;
-      public static final double kDriveVelocityKf = 0.0;
-      public static final int kDriveVelocityIZone = 0;
-      public static final double kDriveVoltageRampRate = 0.0;
-      public static double kDriveVelocityRampRate = 0.05; // 0.05; // 0.02
-      public static double kDriveNominalOutput = 0.1;// 0.5 / 12.0;
-      public static double kDriveMaxSetpoint = 11.0 * 12.0; // 11 fps
-  
-      public static final double kDriveSpinMoveKp = 0.05;
-      public static final double kDriveSpinMoveKi = 0.0;
-      public static final double kDriveSpinMoveKd = 0.0;
-      public static final double kDriveSpinMoveKf = 0.14;
-      public static final int kDriveSpinMoveIZone = 200;
-      public static final double kDriveSpinMoveKa = 0.001;
-      public static final double kDriveSpinMovekTurn = 0.02;
-
-    
-
-
-    public static final LimelightConstants kLimelightConstants = new LimelightConstants();
-    static {
-        kLimelightConstants.kName = "Limelight";
-        kLimelightConstants.kTableName = "limelight";
-        kLimelightConstants.kHeight = 0.0;  // inches
-        kLimelightConstants.kTurretToLens = new Pose2d(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0.0));
-        kLimelightConstants.kHorizontalPlaneToLens = Rotation2d.fromDegrees(0.0);
-    }
-
-
-
-    public static final int kCANTimeoutMs = 10; // use for important on the fly updates
-    public static final int kLongCANTimeoutMs = 100; // use for constructors
-
-    
+    public static final double TURRET_AUTO_HOME_POSITION_DEGREES = -45.0;
+    public static final double TURRET_AUTO_ZERO_SPEED = -0.1;
+    public static final double TURRET_MIN_ANGLE_DEGREES = -45.0;
+    public static final double  TURRET_MAX_ANGLE_DEGREES = 270.0;
 }

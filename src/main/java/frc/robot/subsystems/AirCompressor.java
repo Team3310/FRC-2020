@@ -7,63 +7,30 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.Compressor;
-// import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-/**
- * Add your docs here.
- */
-public class AirCompressor extends Subsystem {
-  private static AirCompressor instance;
-  //public TalonSRX climbPump = new TalonSRX(RobotMap.CLIMB_PUMP_CAN_ID);
+public class AirCompressor extends SubsystemBase {
+	// Internal
+	private Compressor compressor;
 
-  Compressor compressor = new Compressor(0);
-  
+	// Subsystem Instance
+	private final static AirCompressor INSTANCE = new AirCompressor();
 
-   	public void turnCompressorOn(){
+	// Constructor
+	private AirCompressor() {
+		compressor = new Compressor(0);
+	}
+
+	public static AirCompressor getInstance() {
+		return INSTANCE;
+	}
+
+	public void turnCompressorOn(){
 		compressor.setClosedLoopControl(true);
 	}
 
 	public void turnCompressorOff(){
 		compressor.setClosedLoopControl(false);
-  }
-
-  public void turnClimbPumpOn(){
-	  // climbPump.set(ControlMode.PercentOutput, 1.0);
-  }
-
-  public void turnClimbPumpOff(){
-	  // climbPump.set(ControlMode.PercentOutput, 0.0);
-}
-  
-  public static AirCompressor getInstance() {
-		if(instance == null) {
-			instance = new AirCompressor();
-		}
-		return instance;
-	}
-
-	@Override
-	public void stop() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean checkSystem() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void outputTelemetry() {
-		// TODO Auto-generated method stub
-
-	}
-
-  
+  	}
 }

@@ -1,8 +1,6 @@
-package frc.utilities.util;
+package frc.robot.Utilities;
 
 import java.util.List;
-
-import frc.utilities.geometry.Rotation2d;
 
 /**
  * Contains basic functions that are used often.
@@ -72,17 +70,4 @@ public class Util {
         }
         return result;
     }
-
-    public static double toTurretSafeAngleDegrees(Rotation2d rotation2d) {
-        double result = rotation2d.getDegrees() % 360.0;
-        if (result > 270) {
-            result -= 360;
-        } else if (result < -90) {
-            result += 360;
-        }
-        return result;
-    }
-
-    // wa wa click click
-
 }

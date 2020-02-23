@@ -9,12 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.commands.MagazineSetRPMLimit;
 import frc.robot.commands.TurretSetAngle;
-import frc.robot.subsystems.AirCompressor;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -28,6 +28,7 @@ public class RobotContainer
     private final Intake intake = Intake.getInstance();
     private final Magazine magazine = Magazine.getInstance();
     private final Turret turret = Turret.getInstance();
+    private final Shooter shooter = Shooter.getInstance();
 
     private final TurretSetAngle autonomousCommand = new TurretSetAngle(turret, 0);
 
@@ -48,7 +49,37 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
-        
+        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
+        SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(()-> intake.setRollerSpeed(0.0)));
+        SmartDashboard.putData("Intake Set RPM", new InstantCommand(()-> intake.setRollerRPM(2000.0)));
+
+        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
+        SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(()-> magazine.setMagazineSpeed(0.0)));
+        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
+        SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 60, 5));
+
+        SmartDashboard.putData("Shooter Main Set Speed", new InstantCommand(()-> shooter.setMainSpeed(0.2)));
+        SmartDashboard.putData("Shooter Main Set OFF", new InstantCommand(()-> shooter.setMainSpeed(0.0)));
+        SmartDashboard.putData("Shooter Main Set RPM Fender", new InstantCommand(()-> shooter.setMainRPM(2100)));
+        SmartDashboard.putData("Shooter Main Set RPM Auton", new InstantCommand(()-> shooter.setMainRPM(3500)));
+        SmartDashboard.putData("Shooter Main Set RPM Long", new InstantCommand(()-> shooter.setMainRPM(4700)));
+
+        SmartDashboard.putData("Shooter Kicker Set Speed", new InstantCommand(()-> shooter.setKickerSpeed(0.2)));
+        SmartDashboard.putData("Shooter Kicker Set OFF", new InstantCommand(()-> shooter.setKickerSpeed(0.0)));
+        SmartDashboard.putData("Shooter Kicker Set RPM Fender", new InstantCommand(()-> shooter.setKickerRPM(2100)));
+        SmartDashboard.putData("Shooter Kicker Set RPM Auton", new InstantCommand(()-> shooter.setKickerRPM(3500)));
+        SmartDashboard.putData("Shooter Kicker Set RPM Long", new InstantCommand(()-> shooter.setKickerRPM(4700)));
+
+        SmartDashboard.putData("Shooter Intake Set Speed", new InstantCommand(()-> shooter.setIntakeSpeed(0.2)));
+        SmartDashboard.putData("Shooter Intake Set OFF", new InstantCommand(()-> shooter.setIntakeSpeed(0.0)));
+        SmartDashboard.putData("Shooter Intake Set RPM Fender", new InstantCommand(()-> shooter.seIntakeRPM(2000)));
+        SmartDashboard.putData("Shooter Intake Set RPM Auto", new InstantCommand(()-> shooter.seIntakeRPM(3000)));
+        SmartDashboard.putData("Shooter Intake Set RPM Long", new InstantCommand(()-> shooter.seIntakeRPM(4000)));
+
+        SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
+        SmartDashboard.putData("Turret Set OFF", new InstantCommand(()-> turret.setTurretSpeed(0.0)));
+        SmartDashboard.putData("Turret Reset", new InstantCommand(()-> turret.resetEncoders()));
+        SmartDashboard.putData("Turret MM", new InstantCommand(()-> turret.setTurretMotionMagicPosition(45)));
     }
 
 

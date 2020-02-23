@@ -36,41 +36,43 @@ public class Shooter extends SubsystemBase {
         shooterKicker.configAllSettings(configs);
         shooterIntake.configAllSettings(configs);
 
-        shooterMainMaster.setInverted(TalonFXInvertType.Clockwise);
+        shooterMainMaster.setInverted(TalonFXInvertType.CounterClockwise);
         shooterMainMaster.setNeutralMode(NeutralMode.Coast);
 
-        shooterMainSlave.setInverted(TalonFXInvertType.CounterClockwise);
+        shooterMainSlave.setInverted(TalonFXInvertType.Clockwise);
         shooterMainSlave.setNeutralMode(NeutralMode.Coast);
         shooterMainSlave.follow(shooterMainMaster);
 
-        shooterKicker.setInverted(TalonFXInvertType.CounterClockwise);
+        shooterKicker.setInverted(TalonFXInvertType.Clockwise);
         shooterKicker.setNeutralMode(NeutralMode.Coast);
 
-        shooterIntake.setInverted(TalonFXInvertType.Clockwise);
+        shooterIntake.setInverted(TalonFXInvertType.CounterClockwise);
         shooterIntake.setNeutralMode(NeutralMode.Coast);
 
-        SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 30;
-        supplyCurrentConfigs.enable = true;
+        StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
+        statorCurrentConfigs.currentLimit = 30;
+        statorCurrentConfigs.enable = true;
+        statorCurrentConfigs.triggerThresholdCurrent = 60;
+        statorCurrentConfigs.triggerThresholdTime = 2;
 
-        shooterMainMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
-        shooterMainSlave.configSupplyCurrentLimit(supplyCurrentConfigs);
-        shooterKicker.configSupplyCurrentLimit(supplyCurrentConfigs);
-        shooterIntake.configSupplyCurrentLimit(supplyCurrentConfigs);
+        shooterMainMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterMainSlave.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterKicker.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterIntake.configStatorCurrentLimit(statorCurrentConfigs);
 
-        shooterMainMaster.config_kF(0, 0.053);
-        shooterMainMaster.config_kP(0, 0.50);
-        shooterMainMaster.config_kI(0, 0.00001);
+        shooterMainMaster.config_kF(0, 0.05);
+        shooterMainMaster.config_kP(0, 0.5);
+        shooterMainMaster.config_kI(0, 0.0);
         shooterMainMaster.config_kD(0, 0.0);
 
-        shooterKicker.config_kF(0, 0.053);
+        shooterKicker.config_kF(0, 0.045);
         shooterKicker.config_kP(0, 0.2);
-        shooterKicker.config_kI(0, 0.0000);
+        shooterKicker.config_kI(0, 0.00);
         shooterKicker.config_kD(0, 0.0);  // 0.6
 
-        shooterIntake.config_kF(0, 0.053);
-        shooterIntake.config_kP(0, 0.50);
-        shooterIntake.config_kI(0, 0.00001);
+        shooterIntake.config_kF(0, 0.05);
+        shooterIntake.config_kP(0, 0.1);
+        shooterIntake.config_kI(0, 0.0);
         shooterIntake.config_kD(0, 0.0);  // 0.6
     }
 
@@ -78,7 +80,7 @@ public class Shooter extends SubsystemBase {
         return INSTANCE;
     }
 
-    public void setShooterSpeed(double speed) {
+    public void setMainSpeed(double speed) {
         shooterMainMaster.set(ControlMode.PercentOutput, speed);
         System.out.println("Set Shooter Speed");
     }
@@ -87,15 +89,15 @@ public class Shooter extends SubsystemBase {
         shooterMainMaster.setSelectedSensorPosition(0);
     }
 
-    public double getShooterRotations() {
+    public double getMainRotations() {
         return shooterMainMaster.getSelectedSensorPosition() / SHOOTER_OUTPUT_TO_ENCODER_RATIO / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
     }
 
-    public double getShooterRPM() {
+    public double getMainRPM() {
         return shooterMainMaster.getSelectedSensorVelocity() / SHOOTER_OUTPUT_TO_ENCODER_RATIO / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION * 10.0 * 60.0;
     }
 
-    public void setShooterRPM(double rpm) {
+    public void setMainRPM(double rpm) {
         shooterMainMaster.set(ControlMode.Velocity, ShooterRPMToNativeUnits(rpm));
     }
 
@@ -154,8 +156,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooters Rotations", getShooterRotations());
-        SmartDashboard.putNumber("Shooters RPM", getShooterRPM());
+        SmartDashboard.putNumber("Shooters Rotations", getMainRotations());
+        SmartDashboard.putNumber("Shooters RPM", getMainRPM());
 //        SmartDashboard.putNumber("Shooters RPM Graph", getShooterRPM());
 //        SmartDashboard.putNumber("Shooters Velocity Native", shooterMainMaster.getSelectedSensorVelocity());
 //        SmartDashboard.putNumber("Shooters input", shooterMainMaster.getMotorOutputPercent());
@@ -166,8 +168,8 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
 //        SmartDashboard.putNumber("Kicker RPM Graph", getKickerRPM());
 //        SmartDashboard.putNumber("Kicker Velocity Native", shooterKicker.getSelectedSensorVelocity());
-//        SmartDashboard.putNumber("Kicker Stator Current", shooterKicker.getStatorCurrent());
-//        SmartDashboard.putNumber("Kicker Supply Current", shooterKicker.getSupplyCurrent());
+        SmartDashboard.putNumber("Kicker Stator Current", shooterKicker.getStatorCurrent());
+        SmartDashboard.putNumber("Kicker Supply Current", shooterKicker.getSupplyCurrent());
         SmartDashboard.putNumber("Intake Rotations", getIntakeRotations());
         SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
 //        SmartDashboard.putNumber("Intake RPM Graph", getIntakeRPM());

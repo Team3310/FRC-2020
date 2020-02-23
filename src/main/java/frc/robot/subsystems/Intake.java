@@ -11,7 +11,7 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
 
     // Conversions
-    private static final double INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO = 30.0 / 11.0;
+    private static final double INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO = 30.0 / 12.0;
     public static final double INTAKE_ROLLER_REVOLUTIONS_TO_ENCODER_TICKS = INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
 
     // Motor Controllers
@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         intakeMotor.configAllSettings(configs);
 
-        intakeMotor.setInverted(TalonFXInvertType.Clockwise);
+        intakeMotor.setInverted(TalonFXInvertType.CounterClockwise);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
 
         final SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
@@ -37,10 +37,11 @@ public class Intake extends SubsystemBase {
         supplyCurrentConfigs.enable = true;
         intakeMotor.configSupplyCurrentLimit(supplyCurrentConfigs);
 
-        intakeMotor.config_kF(kIntakeVelocitySlot, 0.0);
-        intakeMotor.config_kP(kIntakeVelocitySlot, 0.0);
-        intakeMotor.config_kI(kIntakeVelocitySlot, 0.0);
+        intakeMotor.config_kF(kIntakeVelocitySlot, 0.055);
+        intakeMotor.config_kP(kIntakeVelocitySlot, 0.10);
+        intakeMotor.config_kI(kIntakeVelocitySlot, 0.0001);
         intakeMotor.config_kD(kIntakeVelocitySlot, 0.0);
+        intakeMotor.config_IntegralZone(kIntakeVelocitySlot, (int)this.RollerRPMToNativeUnits(200));
     }
 
     public static Intake getInstance() {

@@ -4,6 +4,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.DigitalGlitchFilter;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Utilities.Util;
@@ -26,6 +29,10 @@ public class Turret extends SubsystemBase {
     // Motor Controllers
     private final TalonFX turretMotor;
 
+    // Sensors
+    private DigitalInput maxRevTurretSensor;
+    private DigitalInput minRevTurretSensor;
+
     // Misc
     private double homePosition = Constants.TURRET_AUTO_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
@@ -41,16 +48,22 @@ public class Turret extends SubsystemBase {
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         turretMotor.configAllSettings(configs);
 
-        turretMotor.setInverted(TalonFXInvertType.Clockwise);
+        turretMotor.setInverted(TalonFXInvertType.CounterClockwise);
         turretMotor.setNeutralMode(NeutralMode.Brake);
+        turretMotor.configMotionCruiseVelocity(500);
+        turretMotor.configMotionAcceleration(500);
+        turretMotor.configMotionSCurveStrength(4);
 
-        final SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 30;
-        supplyCurrentConfigs.enable = true;
-        turretMotor.configSupplyCurrentLimit(supplyCurrentConfigs);
+        maxRevTurretSensor = new DigitalInput(Constants.TURRET_MAX_REV_SENSOR_DIO_ID);
+        minRevTurretSensor = new DigitalInput(Constants.TURRET_MIN_REV_SENSOR_DIO_ID);
 
-        turretMotor.config_kF(kTurretMotionMagicSlot, 0.0);
-        turretMotor.config_kP(kTurretMotionMagicSlot, 0.0);
+        final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
+        statorCurrentConfigs.currentLimit = 120;
+        statorCurrentConfigs.enable = true;
+        turretMotor.configStatorCurrentLimit(statorCurrentConfigs);
+
+        turretMotor.config_kF(kTurretMotionMagicSlot, 0.4);
+        turretMotor.config_kP(kTurretMotionMagicSlot, 1.0);
         turretMotor.config_kI(kTurretMotionMagicSlot, 0.0);
         turretMotor.config_kD(kTurretMotionMagicSlot, 0.0);
     }
@@ -91,7 +104,7 @@ public class Turret extends SubsystemBase {
         }
         turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
         targetPositionTicks = getTurretEncoderTicks(limitTurretAngle(angle));
-        turretMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, angle);
+        turretMotor.set(ControlMode.MotionMagic, targetPositionTicks);
     }
 
     public synchronized boolean hasFinishedTrajectory() {
@@ -147,6 +160,19 @@ public class Turret extends SubsystemBase {
         }
 
         return targetAngle;
+    }
+    public boolean getMaxTurretSensor(){
+        return !maxRevTurretSensor.get();
+    }
+    public boolean getMinTurretSensor(){
+        return !minRevTurretSensor.get();
+    }
+
+    public void periodic() {
+        SmartDashboard.putNumber("Turret Angle", this.getTurretAngleDegrees());
+        SmartDashboard.putNumber("Turret Velocity", turretMotor.getSelectedSensorVelocity());
+        SmartDashboard.putBoolean("Turret Min Sensor", this.getMinTurretSensor());
+        SmartDashboard.putBoolean("Turret Max Sensor", this.getMaxTurretSensor());
     }
 
 }

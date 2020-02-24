@@ -7,19 +7,36 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Utilities.Util;
 
 public class Shooter extends SubsystemBase {
+
+    public static enum HoodControlMode {
+        MOTION_MAGIC, VELOCITY, MANUAL
+    };
 
     // Conversions
     private final double KICKER_OUTPUT_TO_ENCODER_RATIO = 48.0/48.0;
     private final double SHOOTER_OUTPUT_TO_ENCODER_RATIO = 48.0/48.0;
     private final double INTAKE_OUTPUT_TO_ENCODER_RATIO = 48.0/48.0;
+    private final double HOOD_OUTPUT_TO_ENCODER_RATIO = 322.0 / 20.0;
+    private final double HOOD_REVOLUTIONS_TO_ENCODER_TICKS = HOOD_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    private final double HOOD_DEGREES_TO_ENCODER_TICKS = HOOD_REVOLUTIONS_TO_ENCODER_TICKS / 360.0;
+
+    // Motion Magic
+    private static final int kHoodMotionMagicSlot = 0;
+    private HoodControlMode hoodControlMode = HoodControlMode.MANUAL;
 
     // Motor Controllers
     private TalonFX shooterMainMaster;
     private TalonFX shooterMainSlave;
     private TalonFX shooterKicker;
     private TalonFX shooterIntake;
+    private TalonFX shooterHood;
+
+    // Misc
+    private double homePositionAngleDegrees = Constants.HOOD_COMPETITION_HOME_POSITION_DEGREES;
+    private double targetPositionTicks = 0;
 
     private final static Shooter INSTANCE = new Shooter();
 
@@ -28,6 +45,7 @@ public class Shooter extends SubsystemBase {
         shooterMainSlave = new TalonFX(Constants.SHOOTER_MAIN_MOTOR_SLAVE_CAN_ID);
         shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_MOTOR_CAN_ID);
         shooterIntake = new TalonFX(Constants.SHOOTER_INTAKE_MOTOR_CAN_ID);
+        shooterHood = new TalonFX(Constants.SHOOTER_HOOD_MOTOR_CAN_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -35,6 +53,7 @@ public class Shooter extends SubsystemBase {
         shooterMainSlave.configAllSettings(configs);
         shooterKicker.configAllSettings(configs);
         shooterIntake.configAllSettings(configs);
+        shooterHood.configAllSettings(configs);
 
         shooterMainMaster.setInverted(TalonFXInvertType.CounterClockwise);
         shooterMainMaster.setNeutralMode(NeutralMode.Coast);
@@ -48,6 +67,12 @@ public class Shooter extends SubsystemBase {
 
         shooterIntake.setInverted(TalonFXInvertType.CounterClockwise);
         shooterIntake.setNeutralMode(NeutralMode.Coast);
+
+        shooterHood.setInverted(TalonFXInvertType.Clockwise);
+        shooterHood.setNeutralMode(NeutralMode.Brake);
+        shooterHood.configMotionCruiseVelocity(1500);
+        shooterHood.configMotionAcceleration(3000);
+        shooterHood.configMotionSCurveStrength(4);
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 30;
@@ -74,6 +99,11 @@ public class Shooter extends SubsystemBase {
         shooterIntake.config_kP(0, 0.1);
         shooterIntake.config_kI(0, 0.0);
         shooterIntake.config_kD(0, 0.0);  // 0.6
+
+        shooterHood.config_kF(0, 0.0);
+        shooterHood.config_kP(0, 0.0);
+        shooterHood.config_kI(0, 0.0);
+        shooterHood.config_kD(0, 0.0);
     }
 
     public static Shooter getInstance() {
@@ -154,6 +184,67 @@ public class Shooter extends SubsystemBase {
 
     }
 
+    // Turret Control Mode
+    private synchronized void setHoodControlMode(Shooter.HoodControlMode controlMode) {
+        this.hoodControlMode = controlMode;
+    }
+
+    private synchronized Shooter.HoodControlMode getHoodControlMode() {
+        return this.hoodControlMode;
+    }
+
+    public void setHoodSpeed(double speed) {
+        shooterHood.set(ControlMode.PercentOutput, speed);
+    }
+
+    public void resetHoodPosition() {
+        shooterHood.setSelectedSensorPosition(0);
+    }
+
+    public double getHoodAngleAbsoluteDegrees() {
+        return (double)shooterHood.getSelectedSensorPosition() / HOOD_DEGREES_TO_ENCODER_TICKS + homePositionAngleDegrees;
+    }
+
+    public double hoodRPMToNativeUnits(double rpm) {
+        return rpm * INTAKE_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION / 10.0 / 60.0;
+
+    }
+
+    // Motion Magic
+    public synchronized void setHoodMotionMagicPositionAbsolute(double angle) {
+        if (getHoodControlMode() != HoodControlMode.MOTION_MAGIC) {
+            setHoodControlMode(HoodControlMode.MOTION_MAGIC);
+        }
+        shooterHood.selectProfileSlot(kHoodMotionMagicSlot, 0);
+        targetPositionTicks = getHoodEncoderTicksAbsolute(limitHoodAngle(angle));
+        shooterHood.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.01);
+    }
+
+    public synchronized boolean hasFinishedHoodTrajectory() {
+        return hoodControlMode == HoodControlMode.MOTION_MAGIC
+                && Util.epsilonEquals(shooterHood.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+    }
+
+    private double getHoodEncoderTicksAbsolute(double angle) {
+        return (double)shooterHood.getSelectedSensorPosition() / HOOD_DEGREES_TO_ENCODER_TICKS + homePositionAngleDegrees;
+    }
+
+    public synchronized double getHoodSetpointAngle() {
+        return hoodControlMode == HoodControlMode.MOTION_MAGIC
+                ? targetPositionTicks / HOOD_DEGREES_TO_ENCODER_TICKS + homePositionAngleDegrees
+                : Double.NaN;
+    }
+
+    private double limitHoodAngle(double targetAngle) {
+        if (targetAngle < Constants.HOOD_MIN_ANGLE_DEGREES) {
+            return Constants.HOOD_MIN_ANGLE_DEGREES;
+        } else if (targetAngle > Constants.HOOD_MAX_ANGLE_DEGREES) {
+            return Constants.HOOD_MAX_ANGLE_DEGREES;
+        }
+
+        return targetAngle;
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooters Rotations", getMainRotations());
@@ -176,6 +267,7 @@ public class Shooter extends SubsystemBase {
 //        SmartDashboard.putNumber("Intake Velocity Native", shooterIntake.getSelectedSensorVelocity());
 //        SmartDashboard.putNumber("Intake Stator Current", shooterIntake.getStatorCurrent());
 //        SmartDashboard.putNumber("Intake Supply Current", shooterIntake.getSupplyCurrent());
+        SmartDashboard.putNumber("Hood Angle", getHoodAngleAbsoluteDegrees());
     }
 }
 

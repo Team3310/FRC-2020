@@ -24,10 +24,6 @@ public class MagazineSetRPMLimit extends ExtraTimeoutCommand {
     }
 
     @Override
-    public void execute() {
-    }
-
-    @Override
     public boolean isFinished() {
         if (isExtraOneTimedOut() && magazine.getStatorCurrent() > statorCurrentLimit) {
             System.out.println("Stator current exceeded = " + magazine.getStatorCurrent() + ", timeout = " + timeSinceExtraOneInitialized());

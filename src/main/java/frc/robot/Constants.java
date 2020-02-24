@@ -31,7 +31,7 @@ public final class Constants
     public static final int TURRET_MOTOR_CAN_ID = 10;
     public static final int MAGAZINE_MOTOR_CAN_ID = 5;
     public static final int INTAKE_MOTOR_CAN_ID = 7;
-    public static final int CLIMB_MOTOR_CAN_ID = 6;
+//    public static final int CLIMB_MOTOR_CAN_ID = 6;
 
     // Pneumatics
     public static final int INTAKE_OUTER_ARM_PCM_ID = 1;
@@ -45,8 +45,16 @@ public final class Constants
     public static final int TURRET_MIN_REV_SENSOR_DIO_ID = 1;
 
     // Turret
-    public static final double TURRET_AUTO_HOME_POSITION_DEGREES = -45.0;
+    public static final double TURRET_COMPETITION_HOME_POSITION_DEGREES = -180.0;
+    public static final double TURRET_AUTO_HOME_POSITION_DEGREES = -214.1;
     public static final double TURRET_AUTO_ZERO_SPEED = -0.1;
-    public static final double TURRET_MIN_ANGLE_DEGREES = -45.0;
-    public static final double  TURRET_MAX_ANGLE_DEGREES = 235.0;
+    public static final double TURRET_MIN_ANGLE_DEGREES = -225.0;
+    public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
+
+    // Hood
+    public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
+    public static final double HOOD_AUTO_HOME_POSITION_DEGREES = 0.0;
+    public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
+    public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
+    public static final double HOOD_MAX_ANGLE_DEGREES = 40.0;
 }

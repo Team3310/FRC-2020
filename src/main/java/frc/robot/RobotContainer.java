@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.MagazineSetRPMLimit;
+import frc.robot.commands.TurretAutoZero;
 import frc.robot.commands.TurretSetAngle;
 import frc.robot.subsystems.*;
 
@@ -79,7 +80,13 @@ public class RobotContainer
         SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
         SmartDashboard.putData("Turret Set OFF", new InstantCommand(()-> turret.setTurretSpeed(0.0)));
         SmartDashboard.putData("Turret Reset", new InstantCommand(()-> turret.resetEncoders()));
-        SmartDashboard.putData("Turret MM", new InstantCommand(()-> turret.setTurretMotionMagicPosition(45)));
+        SmartDashboard.putData("Turret MM", new InstantCommand(()-> turret.setTurretMotionMagicPositionAbsolute(-135)));
+        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
+        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
+        SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
+
+        SmartDashboard.putData("Hood Reset", new InstantCommand(()-> shooter.resetHoodPosition()));
+        SmartDashboard.putData("Hood MM", new InstantCommand(()-> shooter.setHoodMotionMagicPositionAbsolute(15)));
     }
 
 

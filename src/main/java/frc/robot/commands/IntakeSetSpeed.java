@@ -4,19 +4,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 
-public class IntakeSetRPM extends CommandBase {
+public class IntakeSetSpeed extends CommandBase {
     private final Intake intake;
-    private double rpm;
+    private double speed;
 
-    public IntakeSetRPM(Intake intake, double rpm) {
+    public IntakeSetSpeed(Intake intake, double speed) {
         this.intake = intake;
-        this.rpm = rpm;
-        addRequirements(this.intake);
+        this.speed = speed;
     }
 
     @Override
     public void initialize() {
-        intake.setRollerRPM(rpm);
+        intake.setRollerSpeed(speed);
     }
 
     @Override

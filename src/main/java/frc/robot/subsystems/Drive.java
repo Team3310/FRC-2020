@@ -29,7 +29,16 @@ public class Drive extends SubsystemBase {
     private static final double MOVE_SCALE = 1.0;
     private static final double STEER_SCALE = 0.85;
 
+    private static final double MOVE_TRIM = 0.0;
+    private static final double STEER_TRIM = 0.0;
+
     private static final double STICK_DEADBAND = 0.02;
+
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.6;
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 1.0;
+
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.1;
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.1;
 
     private double m_moveInput = 0.0;
     private double m_steerInput = 0.0;
@@ -37,8 +46,7 @@ public class Drive extends SubsystemBase {
     private double m_moveOutput = 0.0;
     private double m_steerOutput = 0.0;
 
-    private static final double m_moveTrim = 0.0;
-    private static final double m_steerTrim = 0.0;
+    private boolean isHighGear = false;
 
     // Left Drive
     private WPI_TalonFX leftDriveMaster;
@@ -76,30 +84,46 @@ public class Drive extends SubsystemBase {
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+
         leftDriveMaster.configAllSettings(configs);
         leftDriveSlave1.configAllSettings(configs);
         leftDriveSlave2.configAllSettings(configs);
+
         rightDriveMaster.configAllSettings(configs);
         rightDriveSlave1.configAllSettings(configs);
         rightDriveSlave2.configAllSettings(configs);
 
         leftDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDriveSlave1.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDriveSlave2.setInverted(TalonFXInvertType.CounterClockwise);
+        leftDriveSlave1.setInverted(TalonFXInvertType.FollowMaster);
+        leftDriveSlave2.setInverted(TalonFXInvertType.FollowMaster);
+
         leftDriveMaster.setNeutralMode(NeutralMode.Brake);
         leftDriveSlave1.setNeutralMode(NeutralMode.Brake);
         leftDriveSlave2.setNeutralMode(NeutralMode.Brake);
+
         leftDriveSlave1.follow(leftDriveMaster);
         leftDriveSlave2.follow(leftDriveMaster);
 
-        rightDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
-        rightDriveSlave1.setInverted(TalonFXInvertType.CounterClockwise);
-        rightDriveSlave2.setInverted(TalonFXInvertType.CounterClockwise);
+        rightDriveMaster.setInverted(TalonFXInvertType.Clockwise);
+        rightDriveSlave1.setInverted(TalonFXInvertType.FollowMaster);
+        rightDriveSlave2.setInverted(TalonFXInvertType.FollowMaster);
+
         rightDriveMaster.setNeutralMode(NeutralMode.Brake);
         rightDriveSlave1.setNeutralMode(NeutralMode.Brake);
         rightDriveSlave2.setNeutralMode(NeutralMode.Brake);
+
         rightDriveSlave1.follow(rightDriveMaster);
         rightDriveSlave2.follow(rightDriveMaster);
+
+        leftDriveMaster.enableVoltageCompensation(true);
+        leftDriveMaster.configVoltageCompSaturation(12.0);
+        leftDriveMaster.configPeakOutputForward(+1.0f);
+        leftDriveMaster.configPeakOutputReverse(-1.0f);
+
+        rightDriveMaster.enableVoltageCompensation(true);
+        rightDriveMaster.configVoltageCompSaturation(12.0);
+        rightDriveMaster.configPeakOutputForward(+1.0f);
+        rightDriveMaster.configPeakOutputReverse(-1.0f);
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
         supplyCurrentConfigs.currentLimit = 100;
@@ -113,6 +137,18 @@ public class Drive extends SubsystemBase {
         rightDriveSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
         rightDriveSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
+        StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
+        statorCurrentConfigs.currentLimit = 100;
+        statorCurrentConfigs.enable = false;
+
+        leftDriveMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        leftDriveSlave1.configStatorCurrentLimit(statorCurrentConfigs);
+        leftDriveSlave2.configStatorCurrentLimit(statorCurrentConfigs);
+
+        rightDriveMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        rightDriveSlave1.configStatorCurrentLimit(statorCurrentConfigs);
+        rightDriveSlave2.configStatorCurrentLimit(statorCurrentConfigs);
+
         // k constants
         leftDriveMaster.config_kF(0, 0.053);
         leftDriveMaster.config_kP(0, 0.50);
@@ -125,7 +161,10 @@ public class Drive extends SubsystemBase {
         rightDriveMaster.config_kD(0, 0.0);
 
         m_drive = new DifferentialDrive(leftDriveMaster, rightDriveMaster);
+        m_drive.setRightSideInverted(true);
         m_drive.setSafetyEnabled(false);
+
+        updateOpenLoopVoltageRamp();
     }
 
     public static Drive getInstance() {
@@ -162,21 +201,36 @@ public class Drive extends SubsystemBase {
         gyroPigeon.setFusedHeading(0, 10);
     }
 
-    public synchronized void driveWithJoystick() {
-        if (m_drive == null)
-            return;
+    private void updateOpenLoopVoltageRamp() {
+        setOpenLoopVoltageRamp(isHighGear ? OPEN_LOOP_VOLTAGE_RAMP_HI : OPEN_LOOP_VOLTAGE_RAMP_LO);
+    }
 
-        boolean isHighGear = m_driverController.getRightBumper().get();
-        double shiftScaleFactor = 0.6;
+    private void setOpenLoopVoltageRamp(double timeTo12VSec) {
+        leftDriveMaster.configOpenloopRamp(timeTo12VSec);
+        rightDriveMaster.configOpenloopRamp(timeTo12VSec);
+    }
+
+    public synchronized void driveWithJoystick() {
+        if (m_drive == null) {
+            return;
+        }
+
+        boolean isHighGearPrevious = isHighGear;
+        isHighGear = m_driverController.getRightBumper().get();
+        if (isHighGearPrevious != isHighGear) {
+            updateOpenLoopVoltageRamp();
+        }
+
+        double shiftScaleFactor = OPEN_LOOP_PERCENT_OUTPUT_LO;
         if (isHighGear == true) {
-            shiftScaleFactor = 1.0;
+            shiftScaleFactor = OPEN_LOOP_PERCENT_OUTPUT_HI;
         }
 
         m_moveInput = -m_driverController.getY(GenericHID.Hand.kLeft);
         m_steerInput = m_driverController.getX(GenericHID.Hand.kRight);
 
-        m_moveOutput = adjustForSensitivity(MOVE_SCALE * shiftScaleFactor, m_moveTrim, m_moveInput, MOVE_NON_LINEAR, MOVE_NON_LINEARITY);
-        m_steerOutput = adjustForSensitivity(STEER_SCALE, m_steerTrim, m_steerInput, STEER_NON_LINEAR, STEER_NON_LINEARITY);
+        m_moveOutput = adjustForSensitivity(MOVE_SCALE * shiftScaleFactor, MOVE_TRIM, m_moveInput, MOVE_NON_LINEAR, MOVE_NON_LINEARITY);
+        m_steerOutput = adjustForSensitivity(STEER_SCALE, STEER_TRIM, m_steerInput, STEER_NON_LINEAR, STEER_NON_LINEARITY);
 
         m_drive.arcadeDrive(m_moveOutput, m_steerOutput);
     }

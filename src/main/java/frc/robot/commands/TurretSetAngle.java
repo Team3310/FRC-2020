@@ -30,9 +30,7 @@ public class TurretSetAngle extends ExtraTimeoutCommand
 
     @Override
     public boolean isFinished() {
-        System.out.println("Turret angle = " + turret.getTurretAngleAbsoluteDegrees());
         if (isExtraOneTimedOut() && turret.hasFinishedTrajectory()) {
-            System.out.println("Turret Trajectory finished");
             return true;
         }
         return false;

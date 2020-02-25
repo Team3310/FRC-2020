@@ -57,4 +57,18 @@ public final class Constants
     public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
     public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
     public static final double HOOD_MAX_ANGLE_DEGREES = 40.0;
+
+    // Shooter
+    public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
+    public static final double SHOOTER_MAIN_FENDER_RPM = 1200;
+    public static final double SHOOTER_KICKER_RPM_EPSILON = 100;
+
+    // Magazine
+    public static final double MAGAZINE_INTAKE_RPM = 20;
+    public static final double MAGAZINE_SHOOT_RPM = 30;
+    public static final double MAGAZINE_JAM_STATOR_CURRENT = 10;
+
+    // Intake
+    public static final double INTAKE_COLLECT_RPM = 2000;
+
 }

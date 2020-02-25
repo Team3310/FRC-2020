@@ -11,10 +11,10 @@ public class IntakeRetract extends SequentialCommandGroup {
 
        addCommands(
                // Set RPMs
-               new IntakeSetRPM(intake, 0), new MagazineSetRPM(magazine, 0),
+               new IntakeSetSpeed(intake, 0),
 
                // Current Limit
-               new MagazineSetRPMLimit(magazine, 0, 5),
+               new MagazineSetSpeed(magazine, 0),
 
                // Arm State
                new IntakeReleaseArms(intake)

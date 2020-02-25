@@ -12,7 +12,7 @@ public class IntakeAll extends SequentialCommandGroup {
         //           super(new FooCommand(), new BarCommand());
         addCommands(
                 // Set RPMs
-                new IntakeSetRPM(intake, 2000), new MagazineSetRPM(magazine, 60),
+                new IntakeSetRPM(intake, 2000),
 
                 // Current Limit
                 new MagazineSetRPMLimit(magazine, 60, 5),

@@ -11,7 +11,7 @@ public class ShooterFenderShot extends SequentialCommandGroup {
     public ShooterFenderShot(Shooter shooter, Magazine magazine) {
         // TODO: Add your sequential commands in the super() call, e.g.
         //           super(new FooCommand(), new BarCommand());
-        super(new ParallelCommandGroup(
+        addCommands(new ParallelCommandGroup(
 
                 // Set RPMs
                 new ShooterSetRPM(shooter, 2100, 2100),

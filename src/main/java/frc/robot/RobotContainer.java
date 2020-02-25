@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.MagazineSetRPMLimit;
 import frc.robot.commands.TurretAutoZero;
 import frc.robot.commands.TurretSetAngle;
+import frc.robot.controller.GameController;
+import frc.robot.controller.Playstation;
+import frc.robot.controller.Xbox;
 import frc.robot.subsystems.*;
 
 /**
@@ -25,6 +28,9 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer
 {
+    private final GameController m_driver = new GameController(Constants.DRIVER_JOYSTICK_1_USB_ID, new Xbox());
+    private final GameController m_operator = new GameController(Constants.OPERATOR_JOYSTICK_1_USB_ID, new Playstation());
+
     private final AirCompressor compressor = AirCompressor.getInstance();
     private final Intake intake = Intake.getInstance();
     private final Magazine magazine = Magazine.getInstance();
@@ -32,13 +38,16 @@ public class RobotContainer
     private final Shooter shooter = Shooter.getInstance();
     private final Drive drive = Drive.getInstance();
 
-    private final TurretSetAngle autonomousCommand = new TurretSetAngle(turret, 0);
+    private final Command autonomousCommand = new TurretSetAngle(turret, 0);
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
     public RobotContainer()
     {
+        // Pass the driver controller to the drive subsystem for teleop control
+        drive.setDriverController(m_driver);
+
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -91,7 +100,6 @@ public class RobotContainer
         SmartDashboard.putData("Hood Reset", new InstantCommand(()-> shooter.resetHoodPosition()));
         SmartDashboard.putData("Hood MM", new InstantCommand(()-> shooter.setHoodMotionMagicPositionAbsolute(20)));
     }
-
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

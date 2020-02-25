@@ -70,13 +70,13 @@ public class Shooter extends SubsystemBase {
 
         shooterHood.setInverted(TalonFXInvertType.Clockwise);
         shooterHood.setNeutralMode(NeutralMode.Brake);
-        shooterHood.configMotionCruiseVelocity(1500);
-        shooterHood.configMotionAcceleration(3000);
-        shooterHood.configMotionSCurveStrength(4);
+        shooterHood.configMotionCruiseVelocity(3000);
+        shooterHood.configMotionAcceleration(6000);
+ //       shooterHood.configMotionSCurveStrength(4);
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 30;
-        statorCurrentConfigs.enable = true;
+        statorCurrentConfigs.enable = false;
         statorCurrentConfigs.triggerThresholdCurrent = 60;
         statorCurrentConfigs.triggerThresholdTime = 2;
 
@@ -100,10 +100,11 @@ public class Shooter extends SubsystemBase {
         shooterIntake.config_kI(0, 0.0);
         shooterIntake.config_kD(0, 0.0);  // 0.6
 
-        shooterHood.config_kF(0, 0.0);
-        shooterHood.config_kP(0, 0.0);
-        shooterHood.config_kI(0, 0.0);
-        shooterHood.config_kD(0, 0.0);
+        shooterHood.config_kF(kHoodMotionMagicSlot, 0.045);
+        shooterHood.config_kP(kHoodMotionMagicSlot, 0.9);
+        shooterHood.config_kI(kHoodMotionMagicSlot, 0.002);
+        shooterHood.config_kD(kHoodMotionMagicSlot, 0.0);
+        shooterHood.config_IntegralZone(kHoodMotionMagicSlot, (int)(5.0 * HOOD_DEGREES_TO_ENCODER_TICKS));
     }
 
     public static Shooter getInstance() {
@@ -216,8 +217,11 @@ public class Shooter extends SubsystemBase {
             setHoodControlMode(HoodControlMode.MOTION_MAGIC);
         }
         shooterHood.selectProfileSlot(kHoodMotionMagicSlot, 0);
-        targetPositionTicks = getHoodEncoderTicksAbsolute(limitHoodAngle(angle));
-        shooterHood.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.01);
+        double limitedAngle = limitHoodAngle(angle);
+        targetPositionTicks = getHoodEncoderTicksAbsolute(limitedAngle);
+        System.out.println("Angle requested = " + angle + ", limitedAngle = " + limitedAngle + ", targetPositionTicks = " + targetPositionTicks);
+        shooterHood.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.07);
+        System.out.println("Hood MM angle = " + angle);
     }
 
     public synchronized boolean hasFinishedHoodTrajectory() {
@@ -226,7 +230,8 @@ public class Shooter extends SubsystemBase {
     }
 
     private double getHoodEncoderTicksAbsolute(double angle) {
-        return (double)shooterHood.getSelectedSensorPosition() / HOOD_DEGREES_TO_ENCODER_TICKS + homePositionAngleDegrees;
+        double positionDegrees = angle - homePositionAngleDegrees;
+        return (int) (positionDegrees * HOOD_DEGREES_TO_ENCODER_TICKS);
     }
 
     public synchronized double getHoodSetpointAngle() {
@@ -268,6 +273,8 @@ public class Shooter extends SubsystemBase {
 //        SmartDashboard.putNumber("Intake Stator Current", shooterIntake.getStatorCurrent());
 //        SmartDashboard.putNumber("Intake Supply Current", shooterIntake.getSupplyCurrent());
         SmartDashboard.putNumber("Hood Angle", getHoodAngleAbsoluteDegrees());
+        SmartDashboard.putNumber("Hood Velocity", shooterHood.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
     }
 }
 

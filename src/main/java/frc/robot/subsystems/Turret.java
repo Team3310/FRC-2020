@@ -66,13 +66,13 @@ public class Turret extends SubsystemBase {
         turretMotor.config_kP(kTurretMotionMagicSlot, 0.9);
         turretMotor.config_kI(kTurretMotionMagicSlot, 0.002);
         turretMotor.config_kD(kTurretMotionMagicSlot, 0.0);
-        turretMotor.config_IntegralZone(kTurretMotionMagicSlot, getTurretEncoderTicksAbsolute(5.0));
+        turretMotor.config_IntegralZone(kTurretMotionMagicSlot, (int)(5.0 * TURRET_DEGREES_TO_ENCODER_TICKS));
 
         turretMotor.config_kF(kTurretPositionSlot, 0.0);  //0.03
         turretMotor.config_kP(kTurretPositionSlot, 0.3);
         turretMotor.config_kI(kTurretPositionSlot, 0.0002);
         turretMotor.config_kD(kTurretPositionSlot, 0.1);
-        turretMotor.config_IntegralZone(kTurretPositionSlot, getTurretEncoderTicksAbsolute(5.0));
+        turretMotor.config_IntegralZone(kTurretPositionSlot, (int)(5.0 * TURRET_DEGREES_TO_ENCODER_TICKS));
     }
 
     public static Turret getInstance() {

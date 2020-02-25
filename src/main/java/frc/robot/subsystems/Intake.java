@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,6 +18,10 @@ public class Intake extends SubsystemBase {
     // Motor Controllers
     private TalonFX intakeMotor;
 
+    // Pneumatics
+    private Solenoid intakeOuterArm;
+    private Solenoid intakeInnerArm;
+
     // Misc
     private static final int kIntakeVelocitySlot = 0;
 
@@ -24,6 +29,9 @@ public class Intake extends SubsystemBase {
 
     private Intake() {
         intakeMotor = new TalonFX(Constants.INTAKE_MOTOR_CAN_ID);
+
+        intakeOuterArm = new Solenoid(Constants.INTAKE_OUTER_ARM_PCM_ID);
+        intakeInnerArm = new Solenoid(Constants.INTAKE_INNER_ARM_PCM_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -72,6 +80,17 @@ public class Intake extends SubsystemBase {
     public double RollerRPMToNativeUnits(double rpm) {
         return rpm * INTAKE_ROLLER_REVOLUTIONS_TO_ENCODER_TICKS / 10.0D / 60.0D;
     }
+
+    public void releaseIntakeArms() {
+        intakeInnerArm.set(true);
+        intakeOuterArm.set(true);
+    }
+
+    public void retractIntakeArms() {
+        intakeInnerArm.set(false);
+        intakeOuterArm.set(false);
+    }
+
 
     public void periodic() {
         SmartDashboard.putNumber("Intake Roller Rotations", this.getRollerRotations());

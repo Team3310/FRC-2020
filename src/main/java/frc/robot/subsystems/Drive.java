@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.controller.GameController;
@@ -62,9 +63,8 @@ public class Drive extends SubsystemBase {
     private PigeonIMU gyroPigeon;
     private double[] yprPigeon = new double[3];
     private short[] xyzPigeon = new short[3];
-    private double kPGyro = 0.04;
     private boolean isCalibrating = false;
-    private double gyroOffsetDeg = 0;
+    private double gyroYawOffsetAngleDeg = Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES;
 
     // Differential Drive
     private DifferentialDrive m_drive;
@@ -164,6 +164,10 @@ public class Drive extends SubsystemBase {
         m_drive.setRightSideInverted(true);
         m_drive.setSafetyEnabled(false);
 
+        gyroPigeon = new PigeonIMU(Constants.GYRO_CAN_ID);
+        gyroPigeon.configFactoryDefault();
+//        gyroPigeon.setStatusFramePeriod(10, 10);
+
         updateOpenLoopVoltageRamp();
     }
 
@@ -173,7 +177,7 @@ public class Drive extends SubsystemBase {
 
     // Gyro Set Up
     public void calibrateGyro() {
-        gyroPigeon.enterCalibrationMode(PigeonIMU.CalibrationMode.Temperature, 10);
+        gyroPigeon.enterCalibrationMode(PigeonIMU.CalibrationMode.Temperature);
     }
 
     public void endGyroCalibration() {
@@ -182,13 +186,17 @@ public class Drive extends SubsystemBase {
         }
     }
 
-    public void setGyroOffset(double offsetDeg) {
-        gyroOffsetDeg = offsetDeg;
+    public void setGyroYawOffset(double offsetDeg) {
+        gyroYawOffsetAngleDeg = offsetDeg;
     }
 
-    public synchronized double getGyroAngleDeg() {
+    public synchronized double getGyroYawAngleDeg() {
         gyroPigeon.getYawPitchRoll(yprPigeon);
-        return -yprPigeon[0] + gyroOffsetDeg;
+        return yprPigeon[0] + gyroYawOffsetAngleDeg;
+    }
+
+    public synchronized double getGyroFusedHeadingAngleDeg() {
+        return gyroPigeon.getFusedHeading() + gyroYawOffsetAngleDeg;
     }
 
     public synchronized double getGyroPitchAngle() {
@@ -196,9 +204,9 @@ public class Drive extends SubsystemBase {
         return yprPigeon[2];
     }
 
-    public synchronized void resetGyro() {
-        gyroPigeon.setYaw(0, 10);
-        gyroPigeon.setFusedHeading(0, 10);
+    public synchronized void resetGyroYawAngle() {
+        gyroPigeon.setYaw(0);
+        gyroPigeon.setFusedHeading(0);
     }
 
     private void updateOpenLoopVoltageRamp() {
@@ -287,6 +295,8 @@ public class Drive extends SubsystemBase {
 
     public void periodic() {
         driveWithJoystick();
+        SmartDashboard.putNumber("Gyro Yaw Angle", this.getGyroYawAngleDeg());
+        SmartDashboard.putNumber("Gyro Heading Angle", this.getGyroFusedHeadingAngleDeg());
     }
 }
 

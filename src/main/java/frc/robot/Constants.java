@@ -31,7 +31,9 @@ public final class Constants
     public static final int TURRET_MOTOR_CAN_ID = 10;
     public static final int MAGAZINE_MOTOR_CAN_ID = 5;
     public static final int INTAKE_MOTOR_CAN_ID = 7;
-//    public static final int CLIMB_MOTOR_CAN_ID = 6;
+
+    // Gyro
+    public static final int GYRO_CAN_ID = 0;
 
     // Pneumatics
     public static final int INTAKE_OUTER_ARM_PCM_ID = 1;
@@ -71,4 +73,6 @@ public final class Constants
     // Intake
     public static final double INTAKE_COLLECT_RPM = 2000;
 
+    // Drive
+    public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;
 }

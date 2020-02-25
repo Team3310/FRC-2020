@@ -21,22 +21,10 @@ public class HoodSetAngle extends ExtraTimeoutCommand {
     }
 
     @Override
-    public void execute() {
-
-    }
-
-    @Override
     public boolean isFinished() {
-        System.out.println("Hood angle = " + shooter.getHoodAngleAbsoluteDegrees());
         if (isExtraOneTimedOut() && shooter.hasFinishedHoodTrajectory()) {
-            System.out.println("Hood Trajectory finished");
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-
     }
 }

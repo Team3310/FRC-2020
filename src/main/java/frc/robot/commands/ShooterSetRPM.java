@@ -8,13 +8,12 @@ public class ShooterSetRPM extends CommandBase {
     private final Shooter shooter;
     private double shooterMainRPM;
     private double shooterKickerRPM;
-    private double shooterIntakeRPM;
 
-    public ShooterSetRPM(Shooter shooter, double shooterMainRPM, double shooterKickerRPM, double shooterIntakeRPM) {
+
+    public ShooterSetRPM(Shooter shooter, double shooterMainRPM, double shooterKickerRPM) {
         this.shooter = shooter;
         this.shooterMainRPM = shooterMainRPM;
         this.shooterKickerRPM = shooterKickerRPM;
-        this.shooterIntakeRPM = shooterIntakeRPM;
         addRequirements(shooter);
     }
 
@@ -22,7 +21,6 @@ public class ShooterSetRPM extends CommandBase {
     public void initialize() {
         shooter.setMainRPM(shooterMainRPM);
         shooter.setKickerRPM(shooterKickerRPM);
-        shooter.setIntakeSpeed(shooterIntakeRPM);
     }
 
     @Override

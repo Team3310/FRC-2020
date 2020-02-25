@@ -1,22 +1,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Shooter;
 
 
-public class MagazineSetRPM extends CommandBase {
-    private final Magazine magazine;
+public class ShooterIntakeSetRPM extends CommandBase {
+    private final Shooter shooter;
     private double rpm;
 
-    public MagazineSetRPM(Magazine magazine, double rpm) {
-        this.magazine = magazine;
+    public ShooterIntakeSetRPM(Shooter shooter, double rpm) {
+        this.shooter = shooter;
         this.rpm = rpm;
-        addRequirements(this.magazine);
+        addRequirements(shooter);
     }
 
     @Override
     public void initialize() {
-        magazine.setMagazineRPM(rpm);
+        shooter.seIntakeRPM(rpm);
     }
 
     @Override

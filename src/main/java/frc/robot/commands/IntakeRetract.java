@@ -10,7 +10,6 @@ public class IntakeRetract extends SequentialCommandGroup {
     public IntakeRetract(Intake intake, Magazine magazine) {
 
        addCommands(
-               // Set RPMs
                new IntakeSetSpeed(intake, 0),
 
                // Current Limit

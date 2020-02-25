@@ -4,11 +4,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
-import java.util.ArrayList;
 
 public class Drive extends SubsystemBase {
 
@@ -20,26 +22,19 @@ public class Drive extends SubsystemBase {
     // Speed Control
     private static final double DRIVE_OUTPUT_TO_ENCODER_RATIO = 48.0 / 48.0;
     private static final double TICKS_PER_ROTATION = 2048.0;
-    public static final double TRACK_WIDTH_INCHES = 0.0;
-    private static final double DRIVE_ENCODER_PPR = 4096.;
 
-    public static final double MP_STRAIGHT_T1 = 600;
-    public static final double MP_STRAIGHT_T2 = 300;
-    public static final double MP_TURN_T1 = 600;
-    public static final double MP_TURN_T2 = 300;
-    public static final double MP_MAX_TURN_T1 = 200;
-    public static final double MP_MAX_TURN_T2 = 100;
+    public static final double STEER_NON_LINEARITY = 0.5;
+    public static final double MOVE_NON_LINEARITY = 1.0;
 
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.0;
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.1;
+    public static final double STICK_DEADBAND = 0.02;
 
     // Left Drive
-    private TalonFX leftDrive1;
+    private WPI_TalonFX leftDrive1;
     private TalonFX leftDrive2;
     private TalonFX leftDrive3;
 
     // Right Drive
-    private TalonFX rightDrive1;
+    private WPI_TalonFX rightDrive1;
     private TalonFX rightDrive2;
     private TalonFX rightDrive3;
 
@@ -47,22 +42,38 @@ public class Drive extends SubsystemBase {
     private PigeonIMU gyroPigeon;
     private double[] yprPigeon = new double[3];
     private short[] xyzPigeon = new short[3];
-    private boolean useGyroLock;
-    private double gyroLockAngleDeg;
     private double kPGyro = 0.04;
     private boolean isCalibrating = false;
     private double gyroOffsetDeg = 0;
 
+    private DifferentialDrive m_drive;
+
+    private int m_moveNonLinear = 0;
+    private int m_steerNonLinear = -3;
+
+    private double m_moveScale = 1.0;
+    private double m_steerScale = 0.85;
+
+    private double m_moveInput = 0.0;
+    private double m_steerInput = 0.0;
+
+    private double m_moveOutput = 0.0;
+    private double m_steerOutput = 0.0;
+
+    private double m_moveTrim = 0.0;
+    private double m_steerTrim = 0.0;
+
+    XboxController m_driver = new XboxController(Constants.DRIVER_JOYSTICK_1_USB_ID);
 
     // Subsystem Instance
     private final static Drive INSTANCE = new Drive();
 
     private Drive() {
-        leftDrive1 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
+        leftDrive1 = new WPI_TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
         leftDrive2 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID);
         leftDrive3 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID);
 
-        rightDrive1 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
+        rightDrive1 = new WPI_TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
         rightDrive2 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID);
         rightDrive3 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID);
 
@@ -91,7 +102,7 @@ public class Drive extends SubsystemBase {
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
         supplyCurrentConfigs.currentLimit = 30;
-        supplyCurrentConfigs.enable = true;
+        supplyCurrentConfigs.enable = false;
 
         leftDrive1.configSupplyCurrentLimit(supplyCurrentConfigs);
         leftDrive2.configSupplyCurrentLimit(supplyCurrentConfigs);
@@ -131,6 +142,9 @@ public class Drive extends SubsystemBase {
         rightDrive3.config_kP(0, 0.50);
         rightDrive3.config_kI(0, 0.00001);
         rightDrive3.config_kD(0, 0.0);
+
+        m_drive = new DifferentialDrive(leftDrive1, rightDrive1);
+        m_drive.setSafetyEnabled(false);
     }
 
     public static Drive getInstance() {
@@ -298,5 +312,75 @@ public class Drive extends SubsystemBase {
         resetGyro();
     }
 
+    public synchronized void driveWithJoystick() {
+        if (m_drive == null)
+            return;
+
+        boolean isHighGear = m_driver.getBumperPressed(GenericHID.Hand.kRight);
+        double shiftScaleFactor = 0.6;
+        if (isHighGear == true) {
+            shiftScaleFactor = 1.0;
+        }
+
+        m_moveInput = m_driver.getY(GenericHID.Hand.kLeft);
+        m_steerInput = -m_driver.getX(GenericHID.Hand.kRight);
+
+        m_moveOutput = adjustForSensitivity(m_moveScale * shiftScaleFactor, m_moveTrim, m_moveInput, m_moveNonLinear, MOVE_NON_LINEARITY);
+        m_steerOutput = adjustForSensitivity(m_steerScale * shiftScaleFactor, m_steerTrim, m_steerInput, m_steerNonLinear,
+                STEER_NON_LINEARITY);
+
+        m_drive.arcadeDrive(-m_moveOutput, -m_steerOutput);
+    }
+
+    private boolean inDeadZone(double input) {
+        boolean inDeadZone;
+        if (Math.abs(input) < STICK_DEADBAND) {
+            inDeadZone = true;
+        } else {
+            inDeadZone = false;
+        }
+        return inDeadZone;
+    }
+
+    public double adjustForSensitivity(double scale, double trim, double steer, int nonLinearFactor,
+                                       double wheelNonLinearity) {
+        if (inDeadZone(steer))
+            return 0;
+
+        steer += trim;
+        steer *= scale;
+        steer = limitValue(steer);
+
+        int iterations = Math.abs(nonLinearFactor);
+        for (int i = 0; i < iterations; i++) {
+            if (nonLinearFactor > 0) {
+                steer = nonlinearStickCalcPositive(steer, wheelNonLinearity);
+            } else {
+                steer = nonlinearStickCalcNegative(steer, wheelNonLinearity);
+            }
+        }
+        return steer;
+    }
+
+    private double limitValue(double value) {
+        if (value > 1.0) {
+            value = 1.0;
+        } else if (value < -1.0) {
+            value = -1.0;
+        }
+        return value;
+    }
+
+    private double nonlinearStickCalcPositive(double steer, double steerNonLinearity) {
+        return Math.sin(Math.PI / 2.0 * steerNonLinearity * steer) / Math.sin(Math.PI / 2.0 * steerNonLinearity);
+    }
+
+    private double nonlinearStickCalcNegative(double steer, double steerNonLinearity) {
+        return Math.asin(steerNonLinearity * steer) / Math.asin(steerNonLinearity);
+    }
+
+    public void periodic() {
+        driveWithJoystick();
+    }
 }
 

@@ -30,6 +30,7 @@ public class RobotContainer
     private final Magazine magazine = Magazine.getInstance();
     private final Turret turret = Turret.getInstance();
     private final Shooter shooter = Shooter.getInstance();
+    private final Drive drive = Drive.getInstance();
 
     private final TurretSetAngle autonomousCommand = new TurretSetAngle(turret, 0);
 

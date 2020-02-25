@@ -29,14 +29,14 @@ public class Drive extends SubsystemBase {
     public static final double STICK_DEADBAND = 0.02;
 
     // Left Drive
-    private WPI_TalonFX leftDrive1;
-    private TalonFX leftDrive2;
-    private TalonFX leftDrive3;
+    private WPI_TalonFX leftDriveMaster;
+    private TalonFX leftDriveSlave1;
+    private TalonFX leftDriveSlave2;
 
     // Right Drive
-    private WPI_TalonFX rightDrive1;
-    private TalonFX rightDrive2;
-    private TalonFX rightDrive3;
+    private WPI_TalonFX rightDriveMaster;
+    private TalonFX rightDriveSlave1;
+    private TalonFX rightDriveSlave2;
 
     // Gyro
     private PigeonIMU gyroPigeon;
@@ -69,81 +69,85 @@ public class Drive extends SubsystemBase {
     private final static Drive INSTANCE = new Drive();
 
     private Drive() {
-        leftDrive1 = new WPI_TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
-        leftDrive2 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID);
-        leftDrive3 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID);
+        leftDriveMaster = new WPI_TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
+        leftDriveSlave1 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID);
+        leftDriveSlave2 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID);
 
-        rightDrive1 = new WPI_TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
-        rightDrive2 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID);
-        rightDrive3 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID);
+        rightDriveMaster = new WPI_TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
+        rightDriveSlave1 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID);
+        rightDriveSlave2 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-        leftDrive1.configAllSettings(configs);
-        leftDrive2.configAllSettings(configs);
-        leftDrive3.configAllSettings(configs);
-        rightDrive1.configAllSettings(configs);
-        rightDrive2.configAllSettings(configs);
-        rightDrive3.configAllSettings(configs);
+        leftDriveMaster.configAllSettings(configs);
+        leftDriveSlave1.configAllSettings(configs);
+        leftDriveSlave2.configAllSettings(configs);
+        rightDriveMaster.configAllSettings(configs);
+        rightDriveSlave1.configAllSettings(configs);
+        rightDriveSlave2.configAllSettings(configs);
 
-        leftDrive1.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDrive1.setNeutralMode(NeutralMode.Brake);
-        leftDrive2.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDrive2.setNeutralMode(NeutralMode.Brake);
-        leftDrive3.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDrive3.setNeutralMode(NeutralMode.Brake);
+        leftDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
+        leftDriveSlave1.setInverted(TalonFXInvertType.CounterClockwise);
+        leftDriveSlave2.setInverted(TalonFXInvertType.CounterClockwise);
+        leftDriveMaster.setNeutralMode(NeutralMode.Brake);
+        leftDriveSlave1.setNeutralMode(NeutralMode.Brake);
+        leftDriveSlave2.setNeutralMode(NeutralMode.Brake);
+        leftDriveSlave1.follow(leftDriveMaster);
+        leftDriveSlave2.follow(leftDriveMaster);
 
-        rightDrive1.setInverted(TalonFXInvertType.Clockwise);
-        rightDrive1.setNeutralMode(NeutralMode.Brake);
-        rightDrive2.setInverted(TalonFXInvertType.Clockwise);
-        rightDrive2.setNeutralMode(NeutralMode.Brake);
-        rightDrive3.setInverted(TalonFXInvertType.Clockwise);
-        rightDrive3.setNeutralMode(NeutralMode.Brake);
+        rightDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
+        rightDriveSlave1.setInverted(TalonFXInvertType.CounterClockwise);
+        rightDriveSlave2.setInverted(TalonFXInvertType.CounterClockwise);
+        rightDriveMaster.setNeutralMode(NeutralMode.Brake);
+        rightDriveSlave1.setNeutralMode(NeutralMode.Brake);
+        rightDriveSlave2.setNeutralMode(NeutralMode.Brake);
+        rightDriveSlave1.follow(rightDriveMaster);
+        rightDriveSlave2.follow(rightDriveMaster);
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 30;
+        supplyCurrentConfigs.currentLimit = 100;
         supplyCurrentConfigs.enable = false;
 
-        leftDrive1.configSupplyCurrentLimit(supplyCurrentConfigs);
-        leftDrive2.configSupplyCurrentLimit(supplyCurrentConfigs);
-        leftDrive3.configSupplyCurrentLimit(supplyCurrentConfigs);
+        leftDriveMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
+        leftDriveSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
+        leftDriveSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
-        rightDrive1.configSupplyCurrentLimit(supplyCurrentConfigs);
-        rightDrive2.configSupplyCurrentLimit(supplyCurrentConfigs);
-        rightDrive3.configSupplyCurrentLimit(supplyCurrentConfigs);
+        rightDriveMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
+        rightDriveSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
+        rightDriveSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
         // k constants
-        leftDrive1.config_kF(0, 0.053);
-        leftDrive1.config_kP(0, 0.50);
-        leftDrive1.config_kI(0, 0.00001);
-        leftDrive1.config_kD(0, 0.0);
+        leftDriveMaster.config_kF(0, 0.053);
+        leftDriveMaster.config_kP(0, 0.50);
+        leftDriveMaster.config_kI(0, 0.00001);
+        leftDriveMaster.config_kD(0, 0.0);
 
-        leftDrive2.config_kF(0, 0.053);
-        leftDrive2.config_kP(0, 0.50);
-        leftDrive2.config_kI(0, 0.00001);
-        leftDrive2.config_kD(0, 0.0);
+        leftDriveSlave1.config_kF(0, 0.053);
+        leftDriveSlave1.config_kP(0, 0.50);
+        leftDriveSlave1.config_kI(0, 0.00001);
+        leftDriveSlave1.config_kD(0, 0.0);
 
-        leftDrive3.config_kF(0, 0.053);
-        leftDrive3.config_kP(0, 0.50);
-        leftDrive3.config_kI(0, 0.00001);
-        leftDrive3.config_kD(0, 0.0);
+        leftDriveSlave2.config_kF(0, 0.053);
+        leftDriveSlave2.config_kP(0, 0.50);
+        leftDriveSlave2.config_kI(0, 0.00001);
+        leftDriveSlave2.config_kD(0, 0.0);
 
-        rightDrive1.config_kF(0, 0.053);
-        rightDrive1.config_kP(0, 0.50);
-        rightDrive1.config_kI(0, 0.00001);
-        rightDrive1.config_kD(0, 0.0);
+        rightDriveMaster.config_kF(0, 0.053);
+        rightDriveMaster.config_kP(0, 0.50);
+        rightDriveMaster.config_kI(0, 0.00001);
+        rightDriveMaster.config_kD(0, 0.0);
 
-        rightDrive2.config_kF(0, 0.053);
-        rightDrive2.config_kP(0, 0.50);
-        rightDrive2.config_kI(0, 0.00001);
-        rightDrive2.config_kD(0, 0.0);
+        rightDriveSlave1.config_kF(0, 0.053);
+        rightDriveSlave1.config_kP(0, 0.50);
+        rightDriveSlave1.config_kI(0, 0.00001);
+        rightDriveSlave1.config_kD(0, 0.0);
 
-        rightDrive3.config_kF(0, 0.053);
-        rightDrive3.config_kP(0, 0.50);
-        rightDrive3.config_kI(0, 0.00001);
-        rightDrive3.config_kD(0, 0.0);
+        rightDriveSlave2.config_kF(0, 0.053);
+        rightDriveSlave2.config_kP(0, 0.50);
+        rightDriveSlave2.config_kI(0, 0.00001);
+        rightDriveSlave2.config_kD(0, 0.0);
 
-        m_drive = new DifferentialDrive(leftDrive1, rightDrive1);
+        m_drive = new DifferentialDrive(leftDriveMaster, rightDriveMaster);
         m_drive.setSafetyEnabled(false);
     }
 
@@ -153,19 +157,19 @@ public class Drive extends SubsystemBase {
 
     // RPM Set Up
     public void resetLeftDrive1Position() {
-        leftDrive1.setSelectedSensorPosition(0);
+        leftDriveMaster.setSelectedSensorPosition(0);
     }
 
     public double getLeftDrive1Rotations() {
-        return leftDrive1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return leftDriveMaster.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getLeftDrive1RPM() {
-        return leftDrive1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return leftDriveMaster.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setLeftDrive1RPM(double rpm) {
-        leftDrive1.set(ControlMode.Velocity, leftDrive1RPMToNativeUnits(rpm));
+        leftDriveMaster.set(ControlMode.Velocity, leftDrive1RPMToNativeUnits(rpm));
     }
 
     public double leftDrive1RPMToNativeUnits(double rpm) {
@@ -173,19 +177,19 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetLeftDrive2Position() {
-        leftDrive2.setSelectedSensorPosition(0);
+        leftDriveSlave1.setSelectedSensorPosition(0);
     }
 
     public double getLeftDrive2Rotations() {
-        return leftDrive2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return leftDriveSlave1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getLeftDrive2RPM() {
-        return leftDrive2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return leftDriveSlave1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setLeftDrive2RPM(double rpm) {
-        leftDrive2.set(ControlMode.Velocity, leftDrive2RPMToNativeUnits(rpm));
+        leftDriveSlave1.set(ControlMode.Velocity, leftDrive2RPMToNativeUnits(rpm));
     }
 
     public double leftDrive2RPMToNativeUnits(double rpm) {
@@ -193,19 +197,19 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetLeftDrive3Position() {
-        leftDrive3.setSelectedSensorPosition(0);
+        leftDriveSlave2.setSelectedSensorPosition(0);
     }
 
     public double getLeftDrive3Rotations() {
-        return leftDrive3.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return leftDriveSlave2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getLeftDrive3RPM() {
-        return leftDrive3.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return leftDriveSlave2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setLeftDrive3RPM(double rpm) {
-        leftDrive3.set(ControlMode.Velocity, leftDrive3RPMToNativeUnits(rpm));
+        leftDriveSlave2.set(ControlMode.Velocity, leftDrive3RPMToNativeUnits(rpm));
     }
 
     public double leftDrive3RPMToNativeUnits(double rpm) {
@@ -213,19 +217,19 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetRightDrive1Position() {
-        rightDrive1.setSelectedSensorPosition(0);
+        rightDriveMaster.setSelectedSensorPosition(0);
     }
 
     public double getRightDrive1Rotations() {
-        return rightDrive1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return rightDriveMaster.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getRightDrive1RPM() {
-        return rightDrive1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return rightDriveMaster.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setRightDrive1RPM(double rpm) {
-        rightDrive1.set(ControlMode.Velocity, rightDrive1RPMToNativeUnits(rpm));
+        rightDriveMaster.set(ControlMode.Velocity, rightDrive1RPMToNativeUnits(rpm));
     }
 
     public double rightDrive1RPMToNativeUnits(double rpm) {
@@ -233,19 +237,19 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetRightDrive2Position() {
-        rightDrive2.setSelectedSensorPosition(0);
+        rightDriveSlave1.setSelectedSensorPosition(0);
     }
 
     public double getRightDrive2Rotations() {
-        return rightDrive2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return rightDriveSlave1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getRightDrive2RPM() {
-        return rightDrive2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return rightDriveSlave1.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setRightDrive2RPM(double rpm) {
-        rightDrive2.set(ControlMode.Velocity, rightDrive2RPMToNativeUnits(rpm));
+        rightDriveSlave1.set(ControlMode.Velocity, rightDrive2RPMToNativeUnits(rpm));
     }
 
     public double rightDrive2RPMToNativeUnits(double rpm) {
@@ -253,19 +257,19 @@ public class Drive extends SubsystemBase {
     }
 
     public void resetRightDrive3Position() {
-        rightDrive3.setSelectedSensorPosition(0);
+        rightDriveSlave2.setSelectedSensorPosition(0);
     }
 
     public double getRightDrive3Rotations() {
-        return rightDrive3.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
+        return rightDriveSlave2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION;
     }
 
     public double getRightDrive3RPM() {
-        return rightDrive3.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
+        return rightDriveSlave2.getSelectedSensorPosition() / DRIVE_OUTPUT_TO_ENCODER_RATIO / TICKS_PER_ROTATION * 10.0 * 60.0;
     }
 
     public void setRightDrive3RPM(double rpm) {
-        rightDrive3.set(ControlMode.Velocity, rightDrive3RPMToNativeUnits(rpm));
+        rightDriveSlave2.set(ControlMode.Velocity, rightDrive3RPMToNativeUnits(rpm));
     }
 
     public double rightDrive3RPMToNativeUnits(double rpm) {
@@ -316,20 +320,24 @@ public class Drive extends SubsystemBase {
         if (m_drive == null)
             return;
 
-        boolean isHighGear = m_driver.getBumperPressed(GenericHID.Hand.kRight);
+        boolean isHighGear = m_driver.getBumper(GenericHID.Hand.kRight);
         double shiftScaleFactor = 0.6;
         if (isHighGear == true) {
             shiftScaleFactor = 1.0;
         }
 
-        m_moveInput = m_driver.getY(GenericHID.Hand.kLeft);
-        m_steerInput = -m_driver.getX(GenericHID.Hand.kRight);
+        m_moveInput = -m_driver.getY(GenericHID.Hand.kLeft);
+        m_steerInput = m_driver.getX(GenericHID.Hand.kRight);
 
-        m_moveOutput = adjustForSensitivity(m_moveScale * shiftScaleFactor, m_moveTrim, m_moveInput, m_moveNonLinear, MOVE_NON_LINEARITY);
-        m_steerOutput = adjustForSensitivity(m_steerScale * shiftScaleFactor, m_steerTrim, m_steerInput, m_steerNonLinear,
-                STEER_NON_LINEARITY);
+  //      m_moveOutput = adjustForSensitivity(m_moveScale * shiftScaleFactor, m_moveTrim, m_moveInput, m_moveNonLinear, MOVE_NON_LINEARITY);
+  //      m_steerOutput = adjustForSensitivity(m_steerScale * shiftScaleFactor, m_steerTrim, m_steerInput, m_steerNonLinear,
+  //              STEER_NON_LINEARITY);
 
-        m_drive.arcadeDrive(-m_moveOutput, -m_steerOutput);
+        m_moveOutput = m_moveInput * shiftScaleFactor;
+        m_steerOutput = m_steerInput;
+
+        m_drive.arcadeDrive(m_moveOutput, m_steerOutput);
+        System.out.println("Drive move = " + m_moveOutput + ", Steer = " + m_steerOutput + ", Highgear = " + isHighGear);
     }
 
     private boolean inDeadZone(double input) {

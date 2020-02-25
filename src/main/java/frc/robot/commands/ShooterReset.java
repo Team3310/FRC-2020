@@ -1,27 +1,32 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterReset extends SequentialCommandGroup {
+
     public ShooterReset(Shooter shooter, Magazine magazine) {
         // TODO: Add your sequential commands in the super() call, e.g.
         //           super(new FooCommand(), new BarCommand());
-        addCommands(
+        super(new ParallelCommandGroup(
 
-                // Set RPMs
-                new ShooterSetRPM(shooter, 0, 0, 0), new MagazineSetRPM(magazine, 0),
-
-                // Current Limit
-                new MagazineSetRPMLimit(magazine, 0, 5),
+                 // Set RPMs
+                 new ShooterSetRPM(shooter, 2100, 2100),
 
                 // Hood Angle
-                new HoodSetAngle(shooter, 40)
+                new HoodSetAngle(shooter, 0)
 
-                // Turret
-                // Add Turret Command Here
-        );
+                // Limelight
+                // Add Limelight Command Here
+        ),
+
+        // Current Limit
+        new MagazineSetRPMLimit(magazine, 60, 5));
+
+        // Shooter Intake
+        new ShooterIntakeSetRPM(shooter, 2000);
     }
 }

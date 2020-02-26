@@ -11,7 +11,6 @@ public class ShooterAutoShot extends SequentialCommandGroup {
 
     public ShooterAutoShot(Shooter shooter, Magazine magazine, Turret turret) {
         addCommands(
-
                 // Turret Angle
                 new TurretSetAngle(turret, -180),
 

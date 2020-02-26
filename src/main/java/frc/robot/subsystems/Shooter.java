@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase {
     // Misc
     private double homePositionAngleDegrees = Constants.HOOD_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
+    private boolean isReady;
 
     private final static Shooter INSTANCE = new Shooter();
 
@@ -248,6 +249,14 @@ public class Shooter extends SubsystemBase {
         }
 
         return targetAngle;
+    }
+
+    public void setReady(boolean isReady) {
+        this.isReady = isReady;
+    }
+
+    public boolean isReady() {
+        return isReady;
     }
 
     @Override

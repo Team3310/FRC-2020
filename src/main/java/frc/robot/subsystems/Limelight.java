@@ -16,6 +16,16 @@ public class Limelight extends SubsystemBase {
         VISION, DRIVER
     }
 
+    private final static Limelight INSTANCE = new Limelight();
+
+    private Limelight() {
+
+    }
+
+    public static Limelight getInstance() {
+        return INSTANCE;
+    }
+
     public boolean isOnTarget() {
         return getValue("tv").getDouble(0) == 1;
     }

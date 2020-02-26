@@ -92,4 +92,5 @@ public final class Constants
 
     // Vision
     public static final int LIMELIGHT_PIPELINE = 1;
+    public static final double LIMELIGHT_MEDIUM_SHOT_OFFSET_DEGREES = 1.0;
 }

@@ -10,7 +10,6 @@ public class HoodSetAngle extends ExtraTimeoutCommand {
     public HoodSetAngle(Shooter shooter, double angle) {
         this.shooter = shooter;
         this.angle = angle;
-        addRequirements(shooter);
     }
 
     @Override

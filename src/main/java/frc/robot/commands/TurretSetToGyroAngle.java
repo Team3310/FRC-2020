@@ -13,16 +13,18 @@ import frc.robot.subsystems.Turret;
 public class TurretSetToGyroAngle extends ExtraTimeoutCommand
 {
     private final Turret turret;
+    private double offsetAngleDeg;
 
-    public TurretSetToGyroAngle(Turret subsystem)
+    public TurretSetToGyroAngle(Turret subsystem, double offsetAngleDeg)
     {
         this.turret = subsystem;
+        this.offsetAngleDeg = offsetAngleDeg;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        turret.setTurretMotionMagicPositionAbsolute(-Drive.getInstance().getGyroFusedHeadingAngleDeg());
+        turret.setTurretMotionMagicPositionAbsolute(-Drive.getInstance().getGyroFusedHeadingAngleDeg() + offsetAngleDeg);
         resetExtraOneTimer();
         startExtraOneTimeout(0.1);
     }

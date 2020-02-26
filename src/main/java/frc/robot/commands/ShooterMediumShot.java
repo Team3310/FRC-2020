@@ -16,10 +16,10 @@ public class ShooterMediumShot extends SequentialCommandGroup {
                 new ParallelDeadlineGroup(
                         new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
                         new SequentialCommandGroup(
-                                new TurretSetToGyroAngle(turret),
-                                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_MEDIUM_SHOT_OFFSET_DEGREES)
+                                new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
+                                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES)
                         ),
-                        new MagazineIndexToDivider(magazine),
+                        new MagazineIndexDividerToTurret(magazine),
                         new HoodSetAngle(shooter, 45)
                 ),
                 new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),

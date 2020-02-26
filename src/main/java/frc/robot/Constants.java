@@ -53,6 +53,9 @@ public final class Constants
     public static final double TURRET_MIN_ANGLE_DEGREES = -225.0;
     public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
     public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
+    public static final double TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES = 0.0;
+    public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 5.0;
+    public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 3.0;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
@@ -92,5 +95,8 @@ public final class Constants
 
     // Vision
     public static final int LIMELIGHT_PIPELINE = 1;
-    public static final double LIMELIGHT_MEDIUM_SHOT_OFFSET_DEGREES = 1.0;
+    public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
+    public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
+    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = 2.0;
+    public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = 1.0;
 }

@@ -70,4 +70,39 @@ public class Util {
         }
         return result;
     }
+
+    public static double normalizeAngle0To360(double currentAccumAngle) {
+        // reduce the angle
+        double normalizedAngle = currentAccumAngle % 360;
+
+        // force it to be the positive remainder, so that 0 <= angle < 360
+        normalizedAngle = (normalizedAngle + 360) % 360;
+
+        return normalizedAngle;
+    }
+
+    public static double normalizeAngle180ToMinus180(double currentAccumAngle) {
+        // reduce the angle
+        double normalizedAngle = normalizeAngle0To360(currentAccumAngle);
+
+        // force into the minimum absolute value residue class, so that -180 < angle <= 180
+        if (normalizedAngle > 180) {
+            normalizedAngle -= 360;
+        }
+
+        return normalizedAngle;
+    }
+
+    public static double normalizeAngle90ToMinus270(double currentAccumAngle) {
+        // reduce the angle
+        double normalizedAngle = normalizeAngle0To360(currentAccumAngle);
+
+        // force into the minimum absolute value residue class, so that -270 < angle <= 90
+        if (normalizedAngle > 90) {
+            normalizedAngle -= 360;
+        }
+
+        return normalizedAngle;
+    }
+
 }

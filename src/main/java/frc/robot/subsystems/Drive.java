@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,11 +34,11 @@ public class Drive extends SubsystemBase {
 
     private static final double STICK_DEADBAND = 0.02;
 
-    public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.6;
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.5;
     public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 1.0;
 
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.1;
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.1;
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.6;
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.6;
 
     private double m_moveInput = 0.0;
     private double m_steerInput = 0.0;
@@ -104,7 +103,7 @@ public class Drive extends SubsystemBase {
         leftDriveSlave1.follow(leftDriveMaster);
         leftDriveSlave2.follow(leftDriveMaster);
 
-        rightDriveMaster.setInverted(TalonFXInvertType.Clockwise);
+        rightDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
         rightDriveSlave1.setInverted(TalonFXInvertType.FollowMaster);
         rightDriveSlave2.setInverted(TalonFXInvertType.FollowMaster);
 
@@ -161,7 +160,7 @@ public class Drive extends SubsystemBase {
         rightDriveMaster.config_kD(0, 0.0);
 
         m_drive = new DifferentialDrive(leftDriveMaster, rightDriveMaster);
-        m_drive.setRightSideInverted(true);
+//        m_drive.setRightSideInverted(true);
         m_drive.setSafetyEnabled(false);
 
         gyroPigeon = new PigeonIMU(Constants.GYRO_CAN_ID);
@@ -234,8 +233,8 @@ public class Drive extends SubsystemBase {
             shiftScaleFactor = OPEN_LOOP_PERCENT_OUTPUT_HI;
         }
 
-        m_moveInput = -m_driverController.getY(GenericHID.Hand.kLeft);
-        m_steerInput = m_driverController.getX(GenericHID.Hand.kRight);
+        m_moveInput = -m_driverController.getLeftYAxis();
+        m_steerInput = m_driverController.getRightXAxis();
 
         m_moveOutput = adjustForSensitivity(MOVE_SCALE * shiftScaleFactor, MOVE_TRIM, m_moveInput, MOVE_NON_LINEAR, MOVE_NON_LINEARITY);
         m_steerOutput = adjustForSensitivity(STEER_SCALE, STEER_TRIM, m_steerInput, STEER_NON_LINEAR, STEER_NON_LINEARITY);

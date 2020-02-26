@@ -81,8 +81,16 @@ public class Intake extends SubsystemBase {
         return rpm * INTAKE_ROLLER_REVOLUTIONS_TO_ENCODER_TICKS / 10.0D / 60.0D;
     }
 
-    public void releaseIntakeArms() {
+    public void extendIntakeArms() {
         intakeInnerArm.set(true);
+        intakeOuterArm.set(true);
+    }
+
+    public void extendIntakeInnerArms() {
+        intakeInnerArm.set(true);
+    }
+
+    public void extendIntakeOuterArms() {
         intakeOuterArm.set(true);
     }
 

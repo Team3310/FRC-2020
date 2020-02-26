@@ -36,8 +36,8 @@ public final class Constants
     public static final int GYRO_CAN_ID = 0;
 
     // Pneumatics
-    public static final int INTAKE_OUTER_ARM_PCM_ID = 1;
-    public static final int INTAKE_INNER_ARM_PCM_ID = 2;
+    public static final int INTAKE_OUTER_ARM_PCM_ID = 2;
+    public static final int INTAKE_INNER_ARM_PCM_ID = 1;
     public static final int CLIMB_MOTOR_PTO_PCM_ID = 3;
     public static final int CLIMB_ARM_RELEASE_PCM_ID = 4;
     public static final int BUDDY_LEG_RELEASE_PCM_ID = 5;
@@ -52,27 +52,44 @@ public final class Constants
     public static final double TURRET_AUTO_ZERO_SPEED = -0.1;
     public static final double TURRET_MIN_ANGLE_DEGREES = -225.0;
     public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
+    public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
     public static final double HOOD_AUTO_HOME_POSITION_DEGREES = 0.0;
     public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
     public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
-    public static final double HOOD_MAX_ANGLE_DEGREES = 40.0;
+    public static final double HOOD_MAX_ANGLE_DEGREES = 55.0;
+    public static final double HOOD_FENDER_ANGLE_DEGREES = 0.0;
+    public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
+    public static final double HOOD_MEDIUM_ANGLE_DEGREES = 20.0;
+    public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
 
     // Shooter
     public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
-    public static final double SHOOTER_MAIN_FENDER_RPM = 1200;
+    public static final double SHOOTER_MAIN_FENDER_RPM = 2100;
+    public static final double SHOOTER_MAIN_AUTO_RPM = 2500;
+    public static final double SHOOTER_MAIN_MEDIUM_RPM = 3500;
+    public static final double SHOOTER_MAIN_LONG_RPM = 4300;
+    public static final double SHOOTER_KICKER_FENDER_RPM = 2100;
+    public static final double SHOOTER_KICKER_AUTO_RPM = 2500;
+    public static final double SHOOTER_KICKER_MEDIUM_RPM = 3500;
+    public static final double SHOOTER_KICKER_LONG_RPM = 4300;
+    public static final double SHOOTER_INTAKE_RPM = 3000;
     public static final double SHOOTER_KICKER_RPM_EPSILON = 100;
 
     // Magazine
-    public static final double MAGAZINE_INTAKE_RPM = 20;
-    public static final double MAGAZINE_SHOOT_RPM = 30;
-    public static final double MAGAZINE_JAM_STATOR_CURRENT = 10;
+    public static final double MAGAZINE_INTAKE_RPM = 10;
+    public static final double MAGAZINE_SHOOT_RPM = 25;
+    public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
+    public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
 
     // Intake
-    public static final double INTAKE_COLLECT_RPM = 2000;
+    public static final double INTAKE_COLLECT_RPM = 1500;
 
     // Drive
     public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;
+
+    // Vision
+    public static final int LIMELIGHT_PIPELINE = 1;
 }

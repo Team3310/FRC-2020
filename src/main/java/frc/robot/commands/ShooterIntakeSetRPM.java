@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
+import frc.robot.utilities.Util;
 
 
 public class ShooterIntakeSetRPM extends CommandBase {
@@ -21,6 +23,7 @@ public class ShooterIntakeSetRPM extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        boolean isIntakeUpToSpeed = Util.epsilonEquals(shooter.getIntakeRPM(), rpm, Constants.SHOOTER_MAIN_RPM_EPSILON);
+        return isIntakeUpToSpeed;
     }
 }

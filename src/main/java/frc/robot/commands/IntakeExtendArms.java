@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 
-public class IntakeReleaseArms extends CommandBase {
+public class IntakeExtendArms extends CommandBase {
     private final Intake intake;
 
-    public IntakeReleaseArms(Intake intake) {
+    public IntakeExtendArms(Intake intake) {
         this.intake = intake;
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-        intake.releaseIntakeArms();
+        intake.extendIntakeArms();
     }
 
     @Override

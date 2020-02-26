@@ -7,18 +7,23 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.Util;
 
 public class Magazine extends SubsystemBase {
 
     // Conversions
     private static final double MAGAZINE_OUTPUT_TO_ENCODER_RATIO = 500.0 / 11.0;
     public static final double MAGAZINE_REVOLUTIONS_TO_ENCODER_TICKS = MAGAZINE_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    public static final double MAGAZINE_DEGREES_TO_ENCODER_TICKS = MAGAZINE_REVOLUTIONS_TO_ENCODER_TICKS / 360.0;
 
     // Motor Controllers
     private TalonFX magMotor;
 
     // Misc
     private static final int kMagazineVelocitySlot = 0;
+    private static final int kMagazineMotionMagicSlot = 1;
+    private double homePositionAngleDegrees = Constants.MAGAZINE_COMPETITION_HOME_POSITION_DEGREES;
+    private double targetPositionTicks = 0;
 
     private final static Magazine INSTANCE = new Magazine();
 
@@ -27,23 +32,33 @@ public class Magazine extends SubsystemBase {
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        configs.closedloopRamp = 1;
         magMotor.configAllSettings(configs);
 
         magMotor.setInverted(TalonFXInvertType.Clockwise);
         magMotor.setNeutralMode(NeutralMode.Brake);
+        magMotor.configMotionCruiseVelocity(6000);
+        magMotor.configMotionAcceleration(14000);
+        magMotor.configMotionSCurveStrength(4);
 
         final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 20;
         statorCurrentConfigs.triggerThresholdCurrent = 30;
         statorCurrentConfigs.triggerThresholdTime = 1.0;
-        statorCurrentConfigs.enable = true;
+        statorCurrentConfigs.enable = false;
         magMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         magMotor.config_kF(kMagazineVelocitySlot, 0.040);
-        magMotor.config_kP(kMagazineVelocitySlot, 0.04);//0.05
+        magMotor.config_kP(kMagazineVelocitySlot, 0.05);//0.05
         magMotor.config_kI(kMagazineVelocitySlot, 0.0);//0.0001
         magMotor.config_kD(kMagazineVelocitySlot, 0.0);
         magMotor.config_IntegralZone(kMagazineVelocitySlot, (int)this.MagazineRPMToNativeUnits(10));
+
+        magMotor.config_kF(kMagazineMotionMagicSlot, 0.03);
+        magMotor.config_kP(kMagazineMotionMagicSlot, 0.1);//0.05
+        magMotor.config_kI(kMagazineMotionMagicSlot, 0.00001);//0.0001
+        magMotor.config_kD(kMagazineMotionMagicSlot, 0.0);
+        magMotor.config_IntegralZone(kMagazineMotionMagicSlot, (int)this.MagazineRPMToNativeUnits(10));
     }
 
     public static Magazine getInstance() {
@@ -69,6 +84,27 @@ public class Magazine extends SubsystemBase {
         this.magMotor.set(ControlMode.Velocity, this.MagazineRPMToNativeUnits(rpm));
     }
 
+    public double getMagazineAngleAbsoluteDegrees() {
+        return (double)magMotor.getSelectedSensorPosition() / MAGAZINE_DEGREES_TO_ENCODER_TICKS + homePositionAngleDegrees;
+    }
+
+    // Motion Magic
+    public synchronized void setMagazineMotionMagicPositionAbsolute(double angle) {
+        magMotor.selectProfileSlot(kMagazineMotionMagicSlot, 0);
+        targetPositionTicks = getMagazineEncoderTicksAbsolute(angle);
+        System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
+        magMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
+    }
+
+    public synchronized boolean hasFinishedTrajectory() {
+        return Util.epsilonEquals(magMotor.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+    }
+
+    private int getMagazineEncoderTicksAbsolute(double angle) {
+        double positionDegrees = angle - homePositionAngleDegrees;
+        return (int) (positionDegrees * MAGAZINE_DEGREES_TO_ENCODER_TICKS);
+    }
+
     public double MagazineRPMToNativeUnits(double rpm) {
         return rpm * MAGAZINE_REVOLUTIONS_TO_ENCODER_TICKS / 10.0D / 60.0D;
     }
@@ -81,6 +117,7 @@ public class Magazine extends SubsystemBase {
         SmartDashboard.putNumber("Magazine RPM", this.getMagazineRPM());
         SmartDashboard.putNumber("Magazine Roller Rotations", this.getMagazineRotations());
         SmartDashboard.putNumber("Magazine Current", magMotor.getStatorCurrent());
+        SmartDashboard.putNumber("Magazine Angle", getMagazineAngleAbsoluteDegrees());
     }
 }
 

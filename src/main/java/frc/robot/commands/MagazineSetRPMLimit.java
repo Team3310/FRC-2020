@@ -1,33 +1,45 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Turret;
 
 
 public class MagazineSetRPMLimit extends ExtraTimeoutCommand {
     private final Magazine magazine;
     private double rpm;
     private double statorCurrentLimit;
+    private boolean isJamDetected = false;
 
     public MagazineSetRPMLimit(Magazine magazine, double rpm, double statorCurrentLimit) {
         this.magazine = magazine;
         this.rpm = rpm;
         this.statorCurrentLimit = statorCurrentLimit;
+        addRequirements(magazine);
     }
 
     @Override
     public void initialize() {
         magazine.setMagazineRPM(rpm);
         resetExtraOneTimer();
+        resetExtraTwoTimer();
         startExtraOneTimeout(2.0);
     }
 
     @Override
     public boolean isFinished() {
-        if (isExtraOneTimedOut() && magazine.getStatorCurrent() > statorCurrentLimit) {
+        if (isExtraOneTimedOut() && isExtraTwoTimedOut()) {
+            magazine.setMagazineRPM(rpm);
+            resetExtraOneTimer();
+            resetExtraTwoTimer();
+            startExtraOneTimeout(2.0);
+            isJamDetected = false;
+            return false;
+        }
+        else if (isExtraOneTimedOut() && isJamDetected == false && magazine.getStatorCurrent() > statorCurrentLimit) {
             System.out.println("Stator current exceeded = " + magazine.getStatorCurrent() + ", timeout = " + timeSinceExtraOneInitialized());
-            return true;
+            magazine.setMagazineRPM(-rpm);
+            startExtraTwoTimeout(1.0);
+            isJamDetected = true;
+            return false;
         }
         return false;
     }

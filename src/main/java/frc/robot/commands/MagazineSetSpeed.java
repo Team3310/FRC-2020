@@ -11,6 +11,7 @@ public class MagazineSetSpeed extends CommandBase {
     public MagazineSetSpeed(Magazine magazine, double speed) {
         this.magazine = magazine;
         this.speed = speed;
+        addRequirements(magazine);
     }
 
     @Override

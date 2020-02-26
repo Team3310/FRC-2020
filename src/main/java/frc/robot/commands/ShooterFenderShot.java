@@ -1,33 +1,38 @@
 package frc.robot.commands;
 
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Limelight;
+import frc.robot.Constants;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 public class ShooterFenderShot extends SequentialCommandGroup {
 
-    public ShooterFenderShot(Shooter shooter, Magazine magazine, Limelight limelight) {
-        // TODO: Add your sequential commands in the super() call, e.g.
-        //           super(new FooCommand(), new BarCommand());
-        addCommands(new ParallelCommandGroup(
+    public ShooterFenderShot(Shooter shooter, Magazine magazine, Turret turret) {
 
-                // Set RPMs
-                new ShooterSetRPM(shooter, 2100, 2100),
+        addCommands(
+
+                // Turret Angle
+                new TurretSetAngle(turret, 0),
 
                 // Hood Angle
-                new HoodSetAngle(shooter, 0),
+                new HoodSetAngle(shooter, Constants.HOOD_MIN_ANGLE_DEGREES),
+
+                // Set RPMs
+                new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_FENDER_RPM, Constants.SHOOTER_KICKER_FENDER_RPM),
 
                 // Limelight
-                new LimelightSetPipeline(limelight,1)
-        ),
+  //              new LimelightSetPipeline(limelight,Constants.LIMELIGHT_PIPELINE)
 
-        // Current Limit
-        new MagazineSetRPMLimit(magazine, 60, 5));
+                // Shooter Intake
+                new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
 
-        // Shooter Intake
-        new ShooterIntakeSetRPM(shooter, 2000);
+                // Current Limit
+                new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
+        );
+
+
+
     }
 }

@@ -22,7 +22,7 @@ public class TurretSetToGyroAngle extends ExtraTimeoutCommand
 
     @Override
     public void initialize() {
-        turret.setTurretMotionMagicPositionAbsolute(Drive.getInstance().getGyroFusedHeadingAngleDeg());
+        turret.setTurretMotionMagicPositionAbsolute(-Drive.getInstance().getGyroFusedHeadingAngleDeg());
         resetExtraOneTimer();
         startExtraOneTimeout(0.1);
     }

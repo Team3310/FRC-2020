@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
 
-public class IntakeRetract extends SequentialCommandGroup {
+public class IntakeRetractAll extends SequentialCommandGroup {
 
-    public IntakeRetract(Intake intake, Magazine magazine) {
+    public IntakeRetractAll(Intake intake, Magazine magazine) {
 
        addCommands(
                new IntakeSetSpeed(intake, 0),
@@ -16,7 +16,7 @@ public class IntakeRetract extends SequentialCommandGroup {
                new MagazineSetSpeed(magazine, 0),
 
                // Arm State
-               new IntakeReleaseArms(intake)
+               new IntakeRetractArms(intake)
        );
     }
 }

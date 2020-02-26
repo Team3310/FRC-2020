@@ -59,9 +59,29 @@ public class RobotContainer
      */
     private void configureButtonBindings()
     {
+        // Operator
+        Button ShooterBumper = m_operator.getRightBumper();
+        ShooterBumper.whenPressed(new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM));
+
         Button IntakeTrigger = m_operator.getRightTrigger();
         IntakeTrigger.whenPressed(new IntakeExtendAll(intake, magazine));
         IntakeTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
+
+        Button IntakeReverseTrigger = m_operator.getLeftTrigger();
+        IntakeReverseTrigger.whenPressed(new IntakeReverseExtendAll(intake, magazine));
+        IntakeReverseTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
+
+        Button LongShotButton = m_operator.getButtonY();
+        LongShotButton.whenPressed(new ShooterLongShot(shooter, magazine, turret));
+
+        Button MediumShotButton = m_operator.getButtonB();
+        MediumShotButton.whenPressed(new ShooterMediumShot(shooter, magazine, turret));
+
+        Button FenderShotButton = m_operator.getButtonA();
+        FenderShotButton.whenPressed(new ShooterFenderShot(shooter, magazine, turret));
+
+        Button ShooterResetButton = m_operator.getButtonX();
+        ShooterResetButton.whenPressed(new ShooterReset(shooter, magazine, turret));
 
         SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
         SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(()-> intake.setRollerSpeed(0.0)));

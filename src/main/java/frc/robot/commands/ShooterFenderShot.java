@@ -31,8 +31,5 @@ public class ShooterFenderShot extends SequentialCommandGroup {
                 // Current Limit
                 new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
         );
-
-
-
     }
 }

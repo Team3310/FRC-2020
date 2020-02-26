@@ -10,8 +10,6 @@ import frc.robot.subsystems.Turret;
 public class ShooterLongShot extends SequentialCommandGroup {
 
     public ShooterLongShot(Shooter shooter, Magazine magazine, Turret turret) {
-        // TODO: Add your sequential commands in the super() call, e.g.
-        //           super(new FooCommand(), new BarCommand());
         addCommands(
                 // Turret Angle
                 new TurretSetAngle(turret, -171),
@@ -33,7 +31,5 @@ public class ShooterLongShot extends SequentialCommandGroup {
                 // Current Limit
                 new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
         );
-
-
     }
 }

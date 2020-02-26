@@ -25,8 +25,5 @@ public class ShooterReset extends SequentialCommandGroup {
 
         // Current Limit
         new MagazineSetRPMLimit(magazine, 60, 5));
-
-        // Shooter Intake
-        new ShooterIntakeSetRPM(shooter, 2000);
     }
 }

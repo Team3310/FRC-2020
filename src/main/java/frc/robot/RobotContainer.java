@@ -61,7 +61,7 @@ public class RobotContainer
     {
         // Operator
         Button ShooterBumper = m_operator.getRightBumper();
-        ShooterBumper.whenPressed(new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM));
+        ShooterBumper.whenPressed(new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT));
 
         Button IntakeTrigger = m_operator.getRightTrigger();
         IntakeTrigger.whenPressed(new IntakeExtendAll(intake, magazine));

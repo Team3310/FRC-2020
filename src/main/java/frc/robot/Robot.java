@@ -86,9 +86,9 @@ public class Robot extends TimedRobot
         shooter.resetHoodHomePosition();
         drive.setControlMode(Drive.DriveControlMode.PATH_FOLLOWING);
         drive.resetOdometry(new Pose2d());
-        autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
+        autonomousCommand = robotContainer.getAutonomousCommand();
         if (autonomousCommand != null)
         {
             autonomousCommand.schedule();

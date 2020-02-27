@@ -15,6 +15,7 @@ public class TurretSetToLimelightAngle extends ExtraTimeoutCommand
     private final Turret turret;
     private final Limelight limelight;
     private double offsetAngleDeg;
+    private boolean targetFound;
 
     public TurretSetToLimelightAngle(Turret subsystem, double offsetAngleDeg)
     {
@@ -29,16 +30,23 @@ public class TurretSetToLimelightAngle extends ExtraTimeoutCommand
         limelight.setCameraMode(Limelight.CameraMode.VISION);
         limelight.setPipeline(0);
         if (limelight.isOnTarget()) {
+            targetFound = true;
             System.out.println("Limelight tracking = " + -limelight.getTx());
             turret.setTurretMotionMagicPositionRelative(-limelight.getTx() + offsetAngleDeg);
             resetExtraOneTimer();
             startExtraOneTimeout(0.1);
         }
+        else {
+            targetFound = false;
+        }
     }
 
     @Override
     public boolean isFinished() {
-        if (isExtraOneTimedOut() && turret.hasFinishedTrajectory()) {
+        if (!targetFound) {
+            return true;
+        }
+        else if (isExtraOneTimedOut() && turret.hasFinishedTrajectory()) {
             System.out.println("Limelight turret index angle = finished");
             return true;
         }

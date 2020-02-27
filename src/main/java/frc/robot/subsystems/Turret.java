@@ -36,6 +36,7 @@ public class Turret extends SubsystemBase {
     // Misc
     private double homePositionAngleDegrees = Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
+    private double cachedLimelightTurretOffset;
 
     // Subsystem Instance
     private final static Turret INSTANCE = new Turret();
@@ -202,6 +203,14 @@ public class Turret extends SubsystemBase {
     }
     public boolean getMinTurretSensor(){
         return !minRevTurretSensor.get();
+    }
+
+    public void setCachedLimelightTurretOffset(double angle) {
+        this.cachedLimelightTurretOffset = angle;
+    }
+
+    public double getCachesLimelightTurretOffset() {
+        return cachedLimelightTurretOffset;
     }
 
     public void periodic() {

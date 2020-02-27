@@ -38,6 +38,7 @@ public class Shooter extends SubsystemBase {
     private double homePositionAngleDegrees = Constants.HOOD_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
     private boolean isReady;
+    private double cachedHoodAngle;
 
     private final static Shooter INSTANCE = new Shooter();
 
@@ -257,6 +258,14 @@ public class Shooter extends SubsystemBase {
 
     public boolean isReady() {
         return isReady;
+    }
+
+    public void setCachedHoodAngle(double angle) {
+        this.cachedHoodAngle = angle;
+    }
+
+    public double getCachedHoodAngle() {
+        return cachedHoodAngle;
     }
 
     @Override

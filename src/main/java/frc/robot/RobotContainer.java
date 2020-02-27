@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -39,8 +40,7 @@ import java.util.List;
  * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
  * (including subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer
-{
+public class RobotContainer {
     private final GameController m_driver = new GameController(Constants.DRIVER_JOYSTICK_1_USB_ID, new Xbox());
     private final GameController m_operator = new GameController(Constants.OPERATOR_JOYSTICK_1_USB_ID, new Playstation());
 
@@ -52,18 +52,26 @@ public class RobotContainer
     private final Drive drive = Drive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
 
-    private final Command autonomousCommand = new TurretSetAngle(turret, 0);
+    private SendableChooser<Command> autonTaskChooser;
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer()
-    {
+    public RobotContainer() {
         // Pass the driver controller to the drive subsystem for teleop control
         drive.setDriverController(m_driver);
 
-        // Configure the button bindings
+        configureAutonTasks();
         configureButtonBindings();
+    }
+    private void configureAutonTasks() {
+        autonTaskChooser = new SendableChooser<Command>();
+
+        autonTaskChooser.setDefaultOption("None", null);
+        autonTaskChooser.addOption("Shoot 3 from Auton Line", new ShooterAutoShot(shooter, magazine, turret));
+        autonTaskChooser.addOption("Path test", getPathTestAutonomousCommand());
+
+        SmartDashboard.putData("Autonomous", autonTaskChooser);
     }
 
     /**
@@ -72,12 +80,11 @@ public class RobotContainer
      * edu.wpi.first.wpilibj.Joystick Joystick} or {@link XboxController}), and then passing it to a
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton JoystickButton}.
      */
-    private void configureButtonBindings()
-    {
+    private void configureButtonBindings() {
         // Operator
         Button shooterBumper = m_operator.getRightBumper();
-        shooterBumper.whenPressed(new ShooterShoot(shooter, magazine));
-        shooterBumper.whenReleased(new ShooterReset(shooter, magazine, turret));
+        shooterBumper.whenPressed(new ShooterShoot(shooter, magazine, turret, limelight));
+        shooterBumper.whenReleased(new ShooterReset(shooter, magazine, turret, limelight));
 
         Button intakeTrigger = m_operator.getRightTrigger();
         intakeTrigger.whenPressed(new IntakeExtendAll(intake, magazine));
@@ -114,15 +121,15 @@ public class RobotContainer
         SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
 
 //        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
-        SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(()-> intake.setRollerSpeed(0.0)));
-        SmartDashboard.putData("Intake Set RPM", new InstantCommand(()-> intake.setRollerRPM(2000.0)));
+        SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(() -> intake.setRollerSpeed(0.0)));
+        SmartDashboard.putData("Intake Set RPM", new InstantCommand(() -> intake.setRollerRPM(2000.0)));
 
 //        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
-        SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(()-> magazine.setMagazineSpeed(0.0)));
+        SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(() -> magazine.setMagazineSpeed(0.0)));
 //        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
         SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
 //        SmartDashboard.putData("Mag Set MM", new InstantCommand(()-> magazine.setMagazineMotionMagicPositionAbsolute(-180.0 + 72.0)));
-        SmartDashboard.putData("Mag Reset", new InstantCommand(()-> magazine.resetHomePosition()));
+        SmartDashboard.putData("Mag Reset", new InstantCommand(() -> magazine.resetHomePosition()));
         SmartDashboard.putData("Mag Index Divider", new MagazineIndexDividerToTurret(magazine, turret));
 //        SmartDashboard.putData("Shooter Main Set Speed", new InstantCommand(()-> shooter.setMainSpeed(0.2)));
 //        SmartDashboard.putData("Shooter Main Set OFF", new InstantCommand(()-> shooter.setMainSpeed(0.0)));
@@ -139,13 +146,13 @@ public class RobotContainer
 //        SmartDashboard.putData("Shooter Intake Set Speed", new InstantCommand(()-> shooter.setIntakeSpeed(0.2)));
 //        SmartDashboard.putData("Shooter Intake Set OFF", new InstantCommand(()-> shooter.setIntakeSpeed(0.0)));
 //        SmartDashboard.putData("Shooter Intake Set RPM Fender", new InstantCommand(()-> shooter.seIntakeRPM(2000)));
-        SmartDashboard.putData("Shooter Intake Set RPM Auto", new InstantCommand(()-> shooter.seIntakeRPM(3000)));
+        SmartDashboard.putData("Shooter Intake Set RPM Auto", new InstantCommand(() -> shooter.seIntakeRPM(3000)));
 //        SmartDashboard.putData("Shooter Intake Set RPM Long", new InstantCommand(()-> shooter.seIntakeRPM(4000)));
 
 //        SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
-        SmartDashboard.putData("Turret Set OFF", new InstantCommand(()-> turret.setTurretSpeed(0.0)));
-        SmartDashboard.putData("Turret Reset", new InstantCommand(()-> turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
-        SmartDashboard.putData("Turret MM", new InstantCommand(()-> turret.setTurretMotionMagicPositionAbsolute(-135)));
+        SmartDashboard.putData("Turret Set OFF", new InstantCommand(() -> turret.setTurretSpeed(0.0)));
+        SmartDashboard.putData("Turret Reset", new InstantCommand(() -> turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
+        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
 //        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
 //        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
         SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
@@ -159,22 +166,22 @@ public class RobotContainer
 
         SmartDashboard.putData("Intake Extend All", new IntakeExtendAll(intake, magazine));
         SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
-        SmartDashboard.putData("Intake Extend Inner", new InstantCommand(()-> intake.extendIntakeInnerArms()));
-        SmartDashboard.putData("Intake Extend Outer", new InstantCommand(()-> intake.extendIntakeOuterArms()));
+        SmartDashboard.putData("Intake Extend Inner", new InstantCommand(() -> intake.extendIntakeInnerArms()));
+        SmartDashboard.putData("Intake Extend Outer", new InstantCommand(() -> intake.extendIntakeOuterArms()));
         SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
-        SmartDashboard.putData("Climb Reset Encoder", new InstantCommand(()-> intake.resetIntakeEncoder()));
-        SmartDashboard.putData("Climb MM", new InstantCommand(()-> intake.setClimbMotionMagicPositionAbsolute(10)));
+        SmartDashboard.putData("Climb Reset Encoder", new InstantCommand(() -> intake.resetIntakeEncoder()));
+        SmartDashboard.putData("Climb MM", new InstantCommand(() -> intake.setClimbMotionMagicPositionAbsolute(10)));
 
 //        SmartDashboard.putData("Hood Set Forward", new InstantCommand(()-> shooter.setHoodSpeed(0.3)));
-        SmartDashboard.putData("Hood Set OFF", new InstantCommand(()-> shooter.setHoodSpeed(0.0)));
-        SmartDashboard.putData("Hood Reset", new InstantCommand(()-> shooter.resetHoodHomePosition()));
-        SmartDashboard.putData("Hood MM", new InstantCommand(()-> shooter.setHoodMotionMagicPositionAbsolute(20)));
+        SmartDashboard.putData("Hood Set OFF", new InstantCommand(() -> shooter.setHoodSpeed(0.0)));
+        SmartDashboard.putData("Hood Reset", new InstantCommand(() -> shooter.resetHoodHomePosition()));
+        SmartDashboard.putData("Hood MM", new InstantCommand(() -> shooter.setHoodMotionMagicPositionAbsolute(20)));
 
-        SmartDashboard.putData("Limelight LED off", new InstantCommand(()-> limelight.setLedMode(Limelight.LightMode.OFF)));
-        SmartDashboard.putData("Limelight LED on", new InstantCommand(()-> limelight.setLedMode(Limelight.LightMode.ON)));
+        SmartDashboard.putData("Limelight LED off", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.OFF)));
+        SmartDashboard.putData("Limelight LED on", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.ON)));
 
-        SmartDashboard.putData("Reset Gyro", new InstantCommand(()-> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
-        SmartDashboard.putData("Reset Encoders", new InstantCommand(()-> drive.resetEncoders()));
+        SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
+        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
     }
 
     /**
@@ -182,7 +189,11 @@ public class RobotContainer
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand()
+    public Command getAutonomousCommand() {
+        return autonTaskChooser.getSelected();
+    }
+
+    public Command getPathTestAutonomousCommand()
     {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint =

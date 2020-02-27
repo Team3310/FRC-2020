@@ -92,6 +92,7 @@ public final class Constants
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
     public static final double HOOD_AUTO_HOME_POSITION_DEGREES = 0.0;
+    public static final double HOOD_RETRACT_HOME_POSITION_DEGREES = 2.0;
     public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
     public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
     public static final double HOOD_MAX_ANGLE_DEGREES = 55.0;

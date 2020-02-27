@@ -20,20 +20,12 @@ public final class Constants
     public static final int OPERATOR_JOYSTICK_1_USB_ID = 1;
 
     // 2020 Drive Constants
-    public static final double kWheelDiameterInches = 4;
-    public static final double kTrackWidthInches = 23;
-    public static final double kDriveVelocityKp = 0.50; // 0.9;
-    public static final double kDriveVelocityKi = 0.00001;
-    public static final double kDriveVelocityKd = 0.0; // 10.0;
-    public static final double kDriveVelocityKf = 0.053;
+    public static final double kWheelDiameterInches = 3.922;
+    public static final double kTrackWidthInches = 27.5;
 
     public static final double kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
     public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackWidthMeters);
-
-    public static final double kEncoderCPR = 4096.0;
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
-
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
@@ -78,9 +70,7 @@ public final class Constants
     // Pneumatics
     public static final int INTAKE_OUTER_ARM_PCM_ID = 2;
     public static final int INTAKE_INNER_ARM_PCM_ID = 1;
-    public static final int CLIMB_MOTOR_PTO_PCM_ID = 3;
     public static final int CLIMB_ARM_RELEASE_PCM_ID = 4;
-    public static final int BUDDY_LEG_RELEASE_PCM_ID = 5;
 
     // DIO
     public static final int TURRET_MAX_REV_SENSOR_DIO_ID = 0;
@@ -93,6 +83,7 @@ public final class Constants
     public static final double TURRET_MIN_ANGLE_DEGREES = -225.0;
     public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
     public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
+    public static final double TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES = -180.0;
     public static final double TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 10.0; //14
@@ -104,40 +95,50 @@ public final class Constants
     public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
     public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
     public static final double HOOD_MAX_ANGLE_DEGREES = 55.0;
-    public static final double HOOD_FENDER_ANGLE_DEGREES = 0.0;
+    public static final double HOOD_FENDER_ANGLE_DEGREES = 3.0;
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
     public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
 
     // Shooter
-    public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
-    public static final double SHOOTER_MAIN_FENDER_RPM = 2100;
+    public static final double SHOOTER_MAIN_FENDER_RPM = 2500;
     public static final double SHOOTER_MAIN_AUTO_RPM = 2500;
     public static final double SHOOTER_MAIN_MEDIUM_RPM = 3500;
     public static final double SHOOTER_MAIN_LONG_RPM = 4300;
-    public static final double SHOOTER_KICKER_FENDER_RPM = 2100;
+    public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
+
+    public static final double SHOOTER_KICKER_FENDER_RPM = 2500;
     public static final double SHOOTER_KICKER_AUTO_RPM = 2500;
     public static final double SHOOTER_KICKER_MEDIUM_RPM = 3500;
     public static final double SHOOTER_KICKER_LONG_RPM = 4300;
-    public static final double SHOOTER_INTAKE_RPM = 3000;
     public static final double SHOOTER_KICKER_RPM_EPSILON = 100;
+
+    public static final double SHOOTER_INTAKE_RPM = 3000;
 
     // Magazine
     public static final double MAGAZINE_INTAKE_RPM = 10;
     public static final double MAGAZINE_SHOOT_RPM = 60;
+    public static final double MAGAZINE_SHOOT_AUTO_RPM = 40;
+    public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES = 360.0;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
 
     // Intake
     public static final double INTAKE_COLLECT_RPM = 1500;
+    public static final double INTAKE_REVERSE_RPM = -1500;
 
     // Drive
     public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;
 
     // Vision
-    public static final int LIMELIGHT_PIPELINE = 1;
+    public static final int LIMELIGHT_PIPELINE = 0;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
-    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.5;
+    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.0;
     public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -1.0;
+
+    // Climb
+    public static final double CLIMB_MIN_INCHES = 0.0;
+    public static final double CLIMB_MAX_INCHES = 30.0;
+    public static final double CLIMB_LEVEL_1_INCHES = 10.0;
 }

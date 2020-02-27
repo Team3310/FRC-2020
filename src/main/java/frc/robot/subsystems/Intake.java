@@ -8,12 +8,18 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utilities.Util;
 
 public class Intake extends SubsystemBase {
 
     // Conversions
     private static final double INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO = 30.0 / 12.0;
     public static final double INTAKE_ROLLER_REVOLUTIONS_TO_ENCODER_TICKS = INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    private static final double CLIMB_OUTPUT_TO_ENCODER_RATIO = (50.0 / 12.0) * (50.0 / 20.0);
+    public static final double CLIMB_DRUM_DIAMETER_INCHES = 0.625;
+    public static final double CLIMB_REVOLUTIONS_TO_INCHES = Math.PI * CLIMB_DRUM_DIAMETER_INCHES;
+    public static final double CLIMB_INCHES_TO_ENCODER_TICKS = CLIMB_OUTPUT_TO_ENCODER_RATIO * Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION / CLIMB_REVOLUTIONS_TO_INCHES;
+
 
     // Motor Controllers
     private TalonFX intakeMotor;
@@ -21,9 +27,12 @@ public class Intake extends SubsystemBase {
     // Pneumatics
     private Solenoid intakeOuterArm;
     private Solenoid intakeInnerArm;
+    private Solenoid climbRelease;
 
     // Misc
     private static final int kIntakeVelocitySlot = 0;
+    private static final int kClimbMotionMagicSlot = 1;
+    private double targetPositionTicks = 0;
 
     private final static Intake INSTANCE = new Intake();
 
@@ -32,6 +41,7 @@ public class Intake extends SubsystemBase {
 
         intakeOuterArm = new Solenoid(Constants.INTAKE_OUTER_ARM_PCM_ID);
         intakeInnerArm = new Solenoid(Constants.INTAKE_INNER_ARM_PCM_ID);
+        climbRelease = new Solenoid(Constants.CLIMB_ARM_RELEASE_PCM_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -39,17 +49,26 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.setInverted(TalonFXInvertType.CounterClockwise);
         intakeMotor.setNeutralMode(NeutralMode.Brake);
+        intakeMotor.configMotionCruiseVelocity(6000);
+        intakeMotor.configMotionAcceleration(14000);
+        intakeMotor.configMotionSCurveStrength(4);
 
-        final SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 30;
-        supplyCurrentConfigs.enable = true;
-        intakeMotor.configSupplyCurrentLimit(supplyCurrentConfigs);
+        final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
+        statorCurrentConfigs.currentLimit = 30;
+        statorCurrentConfigs.enable = false;
+        intakeMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         intakeMotor.config_kF(kIntakeVelocitySlot, 0.055);
         intakeMotor.config_kP(kIntakeVelocitySlot, 0.10);
         intakeMotor.config_kI(kIntakeVelocitySlot, 0.0001);
         intakeMotor.config_kD(kIntakeVelocitySlot, 0.0);
         intakeMotor.config_IntegralZone(kIntakeVelocitySlot, (int)this.RollerRPMToNativeUnits(200));
+
+        intakeMotor.config_kF(kClimbMotionMagicSlot, 0.0);
+        intakeMotor.config_kP(kClimbMotionMagicSlot, 0.0);
+        intakeMotor.config_kI(kClimbMotionMagicSlot, 0.0);
+        intakeMotor.config_kD(kClimbMotionMagicSlot, 0.0);
+        intakeMotor.config_IntegralZone(kClimbMotionMagicSlot, (int)this.RollerRPMToNativeUnits(200));
     }
 
     public static Intake getInstance() {
@@ -61,12 +80,49 @@ public class Intake extends SubsystemBase {
         System.out.println("Set Intake Speed");
     }
 
-    public void resetRollerPosition() {
+    // Motion Magic
+    public synchronized void setClimbMotionMagicPositionAbsolute(double inches) {
+        intakeMotor.selectProfileSlot(kClimbMotionMagicSlot, 0);
+        targetPositionTicks = getClimbEncoderTicksAbsolute(limitClimbInches(inches));
+        intakeMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
+    }
+
+    public synchronized boolean hasFinishedTrajectory() {
+        return Util.epsilonEquals(intakeMotor.getActiveTrajectoryPosition(), targetPositionTicks, 100);
+    }
+
+    private int getClimbEncoderTicksAbsolute(double inches) {
+        return (int) (inches * CLIMB_INCHES_TO_ENCODER_TICKS);
+    }
+
+    public double getClimbAbsoluteInches() {
+        return (double)intakeMotor.getSelectedSensorPosition() / CLIMB_INCHES_TO_ENCODER_TICKS;
+    }
+
+    private double limitClimbInches(double targetInches) {
+        if (targetInches < Constants.CLIMB_MIN_INCHES) {
+            return Constants.CLIMB_MIN_INCHES;
+        } else if (targetInches > Constants.CLIMB_MAX_INCHES) {
+            return Constants.CLIMB_MAX_INCHES;
+        }
+
+        return targetInches;
+    }
+
+    public void resetIntakeEncoder() {
         this.intakeMotor.setSelectedSensorPosition(0);
     }
 
     public double getRollerRotations() {
         return intakeMotor.getSelectedSensorPosition() / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION / INTAKE_ROLLER_OUTPUT_TO_ENCODER_RATIO;
+    }
+
+    public double getClimbRotations() {
+        return intakeMotor.getSelectedSensorPosition() / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION / CLIMB_OUTPUT_TO_ENCODER_RATIO;
+    }
+
+    public double getClimbInches() {
+        return getClimbRotations() * CLIMB_REVOLUTIONS_TO_INCHES;
     }
 
     public double getRollerRPM() {
@@ -99,10 +155,18 @@ public class Intake extends SubsystemBase {
         intakeOuterArm.set(false);
     }
 
+    public void climbRelease() {
+        climbRelease.set(true);
+    }
+
+    public void climbLock() {
+        climbRelease.set(false);
+    }
 
     public void periodic() {
 //        SmartDashboard.putNumber("Intake Roller Rotations", this.getRollerRotations());
         SmartDashboard.putNumber("Intake Roller RPM", this.getRollerRPM());
+        SmartDashboard.putNumber("Climb Inches", this.getClimbInches());
     }
 }
 

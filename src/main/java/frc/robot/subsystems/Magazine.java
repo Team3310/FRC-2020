@@ -70,7 +70,7 @@ public class Magazine extends SubsystemBase {
         System.out.println("Set Magazine Speed");
     }
 
-    public void resetMagazinePosition() {
+    public void resetHomePosition() {
         this.magMotor.setSelectedSensorPosition(0);
     }
 

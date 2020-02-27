@@ -9,7 +9,6 @@ public class ShooterIsReady extends CommandBase {
 
     public ShooterIsReady(Shooter shooter) {
         this.shooter = shooter;
-        addRequirements(shooter);
     }
 
     @Override

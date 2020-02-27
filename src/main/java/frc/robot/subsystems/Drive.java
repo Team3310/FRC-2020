@@ -20,10 +20,12 @@ import frc.robot.controller.GameController;
 public class Drive extends SubsystemBase {
 
     public static enum DriveControlMode {
-        JOYSTICK, PATH_FOLLOWING, OPEN_LOOP,
+        JOYSTICK, PATH_FOLLOWING
     }
 
     private DriveControlMode driveControlMode = DriveControlMode.JOYSTICK;
+
+    private static final double DRIVE_OUTPUT_TO_ENCODER_RATIO = 50.0 / 11.0;
 
     // Speed Control
     private static final double STEER_NON_LINEARITY = 0.5;
@@ -226,12 +228,12 @@ public class Drive extends SubsystemBase {
 
     //Returns left inches per second using the sensor velocity and the ticksToInches conversion method
     public double getLeftInchesPerSecond(){
-        return ticksPer100msToInchesPerSec(getLeftVelocityNativeUnits());
+        return ticksPer100msToInchesPerSec(getLeftVelocityNativeUnits()) / DRIVE_OUTPUT_TO_ENCODER_RATIO;
     }
 
     //Returns right inches per second using the sensor velocity and the ticksToInches conversion method
     public double getRightInchesPerSecond(){
-        return ticksPer100msToInchesPerSec(getRightVelocityNativeUnits());
+        return ticksPer100msToInchesPerSec(getRightVelocityNativeUnits()) / DRIVE_OUTPUT_TO_ENCODER_RATIO;
     }
 
     //Returns left meters per second using inchesPerSecond calculation and inchesToMeters method
@@ -255,11 +257,11 @@ public class Drive extends SubsystemBase {
 
     //Wheel Rotations = Encoder Rotations (If ratio is 1:1)
     public double getLeftWheelRotations() {
-        return getLeftEncoderRotations();
+        return getLeftEncoderRotations() / DRIVE_OUTPUT_TO_ENCODER_RATIO;
     }
 
     public double getRightWheelRotations() {
-        return getRightEncoderRotations();
+        return getRightEncoderRotations() / DRIVE_OUTPUT_TO_ENCODER_RATIO;
     }
 
     //Returns left distance traveled in inches by taking wheel rotations and converting it to inches
@@ -436,7 +438,7 @@ public class Drive extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        resetGyroYawAngle(-180);
+        resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES);
         m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()));
     }
 
@@ -462,8 +464,6 @@ public class Drive extends SubsystemBase {
                 case PATH_FOLLOWING:
                     m_odometry.update(Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()),
                             getLeftWheelDistanceMeters(),getRightWheelDistanceMeters());
-                    break;
-                case OPEN_LOOP:
                     break;
                 default:
                     System.out.println("Unknown drive control mode: " + currentControlMode);

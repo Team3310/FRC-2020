@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Magazine;
@@ -11,25 +12,18 @@ public class ShooterLongShot extends SequentialCommandGroup {
 
     public ShooterLongShot(Shooter shooter, Magazine magazine, Turret turret) {
         addCommands(
-                // Turret Angle
-                new TurretSetAngle(turret, -171),
-
-                // Hood Angle
-                new HoodSetAngle(shooter, Constants.HOOD_LONG_ANGLE_DEGREES),
-
-                // Set RPMs
-                new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_LONG_RPM, Constants.SHOOTER_KICKER_LONG_RPM),
-
-                // Limelight
-                // new LimelightSetPipeline(limelight,Constants.LIMELIGHT_PIPELINE),
-
-                // magazine index
-
-                // Shooter Intake
+                new ShooterSetReady(shooter,false),
+                new ParallelCommandGroup(
+                        new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_LONG_RPM, Constants.SHOOTER_KICKER_LONG_RPM),
+                        new SequentialCommandGroup(
+                                new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES),
+                                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_LONG_SHOT_DEGREES),
+                                new MagazineIndexDividerToTurret(magazine, turret)
+                        ),
+                        new HoodSetAngle(shooter, Constants.HOOD_LONG_ANGLE_DEGREES)
+                ),
                 new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
-
-                // Current Limit
-                new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
+                new ShooterSetReady(shooter,true)
         );
     }
 }

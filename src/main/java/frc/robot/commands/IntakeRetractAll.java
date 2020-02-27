@@ -11,11 +11,7 @@ public class IntakeRetractAll extends SequentialCommandGroup {
 
        addCommands(
                new IntakeSetSpeed(intake, 0),
-
-               // Current Limit
                new MagazineSetSpeed(magazine, 0),
-
-               // Arm State
                new IntakeRetractArms(intake)
        );
     }

@@ -45,7 +45,7 @@ public class TurretAutoZero extends ExtraTimeoutCommand
     public void end(boolean interrupted) {
         turret.setTurretSpeed(0.0);
         if (isHomeFound) {
-            turret.resetEncoders(Constants.TURRET_AUTO_HOME_POSITION_DEGREES);
+            turret.resetHomePosition(Constants.TURRET_AUTO_HOME_POSITION_DEGREES);
 //            turret.setTurretPositionRelative(0);
             System.out.println("HOME RESET");
         }

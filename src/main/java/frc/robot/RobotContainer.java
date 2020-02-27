@@ -75,40 +75,54 @@ public class RobotContainer
     private void configureButtonBindings()
     {
         // Operator
-        Button ShooterBumper = m_operator.getRightBumper();
-        ShooterBumper.whenPressed(new ShooterShoot(shooter, magazine));
-        ShooterBumper.whenReleased(new ShooterReset(shooter, magazine, turret));
+        Button shooterBumper = m_operator.getRightBumper();
+        shooterBumper.whenPressed(new ShooterShoot(shooter, magazine));
+        shooterBumper.whenReleased(new ShooterReset(shooter, magazine, turret));
 
-        Button IntakeTrigger = m_operator.getRightTrigger();
-        IntakeTrigger.whenPressed(new IntakeExtendAll(intake, magazine));
-        IntakeTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
+        Button intakeTrigger = m_operator.getRightTrigger();
+        intakeTrigger.whenPressed(new IntakeExtendAll(intake, magazine));
+        intakeTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
 
-        Button IntakeReverseTrigger = m_operator.getLeftTrigger();
-        IntakeReverseTrigger.whenPressed(new IntakeReverseExtendAll(intake, magazine));
-        IntakeReverseTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
+        Button intakeReverseTrigger = m_operator.getLeftTrigger();
+        intakeReverseTrigger.whenPressed(new IntakeReverseExtendAll(intake, magazine));
+        intakeReverseTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
 
-        Button LongShotButton = m_operator.getButtonY();
-        LongShotButton.whenPressed(new ShooterLongShot(shooter, magazine, turret));
+        Button longShotButton = m_operator.getButtonY();
+        longShotButton.whenPressed(new ShooterLongShot(shooter, magazine, turret));
 
-        Button MediumShotButton = m_operator.getButtonB();
-        MediumShotButton.whenPressed(new ShooterMediumShot(shooter, magazine, turret));
+        Button mediumShotButton = m_operator.getButtonB();
+        mediumShotButton.whenPressed(new ShooterMediumShot(shooter, magazine, turret));
 
-        Button FenderShotButton = m_operator.getButtonA();
-        FenderShotButton.whenPressed(new ShooterFenderShot(shooter, magazine, turret));
+        Button fenderShotButton = m_operator.getButtonA();
+        fenderShotButton.whenPressed(new ShooterFenderShot(shooter, magazine, turret));
 
-        Button ShooterResetButton = m_operator.getButtonX();
- //       ShooterResetButton.whenPressed(new ShooterReset(shooter, magazine, turret));
+        Button climbReleaseButton = m_operator.getStartButton();
+        climbReleaseButton.whenPressed(new ClimbRelease(intake, turret, magazine));
 
-        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
+        Button climbLevel1Button = m_operator.getDPadUp();
+        climbLevel1Button.whenPressed(new ClimbLevelOne(intake, turret, magazine));
+
+        Button magazineForwardButton = m_operator.getDPadLeft();
+        magazineForwardButton.whenPressed(new MagazineSetRPMLimit(magazine, Constants.INTAKE_COLLECT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT));
+
+        Button magazineReverseButton = m_operator.getDPadRight();
+        magazineReverseButton.whenPressed(new MagazineSetRPMLimit(magazine, -Constants.INTAKE_COLLECT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT));
+
+        Button resetHomeButton = m_driver.getStartButton();
+        resetHomeButton.whenPressed(new ResetAllHomePositions(drive, turret, magazine, shooter));
+
+        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
+
+//        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
         SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(()-> intake.setRollerSpeed(0.0)));
         SmartDashboard.putData("Intake Set RPM", new InstantCommand(()-> intake.setRollerRPM(2000.0)));
 
-        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
+//        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
         SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(()-> magazine.setMagazineSpeed(0.0)));
-        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
+//        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
         SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
-        SmartDashboard.putData("Mag Set MM", new InstantCommand(()-> magazine.setMagazineMotionMagicPositionAbsolute(-180.0 + 72.0)));
-        SmartDashboard.putData("Mag Reset", new InstantCommand(()-> magazine.resetMagazinePosition()));
+//        SmartDashboard.putData("Mag Set MM", new InstantCommand(()-> magazine.setMagazineMotionMagicPositionAbsolute(-180.0 + 72.0)));
+        SmartDashboard.putData("Mag Reset", new InstantCommand(()-> magazine.resetHomePosition()));
         SmartDashboard.putData("Mag Index Divider", new MagazineIndexDividerToTurret(magazine, turret));
 //        SmartDashboard.putData("Shooter Main Set Speed", new InstantCommand(()-> shooter.setMainSpeed(0.2)));
 //        SmartDashboard.putData("Shooter Main Set OFF", new InstantCommand(()-> shooter.setMainSpeed(0.0)));
@@ -130,7 +144,7 @@ public class RobotContainer
 
 //        SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
         SmartDashboard.putData("Turret Set OFF", new InstantCommand(()-> turret.setTurretSpeed(0.0)));
-        SmartDashboard.putData("Turret Reset", new InstantCommand(()-> turret.resetEncoders(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
+        SmartDashboard.putData("Turret Reset", new InstantCommand(()-> turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
         SmartDashboard.putData("Turret MM", new InstantCommand(()-> turret.setTurretMotionMagicPositionAbsolute(-135)));
 //        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
 //        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
@@ -138,26 +152,29 @@ public class RobotContainer
         SmartDashboard.putData("Turret Turn Gyro", new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES));
         SmartDashboard.putData("Turret Turn Limelight", new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES));
 
-        SmartDashboard.putData("Shoot Medium Shot", new ShooterMediumShot(shooter, magazine, turret));
-        SmartDashboard.putData("Shoot Auto Shot", new ShooterAutoShot(shooter, magazine, turret));
-        SmartDashboard.putData("Shoot Long Shot", new ShooterLongShot(shooter, magazine, turret));
-        SmartDashboard.putData("Shoot Fender Shot", new ShooterFenderShot(shooter, magazine, turret));
+//        SmartDashboard.putData("Shoot Medium Shot", new ShooterMediumShot(shooter, magazine, turret));
+//        SmartDashboard.putData("Shoot Auto Shot", new ShooterAutoShot(shooter, magazine, turret));
+//        SmartDashboard.putData("Shoot Long Shot", new ShooterLongShot(shooter, magazine, turret));
+//        SmartDashboard.putData("Shoot Fender Shot", new ShooterFenderShot(shooter, magazine, turret));
 
         SmartDashboard.putData("Intake Extend All", new IntakeExtendAll(intake, magazine));
         SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
         SmartDashboard.putData("Intake Extend Inner", new InstantCommand(()-> intake.extendIntakeInnerArms()));
         SmartDashboard.putData("Intake Extend Outer", new InstantCommand(()-> intake.extendIntakeOuterArms()));
         SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
+        SmartDashboard.putData("Climb Reset Encoder", new InstantCommand(()-> intake.resetIntakeEncoder()));
+        SmartDashboard.putData("Climb MM", new InstantCommand(()-> intake.setClimbMotionMagicPositionAbsolute(10)));
 
-        SmartDashboard.putData("Hood Set Forward", new InstantCommand(()-> shooter.setHoodSpeed(0.3)));
+//        SmartDashboard.putData("Hood Set Forward", new InstantCommand(()-> shooter.setHoodSpeed(0.3)));
         SmartDashboard.putData("Hood Set OFF", new InstantCommand(()-> shooter.setHoodSpeed(0.0)));
-        SmartDashboard.putData("Hood Reset", new InstantCommand(()-> shooter.resetHoodPosition()));
+        SmartDashboard.putData("Hood Reset", new InstantCommand(()-> shooter.resetHoodHomePosition()));
         SmartDashboard.putData("Hood MM", new InstantCommand(()-> shooter.setHoodMotionMagicPositionAbsolute(20)));
 
         SmartDashboard.putData("Limelight LED off", new InstantCommand(()-> limelight.setLedMode(Limelight.LightMode.OFF)));
         SmartDashboard.putData("Limelight LED on", new InstantCommand(()-> limelight.setLedMode(Limelight.LightMode.ON)));
 
         SmartDashboard.putData("Reset Gyro", new InstantCommand(()-> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
+        SmartDashboard.putData("Reset Encoders", new InstantCommand(()-> drive.resetEncoders()));
     }
 
     /**

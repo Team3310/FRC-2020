@@ -199,7 +199,7 @@ public class Shooter extends SubsystemBase {
         shooterHood.set(ControlMode.PercentOutput, speed);
     }
 
-    public void resetHoodPosition() {
+    public void resetHoodHomePosition() {
         shooterHood.setSelectedSensorPosition(0);
     }
 
@@ -227,7 +227,7 @@ public class Shooter extends SubsystemBase {
 
     public synchronized boolean hasFinishedHoodTrajectory() {
         return hoodControlMode == HoodControlMode.MOTION_MAGIC
-                && Util.epsilonEquals(shooterHood.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+                && Util.epsilonEquals(shooterHood.getActiveTrajectoryPosition(), targetPositionTicks, 100);
     }
 
     private double getHoodEncoderTicksAbsolute(double angle) {

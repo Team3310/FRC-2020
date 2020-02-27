@@ -11,7 +11,6 @@ public class ShooterSetReady extends CommandBase {
     public ShooterSetReady(Shooter shooter, boolean isReady) {
         this.shooter = shooter;
         this.isReady = isReady;
-        addRequirements(shooter);
     }
 
     @Override

@@ -86,7 +86,7 @@ public final class Constants
     public static final double TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES = -180.0;
     public static final double TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
-    public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 10.0; //14
+    public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 14.0;
     public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 8.0;
 
     // Hood

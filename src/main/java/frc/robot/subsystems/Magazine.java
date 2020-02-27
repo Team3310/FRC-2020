@@ -96,7 +96,7 @@ public class Magazine extends SubsystemBase {
     }
 
     public synchronized boolean hasFinishedTrajectory() {
-        return Util.epsilonEquals(magMotor.getActiveTrajectoryPosition(), targetPositionTicks, 50);
+        return Util.epsilonEquals(magMotor.getActiveTrajectoryPosition(), targetPositionTicks, 100);
     }
 
     private int getMagazineEncoderTicksAbsolute(double angle) {

@@ -138,7 +138,7 @@ public class Turret extends SubsystemBase {
 
     public synchronized boolean hasFinishedTrajectory() {
         return turretControlMode == TurretControlMode.MOTION_MAGIC
-                && Util.epsilonEquals(turretMotor.getActiveTrajectoryPosition(), targetPositionTicks, 50);
+                && Util.epsilonEquals(turretMotor.getActiveTrajectoryPosition(), targetPositionTicks, 100);
     }
 
     public synchronized double getTurretSetpointAngle() {

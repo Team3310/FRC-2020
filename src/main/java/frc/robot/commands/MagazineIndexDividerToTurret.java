@@ -36,6 +36,7 @@ public class MagazineIndexDividerToTurret extends ExtraTimeoutCommand {
 
     private double closestDividerDeltaAngle(double turretAngle, double magazineAngle) {
         double normalizedDividerAngle = Util.normalizeAngle90ToMinus270(magazineAngle);
+        System.out.println("normalizedDividerAngle = " + normalizedDividerAngle);
         double currentDividerAngle = normalizedDividerAngle;
         double closestDividerDeltaAngle = turretAngle - currentDividerAngle;
         for (int i = 1; i < 5; i++) {

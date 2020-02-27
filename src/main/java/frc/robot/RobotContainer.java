@@ -9,15 +9,29 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.*;
 import frc.robot.controller.GameController;
 import frc.robot.controller.Playstation;
 import frc.robot.controller.Xbox;
 import frc.robot.subsystems.*;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -153,7 +167,57 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        // An ExampleCommand will run in autonomous
-        return autonomousCommand;
+        // Create a voltage constraint to ensure we don't accelerate too fast
+        var autoVoltageConstraint =
+                new DifferentialDriveVoltageConstraint(
+                        new SimpleMotorFeedforward(Constants.ksVolts,
+                                Constants.kvVoltSecondsPerMeter,
+                                Constants.kaVoltSecondsSquaredPerMeter),
+                        Constants.kDriveKinematics,
+                        10);
+
+        // Create config for trajectory
+        TrajectoryConfig config =
+                new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
+                        Constants.kMaxAccelerationMetersPerSecondSquared)
+                        // Add kinematics to ensure max speed is actually obeyed
+                        .setKinematics(Constants.kDriveKinematics)
+                        // Apply the voltage constraint
+                        .addConstraint(autoVoltageConstraint);
+
+        // An example trajectory to follow.  All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(-180)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(
+                        new Translation2d(Units.inchesToMeters(42.856), Units.inchesToMeters(35))//162.856 //-58.085
+                ),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(Units.inchesToMeters(86.57), Units.inchesToMeters(65.66), new Rotation2d(-180)),
+                // Pass config
+                config
+        );
+
+
+
+        RamseteCommand ramseteCommand = new RamseteCommand(
+                exampleTrajectory,
+                drive::getPose,
+                new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+                new SimpleMotorFeedforward(Constants.ksVolts,
+                        Constants.kvVoltSecondsPerMeter,
+                        Constants.kaVoltSecondsSquaredPerMeter),
+                Constants.kDriveKinematics,
+                drive::getWheelSpeeds,
+                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
+                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
+                // RamseteCommand passes volts to the callback
+                drive::tankDriveVolts,
+                drive
+        );
+
+        // Run path following command, then stop at the end.
+        return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
     }
 }

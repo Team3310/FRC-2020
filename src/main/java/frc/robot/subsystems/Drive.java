@@ -7,7 +7,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.controller.GameController;
@@ -15,9 +20,10 @@ import frc.robot.controller.GameController;
 public class Drive extends SubsystemBase {
 
     public static enum DriveControlMode {
-        JOYSTICK, MP_STRAIGHT, MP_TURN, PID_TURN, HOLD, MANUAL, VELOCITY_SETPOINT, CAMERA_TRACK, PATH_FOLLOWING, OPEN_LOOP,
-        CAMERA_TRACK_DRIVE, SPIN_MOVE
-    };
+        JOYSTICK, PATH_FOLLOWING, OPEN_LOOP,
+    }
+
+    private DriveControlMode driveControlMode = DriveControlMode.JOYSTICK;
 
     // Speed Control
     private static final double STEER_NON_LINEARITY = 0.5;
@@ -49,14 +55,14 @@ public class Drive extends SubsystemBase {
     private boolean isHighGear = false;
 
     // Left Drive
-    private WPI_TalonFX leftDriveMaster;
-    private TalonFX leftDriveSlave1;
-    private TalonFX leftDriveSlave2;
+    private WPI_TalonFX mLeftMaster;
+    private TalonFX mLeftSlave1;
+    private TalonFX mLeftSlave2;
 
     // Right Drive
-    private WPI_TalonFX rightDriveMaster;
-    private TalonFX rightDriveSlave1;
-    private TalonFX rightDriveSlave2;
+    private WPI_TalonFX mRightMaster;
+    private TalonFX mRightSlave1;
+    private TalonFX mRightSlave2;
 
     // Gyro
     private PigeonIMU gyroPigeon;
@@ -69,97 +75,91 @@ public class Drive extends SubsystemBase {
     private DifferentialDrive m_drive;
     private GameController m_driverController;
 
+    //Path Following
+    private final DifferentialDriveOdometry m_odometry;
+
+
     // Subsystem Instance
     private final static Drive INSTANCE = new Drive();
 
     private Drive() {
-        leftDriveMaster = new WPI_TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
-        leftDriveSlave1 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID);
-        leftDriveSlave2 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID);
+        mLeftMaster = new WPI_TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_MASTER_CAN_ID);
+        mLeftSlave1 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_1_CAN_ID);
+        mLeftSlave2 = new TalonFX(Constants.DRIVETRAIN_LEFT_MOTOR_SLAVE_2_CAN_ID);
 
-        rightDriveMaster = new WPI_TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
-        rightDriveSlave1 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID);
-        rightDriveSlave2 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID);
+        mRightMaster = new WPI_TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID);
+        mRightSlave1 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_1_CAN_ID);
+        mRightSlave2 = new TalonFX(Constants.DRIVETRAIN_RIGHT_MOTOR_SLAVE_2_CAN_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
-        leftDriveMaster.configAllSettings(configs);
-        leftDriveSlave1.configAllSettings(configs);
-        leftDriveSlave2.configAllSettings(configs);
+        mLeftMaster.configAllSettings(configs);
+        mLeftSlave1.configAllSettings(configs);
+        mLeftSlave2.configAllSettings(configs);
 
-        rightDriveMaster.configAllSettings(configs);
-        rightDriveSlave1.configAllSettings(configs);
-        rightDriveSlave2.configAllSettings(configs);
+        mRightMaster.configAllSettings(configs);
+        mRightSlave1.configAllSettings(configs);
+        mRightSlave2.configAllSettings(configs);
 
-        leftDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
-        leftDriveSlave1.setInverted(TalonFXInvertType.FollowMaster);
-        leftDriveSlave2.setInverted(TalonFXInvertType.FollowMaster);
+        mLeftMaster.setInverted(TalonFXInvertType.CounterClockwise);
+        mLeftSlave1.setInverted(TalonFXInvertType.FollowMaster);
+        mLeftSlave2.setInverted(TalonFXInvertType.FollowMaster);
 
-        leftDriveMaster.setNeutralMode(NeutralMode.Brake);
-        leftDriveSlave1.setNeutralMode(NeutralMode.Brake);
-        leftDriveSlave2.setNeutralMode(NeutralMode.Brake);
+        mLeftMaster.setNeutralMode(NeutralMode.Brake);
+        mLeftSlave1.setNeutralMode(NeutralMode.Brake);
+        mLeftSlave2.setNeutralMode(NeutralMode.Brake);
 
-        leftDriveSlave1.follow(leftDriveMaster);
-        leftDriveSlave2.follow(leftDriveMaster);
+        mLeftSlave1.follow(mLeftMaster);
+        mLeftSlave2.follow(mLeftMaster);
 
-        rightDriveMaster.setInverted(TalonFXInvertType.CounterClockwise);
-        rightDriveSlave1.setInverted(TalonFXInvertType.FollowMaster);
-        rightDriveSlave2.setInverted(TalonFXInvertType.FollowMaster);
+        mRightMaster.setInverted(TalonFXInvertType.CounterClockwise);
+        mRightSlave1.setInverted(TalonFXInvertType.FollowMaster);
+        mRightSlave2.setInverted(TalonFXInvertType.FollowMaster);
 
-        rightDriveMaster.setNeutralMode(NeutralMode.Brake);
-        rightDriveSlave1.setNeutralMode(NeutralMode.Brake);
-        rightDriveSlave2.setNeutralMode(NeutralMode.Brake);
+        mRightMaster.setNeutralMode(NeutralMode.Brake);
+        mRightSlave1.setNeutralMode(NeutralMode.Brake);
+        mRightSlave2.setNeutralMode(NeutralMode.Brake);
 
-        rightDriveSlave1.follow(rightDriveMaster);
-        rightDriveSlave2.follow(rightDriveMaster);
+        mRightSlave1.follow(mRightMaster);
+        mRightSlave2.follow(mRightMaster);
 
-        leftDriveMaster.enableVoltageCompensation(true);
-        leftDriveMaster.configVoltageCompSaturation(12.0);
-        leftDriveMaster.configPeakOutputForward(+1.0f);
-        leftDriveMaster.configPeakOutputReverse(-1.0f);
+        mLeftMaster.enableVoltageCompensation(true);
+        mLeftMaster.configVoltageCompSaturation(12.0);
+        mLeftMaster.configPeakOutputForward(+1.0f);
+        mLeftMaster.configPeakOutputReverse(-1.0f);
 
-        rightDriveMaster.enableVoltageCompensation(true);
-        rightDriveMaster.configVoltageCompSaturation(12.0);
-        rightDriveMaster.configPeakOutputForward(+1.0f);
-        rightDriveMaster.configPeakOutputReverse(-1.0f);
+        mRightMaster.enableVoltageCompensation(true);
+        mRightMaster.configVoltageCompSaturation(12.0);
+        mRightMaster.configPeakOutputForward(+1.0f);
+        mRightMaster.configPeakOutputReverse(-1.0f);
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
         supplyCurrentConfigs.currentLimit = 100;
         supplyCurrentConfigs.enable = false;
 
-        leftDriveMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
-        leftDriveSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
-        leftDriveSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mLeftMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mLeftSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mLeftSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
-        rightDriveMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
-        rightDriveSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
-        rightDriveSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mRightMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mRightSlave1.configSupplyCurrentLimit(supplyCurrentConfigs);
+        mRightSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 100;
         statorCurrentConfigs.enable = false;
 
-        leftDriveMaster.configStatorCurrentLimit(statorCurrentConfigs);
-        leftDriveSlave1.configStatorCurrentLimit(statorCurrentConfigs);
-        leftDriveSlave2.configStatorCurrentLimit(statorCurrentConfigs);
+        mLeftMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        mLeftSlave1.configStatorCurrentLimit(statorCurrentConfigs);
+        mLeftSlave2.configStatorCurrentLimit(statorCurrentConfigs);
 
-        rightDriveMaster.configStatorCurrentLimit(statorCurrentConfigs);
-        rightDriveSlave1.configStatorCurrentLimit(statorCurrentConfigs);
-        rightDriveSlave2.configStatorCurrentLimit(statorCurrentConfigs);
+        mRightMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        mRightSlave1.configStatorCurrentLimit(statorCurrentConfigs);
+        mRightSlave2.configStatorCurrentLimit(statorCurrentConfigs);
 
-        // k constants
-        leftDriveMaster.config_kF(0, 0.053);
-        leftDriveMaster.config_kP(0, 0.50);
-        leftDriveMaster.config_kI(0, 0.00001);
-        leftDriveMaster.config_kD(0, 0.0);
 
-        rightDriveMaster.config_kF(0, 0.053);
-        rightDriveMaster.config_kP(0, 0.50);
-        rightDriveMaster.config_kI(0, 0.00001);
-        rightDriveMaster.config_kD(0, 0.0);
-
-        m_drive = new DifferentialDrive(leftDriveMaster, rightDriveMaster);
+        m_drive = new DifferentialDrive(mLeftMaster, mRightMaster);
 //        m_drive.setRightSideInverted(true);
         m_drive.setSafetyEnabled(false);
 
@@ -168,10 +168,123 @@ public class Drive extends SubsystemBase {
 //        gyroPigeon.setStatusFramePeriod(10, 10);
 
         updateOpenLoopVoltageRamp();
+
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()));
+
     }
 
     public static Drive getInstance() {
         return INSTANCE;
+    }
+
+    //Encoder Setup
+    public synchronized DriveControlMode getControlMode() {
+        return driveControlMode;
+    }
+
+    public synchronized void setControlMode(DriveControlMode controlMode) {
+        this.driveControlMode = controlMode;
+    }
+
+    // Encoder Setup
+
+    //Returns left sensors velocity in ticks per 100ms
+    public double getLeftVelocityNativeUnits() {
+        return mLeftMaster.getSelectedSensorVelocity(0);
+    }
+
+    //Returns right sensors velocity in ticks per 100ms
+    public double getRightVelocityNativeUnits() {
+        return mLeftMaster.getSelectedSensorVelocity(0);
+    }
+
+    //Returns left sensors position in ticks
+    public double getLeftSensorPosition(){
+        return mLeftMaster.getSelectedSensorPosition(0);
+    }
+
+    //Returns right sensors position in ticks
+    public double getRightSensorPosition(){
+        return mLeftMaster.getSelectedSensorPosition(0);
+    }
+
+    //Takes that times the wheel has rotated * by the circumference of the wheel to get its distance traveled in inches
+    public static double rotationsToInches(double rotations) {
+        return rotations * (Constants.kWheelDiameterInches * Math.PI);
+    }
+
+    //Takes inches and converts it to meters using units class
+    public static double inchesToMeters(double inches){
+        return Units.inchesToMeters(inches);
+    }
+
+    //Takes the sensor velocity of an encoder * by 10 to get ticks per second / the encoder PPR to get encoder rotations
+    //per second and then uses the rotations to inches functions to get inches per second
+    private static double ticksPer100msToInchesPerSec(double ticks_100ms) {
+        return rotationsToInches(ticks_100ms * 10.0 / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION);
+    }
+
+    //Returns left inches per second using the sensor velocity and the ticksToInches conversion method
+    public double getLeftInchesPerSecond(){
+        return ticksPer100msToInchesPerSec(getLeftVelocityNativeUnits());
+    }
+
+    //Returns right inches per second using the sensor velocity and the ticksToInches conversion method
+    public double getRightInchesPerSecond(){
+        return ticksPer100msToInchesPerSec(getRightVelocityNativeUnits());
+    }
+
+    //Returns left meters per second using inchesPerSecond calculation and inchesToMeters method
+    public double getLeftMetersPerSecond(){
+        return inchesToMeters(getLeftInchesPerSecond());
+    }
+
+    //Returns right meters per second using inchesPerSecond calculation and inchesToMeters method
+    public double getRightMetersPerSecond(){
+        return inchesToMeters(getRightInchesPerSecond());
+    }
+
+    //Sensors positions in ticks / Pulses per Revolution of the Encoder = Encoder Rotations (If ratio is 1:1)
+    public double getLeftEncoderRotations() {
+        return getLeftSensorPosition() / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    }
+
+    public double getRightEncoderRotations() {
+        return getRightSensorPosition() / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION;
+    }
+
+    //Wheel Rotations = Encoder Rotations (If ratio is 1:1)
+    public double getLeftWheelRotations() {
+        return getLeftEncoderRotations();
+    }
+
+    public double getRightWheelRotations() {
+        return getRightEncoderRotations();
+    }
+
+    //Returns left distance traveled in inches by taking wheel rotations and converting it to inches
+    public double getLeftWheelDistanceInches() {
+        return rotationsToInches(getLeftWheelRotations());
+    }
+
+    //Returns right distance traveled in inches by taking wheel rotations and converting it to inches
+    public double getRightWheelDistanceInches() {
+        return rotationsToInches(getRightWheelRotations());
+    }
+
+    //Returns left distance traveled in meters using calculated inches distances and inchesToMeters conversion
+    public double getLeftWheelDistanceMeters() {
+        return inchesToMeters(getLeftWheelDistanceInches());
+    }
+
+    //Returns right distance traveled in meters using calculated inches distances and inchesToMeters conversion
+    public double getRightWheelDistanceMeters(){
+        return inchesToMeters(getRightWheelDistanceInches());
+    }
+
+    public synchronized void resetEncoders() {
+        mLeftMaster.setSelectedSensorPosition(0);
+        mRightMaster.setSelectedSensorPosition(0);
     }
 
     // Gyro Set Up
@@ -218,8 +331,8 @@ public class Drive extends SubsystemBase {
     }
 
     private void setOpenLoopVoltageRamp(double timeTo12VSec) {
-        leftDriveMaster.configOpenloopRamp(timeTo12VSec);
-        rightDriveMaster.configOpenloopRamp(timeTo12VSec);
+        mLeftMaster.configOpenloopRamp(timeTo12VSec);
+        mRightMaster.configOpenloopRamp(timeTo12VSec);
     }
 
     public synchronized void driveWithJoystick() {
@@ -297,10 +410,75 @@ public class Drive extends SubsystemBase {
         m_driverController = driverController;
     }
 
+    //Path Following
+    /**
+     * Returns the currently-estimated pose of the robot.
+     *
+     * @return The pose.
+     */
+    public Pose2d getPose() {
+        return m_odometry.getPoseMeters();
+    }
+
+    /**
+     * Returns the current wheel speeds of the robot.
+     *
+     * @return The current wheel speeds.
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(getLeftMetersPerSecond(), getRightMetersPerSecond());
+    }
+
+    /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        resetGyroYawAngle(-180);
+        m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()));
+    }
+
+    /**
+     * Controls the left and right sides of the drive directly with voltages.
+     *
+     * @param leftVolts  the commanded left output
+     * @param rightVolts the commanded right output
+     */
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        mLeftMaster.setVoltage(-leftVolts);
+        mRightMaster.setVoltage(rightVolts);
+        m_drive.feed();
+    }
+
     public void periodic() {
-        driveWithJoystick();
-        SmartDashboard.putNumber("Gyro Yaw Angle", this.getGyroYawAngleDeg());
-        SmartDashboard.putNumber("Gyro Heading Angle", this.getGyroFusedHeadingAngleDeg());
+        synchronized (Drive.this){
+            DriveControlMode currentControlMode = getControlMode();
+            switch (currentControlMode){
+                case JOYSTICK:
+                    driveWithJoystick();
+                    break;
+                case PATH_FOLLOWING:
+                    m_odometry.update(Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()),
+                            getLeftWheelDistanceMeters(),getRightWheelDistanceMeters());
+                    break;
+                case OPEN_LOOP:
+                    break;
+                default:
+                    System.out.println("Unknown drive control mode: " + currentControlMode);
+            }
+        }
+
+        SmartDashboard.putNumber("Left Distance Inches: ", getLeftWheelDistanceInches());
+        SmartDashboard.putNumber("Right Distance Inches: ", getRightWheelDistanceInches());
+
+        SmartDashboard.putNumber("Left Distance Meters: ", getLeftWheelDistanceMeters());
+        SmartDashboard.putNumber("Right Distance Meters: ", getRightWheelDistanceMeters());
+
+        SmartDashboard.putNumber("Heading: ", getGyroFusedHeadingAngleDeg());
+
     }
 }
+
 

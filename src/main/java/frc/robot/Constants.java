@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.util.Units;
+
 public final class Constants
 {
     public static final double kLooperDt = 0.01;
@@ -15,6 +18,43 @@ public final class Constants
     // USB Port IDs
     public static final int DRIVER_JOYSTICK_1_USB_ID = 0;
     public static final int OPERATOR_JOYSTICK_1_USB_ID = 1;
+
+    // 2020 Drive Constants
+    public static final double kWheelDiameterInches = 4;
+    public static final double kTrackWidthInches = 23;
+    public static final double kDriveVelocityKp = 0.50; // 0.9;
+    public static final double kDriveVelocityKi = 0.00001;
+    public static final double kDriveVelocityKd = 0.0; // 10.0;
+    public static final double kDriveVelocityKf = 0.053;
+
+    public static final double kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
+    public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackWidthMeters);
+
+    public static final double kEncoderCPR = 4096.0;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(kWheelDiameterInches);
+
+
+    // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
+    // These characterization values MUST be determined either experimentally or theoretically
+    // for *your* robot's drive.
+    // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
+    // values for your robot.
+    public static final double ksVolts = 1.21;
+    public static final double kvVoltSecondsPerMeter = 0.0628;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.0204;
+
+    // Example value only - as above, this must be tuned for your drive!
+    public static final double kPDriveVel = 8.5; //8.5
+    public static final double kDDriveVel = 0;
+
+
+    public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(7.0);
+    public static final double kMaxAccelerationMetersPerSecondSquared = Math.pow(Units.feetToMeters(7.0), 2);
+
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2.0;
+    public static final double kRamseteZeta = 0.7;
 
     // Motors
     public static final int DRIVETRAIN_RIGHT_MOTOR_MASTER_CAN_ID = 15;

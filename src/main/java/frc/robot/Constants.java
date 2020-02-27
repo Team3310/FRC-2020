@@ -54,8 +54,9 @@ public final class Constants
     public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
     public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
     public static final double TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES = 0.0;
-    public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 5.0;
-    public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 3.0;
+    public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
+    public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 10.0; //14
+    public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 8.0;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
@@ -65,7 +66,7 @@ public final class Constants
     public static final double HOOD_MAX_ANGLE_DEGREES = 55.0;
     public static final double HOOD_FENDER_ANGLE_DEGREES = 0.0;
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
-    public static final double HOOD_MEDIUM_ANGLE_DEGREES = 20.0;
+    public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
 
     // Shooter
@@ -83,7 +84,7 @@ public final class Constants
 
     // Magazine
     public static final double MAGAZINE_INTAKE_RPM = 10;
-    public static final double MAGAZINE_SHOOT_RPM = 25;
+    public static final double MAGAZINE_SHOOT_RPM = 60;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
 
@@ -97,6 +98,6 @@ public final class Constants
     public static final int LIMELIGHT_PIPELINE = 1;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
-    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = 2.0;
-    public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = 1.0;
+    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.0;
+    public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -1.0;
 }

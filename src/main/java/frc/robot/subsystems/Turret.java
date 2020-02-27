@@ -121,7 +121,7 @@ public class Turret extends SubsystemBase {
         }
         turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
         targetPositionTicks = getTurretEncoderTicksRelative(delta_angle);
-        System.out.println("Set point MM relative encoder ticks = " + targetPositionTicks);
+//        System.out.println("Set point MM relative encoder ticks = " + targetPositionTicks);
         turretMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
     }
 
@@ -138,7 +138,7 @@ public class Turret extends SubsystemBase {
 
     public synchronized boolean hasFinishedTrajectory() {
         return turretControlMode == TurretControlMode.MOTION_MAGIC
-                && Util.epsilonEquals(turretMotor.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+                && Util.epsilonEquals(turretMotor.getActiveTrajectoryPosition(), targetPositionTicks, 50);
     }
 
     public synchronized double getTurretSetpointAngle() {
@@ -206,12 +206,12 @@ public class Turret extends SubsystemBase {
 
     public void periodic() {
         SmartDashboard.putNumber("Turret Angle", this.getTurretAngleAbsoluteDegrees());
-        SmartDashboard.putNumber("Turret Angle Ticks", turretMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Turret Output Percent", turretMotor.getMotorOutputPercent());
-        SmartDashboard.putNumber("Turret Velocity", turretMotor.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Turret Stator Current", turretMotor.getStatorCurrent());
-        SmartDashboard.putBoolean("Turret Min Sensor", this.getMinTurretSensor());
-        SmartDashboard.putBoolean("Turret Max Sensor", this.getMaxTurretSensor());
+ //       SmartDashboard.putNumber("Turret Angle Ticks", turretMotor.getSelectedSensorPosition());
+ //       SmartDashboard.putNumber("Turret Output Percent", turretMotor.getMotorOutputPercent());
+ //       SmartDashboard.putNumber("Turret Velocity", turretMotor.getSelectedSensorVelocity());
+ //       SmartDashboard.putNumber("Turret Stator Current", turretMotor.getStatorCurrent());
+ //       SmartDashboard.putBoolean("Turret Min Sensor", this.getMinTurretSensor());
+ //       SmartDashboard.putBoolean("Turret Max Sensor", this.getMaxTurretSensor());
     }
 
 }

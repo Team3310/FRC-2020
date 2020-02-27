@@ -20,7 +20,6 @@ public class MagazineSetRPMLimit extends ExtraTimeoutCommand {
     public void initialize() {
         magazine.setMagazineRPM(rpm);
         resetExtraOneTimer();
-        resetExtraTwoTimer();
         startExtraOneTimeout(2.0);
     }
 
@@ -29,7 +28,6 @@ public class MagazineSetRPMLimit extends ExtraTimeoutCommand {
         if (isExtraOneTimedOut() && isExtraTwoTimedOut()) {
             magazine.setMagazineRPM(rpm);
             resetExtraOneTimer();
-            resetExtraTwoTimer();
             startExtraOneTimeout(2.0);
             isJamDetected = false;
             return false;
@@ -37,6 +35,7 @@ public class MagazineSetRPMLimit extends ExtraTimeoutCommand {
         else if (isExtraOneTimedOut() && isJamDetected == false && magazine.getStatorCurrent() > statorCurrentLimit) {
             System.out.println("Stator current exceeded = " + magazine.getStatorCurrent() + ", timeout = " + timeSinceExtraOneInitialized());
             magazine.setMagazineRPM(-rpm);
+            resetExtraTwoTimer();
             startExtraTwoTimeout(1.0);
             isJamDetected = true;
             return false;

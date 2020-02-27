@@ -7,11 +7,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Turret;
 
-public class TurretSetToLimelightAngle extends CommandBase
+public class TurretSetToLimelightAngle extends ExtraTimeoutCommand
 {
     private final Turret turret;
     private final Limelight limelight;
@@ -29,17 +28,25 @@ public class TurretSetToLimelightAngle extends CommandBase
     public void initialize() {
         limelight.setCameraMode(Limelight.CameraMode.VISION);
         limelight.setPipeline(0);
-    }
-
-    @Override
-    public void execute() {
-        if (Limelight.getInstance().isOnTarget()) {
-            turret.setTurretMotionMagicPositionRelative(limelight.getTx() + offsetAngleDeg);
+        if (limelight.isOnTarget()) {
+            System.out.println("Limelight tracking = " + -limelight.getTx());
+            turret.setTurretMotionMagicPositionRelative(-limelight.getTx() + offsetAngleDeg);
+            resetExtraOneTimer();
+            startExtraOneTimeout(0.1);
         }
     }
 
     @Override
     public boolean isFinished() {
+        if (isExtraOneTimedOut() && turret.hasFinishedTrajectory()) {
+            System.out.println("Limelight turret index angle = finished");
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        System.out.println("Turret interrupted = " + interrupted);
     }
 }

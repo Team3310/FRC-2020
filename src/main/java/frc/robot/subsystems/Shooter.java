@@ -261,7 +261,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooters Rotations", getMainRotations());
+ //       SmartDashboard.putNumber("Shooters Rotations", getMainRotations());
         SmartDashboard.putNumber("Shooters RPM", getMainRPM());
 //        SmartDashboard.putNumber("Shooters RPM Graph", getShooterRPM());
 //        SmartDashboard.putNumber("Shooters Velocity Native", shooterMainMaster.getSelectedSensorVelocity());
@@ -269,21 +269,21 @@ public class Shooter extends SubsystemBase {
 //        SmartDashboard.putNumber("Shooters Stator Current", shooterMainMaster.getStatorCurrent());
 //        SmartDashboard.putNumber("Shooters Supply Current", shooterMainMaster.getSupplyCurrent());
 //        SmartDashboard.putNumber("Shooters2 Supply Current", shooterMainSlave.getSupplyCurrent());
-        SmartDashboard.putNumber("Kicker Rotations", getKickerRotations());
+ //       SmartDashboard.putNumber("Kicker Rotations", getKickerRotations());
         SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
 //        SmartDashboard.putNumber("Kicker RPM Graph", getKickerRPM());
 //        SmartDashboard.putNumber("Kicker Velocity Native", shooterKicker.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Kicker Stator Current", shooterKicker.getStatorCurrent());
-        SmartDashboard.putNumber("Kicker Supply Current", shooterKicker.getSupplyCurrent());
-        SmartDashboard.putNumber("Intake Rotations", getIntakeRotations());
+//       SmartDashboard.putNumber("Kicker Stator Current", shooterKicker.getStatorCurrent());
+//        SmartDashboard.putNumber("Kicker Supply Current", shooterKicker.getSupplyCurrent());
+//        SmartDashboard.putNumber("Intake Rotations", getIntakeRotations());
         SmartDashboard.putNumber("Intake RPM", getIntakeRPM());
 //        SmartDashboard.putNumber("Intake RPM Graph", getIntakeRPM());
 //        SmartDashboard.putNumber("Intake Velocity Native", shooterIntake.getSelectedSensorVelocity());
 //        SmartDashboard.putNumber("Intake Stator Current", shooterIntake.getStatorCurrent());
 //        SmartDashboard.putNumber("Intake Supply Current", shooterIntake.getSupplyCurrent());
         SmartDashboard.putNumber("Hood Angle", getHoodAngleAbsoluteDegrees());
-        SmartDashboard.putNumber("Hood Velocity", shooterHood.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
+//        SmartDashboard.putNumber("Hood Velocity", shooterHood.getSelectedSensorVelocity());
+//        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
     }
 }
 

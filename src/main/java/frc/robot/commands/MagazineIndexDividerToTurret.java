@@ -1,28 +1,36 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Turret;
 import frc.robot.utilities.Util;
 
 
-public class MagazineIndexDividerToTurret extends CommandBase {
+public class MagazineIndexDividerToTurret extends ExtraTimeoutCommand {
     private final Magazine magazine;
+    private final Turret turret;
     public static final double dividerDeltaAngle = 72.0;
 
-    public MagazineIndexDividerToTurret(Magazine magazine) {
+    public MagazineIndexDividerToTurret(Magazine magazine, Turret turret) {
         this.magazine = magazine;
+        this.turret = turret;
         addRequirements(magazine);
     }
 
     @Override
-    public void execute() {
-        double magazineAngle = closestDividerDeltaAngle(Turret.getInstance().getTurretAngleAbsoluteDegrees(), magazine.getMagazineAngleAbsoluteDegrees());
+    public void initialize() {
+        double magazineAngle = closestDividerDeltaAngle(turret.getTurretAngleAbsoluteDegrees(), magazine.getMagazineAngleAbsoluteDegrees());
+        System.out.println("Magazine index angle = " + magazineAngle);
         magazine.setMagazineMotionMagicPositionAbsolute(magazineAngle);
+        resetExtraOneTimer();
+        startExtraOneTimeout(0.1);
     }
 
     @Override
     public boolean isFinished() {
+        if (isExtraOneTimedOut() && magazine.hasFinishedTrajectory()) {
+            System.out.println("Magazine index angle = finished");
+            return true;
+        }
         return false;
     }
 

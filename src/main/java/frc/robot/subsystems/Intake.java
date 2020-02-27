@@ -101,7 +101,7 @@ public class Intake extends SubsystemBase {
 
 
     public void periodic() {
-        SmartDashboard.putNumber("Intake Roller Rotations", this.getRollerRotations());
+//        SmartDashboard.putNumber("Intake Roller Rotations", this.getRollerRotations());
         SmartDashboard.putNumber("Intake Roller RPM", this.getRollerRPM());
     }
 }

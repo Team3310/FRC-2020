@@ -55,7 +55,7 @@ public class Magazine extends SubsystemBase {
         magMotor.config_IntegralZone(kMagazineVelocitySlot, (int)this.MagazineRPMToNativeUnits(10));
 
         magMotor.config_kF(kMagazineMotionMagicSlot, 0.03);
-        magMotor.config_kP(kMagazineMotionMagicSlot, 0.1);//0.05
+        magMotor.config_kP(kMagazineMotionMagicSlot, 0.05);//0.05
         magMotor.config_kI(kMagazineMotionMagicSlot, 0.00001);//0.0001
         magMotor.config_kD(kMagazineMotionMagicSlot, 0.0);
         magMotor.config_IntegralZone(kMagazineMotionMagicSlot, (int)this.MagazineRPMToNativeUnits(10));
@@ -92,12 +92,11 @@ public class Magazine extends SubsystemBase {
     public synchronized void setMagazineMotionMagicPositionAbsolute(double angle) {
         magMotor.selectProfileSlot(kMagazineMotionMagicSlot, 0);
         targetPositionTicks = getMagazineEncoderTicksAbsolute(angle);
-        System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
         magMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
     }
 
     public synchronized boolean hasFinishedTrajectory() {
-        return Util.epsilonEquals(magMotor.getActiveTrajectoryPosition(), targetPositionTicks, 5);
+        return Util.epsilonEquals(magMotor.getActiveTrajectoryPosition(), targetPositionTicks, 50);
     }
 
     private int getMagazineEncoderTicksAbsolute(double angle) {
@@ -114,9 +113,9 @@ public class Magazine extends SubsystemBase {
     }
 
     public void periodic() {
-        SmartDashboard.putNumber("Magazine RPM", this.getMagazineRPM());
-        SmartDashboard.putNumber("Magazine Roller Rotations", this.getMagazineRotations());
-        SmartDashboard.putNumber("Magazine Current", magMotor.getStatorCurrent());
+ //       SmartDashboard.putNumber("Magazine RPM", this.getMagazineRPM());
+ //       SmartDashboard.putNumber("Magazine Roller Rotations", this.getMagazineRotations());
+ //       SmartDashboard.putNumber("Magazine Current", magMotor.getStatorCurrent());
         SmartDashboard.putNumber("Magazine Angle", getMagazineAngleAbsoluteDegrees());
     }
 }

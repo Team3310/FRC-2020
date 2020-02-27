@@ -208,6 +208,11 @@ public class Drive extends SubsystemBase {
         gyroPigeon.setFusedHeading(0);
     }
 
+    public synchronized void resetGyroYawAngle(double homeAngle) {
+        resetGyroYawAngle();
+        setGyroYawOffset(homeAngle);
+    }
+
     private void updateOpenLoopVoltageRamp() {
         setOpenLoopVoltageRamp(isHighGear ? OPEN_LOOP_VOLTAGE_RAMP_HI : OPEN_LOOP_VOLTAGE_RAMP_LO);
     }

@@ -24,7 +24,14 @@ public class TurretSetToGyroAngle extends ExtraTimeoutCommand
 
     @Override
     public void initialize() {
-        turret.setTurretMotionMagicPositionAbsolute(-Drive.getInstance().getGyroFusedHeadingAngleDeg() + offsetAngleDeg);
+        double gyroMirror = Drive.getInstance().getGyroFusedHeadingAngleDeg();
+        if (Math.abs(gyroMirror) < 90) {
+            gyroMirror = -gyroMirror;
+        }
+        else {
+            gyroMirror = (-180 - gyroMirror) - 180;
+        }
+        turret.setTurretMotionMagicPositionAbsolute(gyroMirror + offsetAngleDeg);
         resetExtraOneTimer();
         startExtraOneTimeout(0.1);
     }
@@ -32,6 +39,7 @@ public class TurretSetToGyroAngle extends ExtraTimeoutCommand
     @Override
     public boolean isFinished() {
         if (isExtraOneTimedOut() && turret.hasFinishedTrajectory()) {
+            System.out.println("Gyro Turret index angle = finished");
             return true;
         }
         return false;

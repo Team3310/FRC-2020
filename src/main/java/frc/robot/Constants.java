@@ -138,6 +138,6 @@ public final class Constants
     public static final int LIMELIGHT_PIPELINE = 1;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
-    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.0;
+    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.5;
     public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -1.0;
 }

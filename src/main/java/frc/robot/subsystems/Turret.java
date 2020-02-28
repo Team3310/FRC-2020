@@ -13,7 +13,7 @@ import frc.robot.utilities.Util;
 public class Turret extends SubsystemBase {
 
     public static enum TurretControlMode {
-        MOTION_MAGIC, POSITION, VELOCITY, MANUAL
+        MOTION_MAGIC, MOTION_MAGIC_TRACK_GYRO, MOTION_MAGIC_TRACK_LIMELIGHT, POSITION, VELOCITY, MANUAL
     };
 
     // Conversions
@@ -37,6 +37,13 @@ public class Turret extends SubsystemBase {
     private double homePositionAngleDegrees = Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
     private double cachedLimelightTurretOffset;
+
+    private double gyroTrackOffsetAngle;
+    private double limelightTrackOffsetAngle;
+    private boolean limelightTargetFound;
+    private double previousLimelightAngle;
+    private int maxNumInvalidLimelightAttempts = 100;
+    private int currentNumInvalidLimelightAttempts;
 
     // Subsystem Instance
     private final static Turret INSTANCE = new Turret();
@@ -110,6 +117,10 @@ public class Turret extends SubsystemBase {
         if (getTurretControlMode() != TurretControlMode.MOTION_MAGIC) {
             setTurretControlMode(TurretControlMode.MOTION_MAGIC);
         }
+        setTurretMotionMagicPositionAbsoluteInternal(angle);
+    }
+
+    public synchronized void setTurretMotionMagicPositionAbsoluteInternal(double angle) {
         turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
         targetPositionTicks = getTurretEncoderTicksAbsolute(limitTurretAngle(angle));
         System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
@@ -120,6 +131,10 @@ public class Turret extends SubsystemBase {
         if (getTurretControlMode() != TurretControlMode.MOTION_MAGIC) {
             setTurretControlMode(TurretControlMode.MOTION_MAGIC);
         }
+        setTurretMotionMagicPositionRelativeInternal(delta_angle);
+    }
+
+    public synchronized void setTurretMotionMagicPositionRelativeInternal(double delta_angle) {
         turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
         targetPositionTicks = getTurretEncoderTicksRelative(delta_angle);
 //        System.out.println("Set point MM relative encoder ticks = " + targetPositionTicks);
@@ -213,7 +228,56 @@ public class Turret extends SubsystemBase {
         return cachedLimelightTurretOffset;
     }
 
+    public void setGyroTrackMode(double gyroOffsetAngle) {
+        this.gyroTrackOffsetAngle = gyroOffsetAngle;
+        setTurretControlMode(TurretControlMode.MOTION_MAGIC_TRACK_GYRO);
+        updateGyroTrack();
+    }
+
+    private void updateGyroTrack() {
+        double gyroMirror = Drive.getInstance().getGyroFusedHeadingAngleDeg();
+        if (Math.abs(gyroMirror) < 90) {
+            gyroMirror = -gyroMirror;
+        }
+        else {
+            gyroMirror = (-180 - gyroMirror) - 180;
+        }
+        setTurretMotionMagicPositionAbsoluteInternal(gyroMirror + gyroTrackOffsetAngle);
+    }
+
+    public void setLimelightTrackMode(double limelightTrackOffsetAngle) {
+        limelightTargetFound = false;
+        currentNumInvalidLimelightAttempts = 0;
+        this.limelightTrackOffsetAngle = limelightTrackOffsetAngle;
+        setTurretControlMode(TurretControlMode.MOTION_MAGIC_TRACK_LIMELIGHT);
+        updateLimelightTrack();
+    }
+
+    private void updateLimelightTrack() {
+        Limelight limelight = Limelight.getInstance();
+        if (limelight.isOnTarget()) {
+            limelightTargetFound = true;
+            previousLimelightAngle = -limelight.getTx() + limelightTrackOffsetAngle;
+            setTurretMotionMagicPositionRelativeInternal(previousLimelightAngle);
+        }
+        else if (limelightTargetFound) {
+             currentNumInvalidLimelightAttempts++;
+             if (currentNumInvalidLimelightAttempts > maxNumInvalidLimelightAttempts) {
+                 limelightTargetFound = false;
+             }
+        }
+        else {
+            updateGyroTrack();
+        }
+    }
+
     public void periodic() {
+        if (getTurretControlMode() == TurretControlMode.MOTION_MAGIC_TRACK_GYRO) {
+            updateGyroTrack();
+        }
+        else if (getTurretControlMode() == TurretControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
+            updateLimelightTrack();
+        }
         SmartDashboard.putNumber("Turret Angle", this.getTurretAngleAbsoluteDegrees());
  //       SmartDashboard.putNumber("Turret Angle Ticks", turretMotor.getSelectedSensorPosition());
  //       SmartDashboard.putNumber("Turret Output Percent", turretMotor.getMotorOutputPercent());

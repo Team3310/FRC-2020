@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.*;
 import frc.robot.controller.GameController;
@@ -111,9 +112,11 @@ public class RobotContainer {
 
         Button magazineForwardButton = m_operator.getDPadLeft();
         magazineForwardButton.whenPressed(new MagazineForward(intake, magazine));
+        magazineForwardButton.whenReleased(new SequentialCommandGroup(new MagazineSetSpeed(magazine, 0), new IntakeSetSpeed(intake,0)));
 
         Button magazineReverseButton = m_operator.getDPadRight();
         magazineReverseButton.whenPressed(new MagazineReverse(intake, magazine));
+        magazineReverseButton.whenReleased(new SequentialCommandGroup(new MagazineSetSpeed(magazine, 0), new IntakeSetSpeed(intake,0)));
 
         // Driver
         Button resetHomeButton = m_driver.getStartButton();

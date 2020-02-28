@@ -35,7 +35,7 @@ public class Drive extends SubsystemBase {
     private static final int STEER_NON_LINEAR = -3;
 
     private static final double MOVE_SCALE = 1.0;
-    private static final double STEER_SCALE = 0.85;
+    private static final double STEER_SCALE = 0.75;
 
     private static final double MOVE_TRIM = 0.0;
     private static final double STEER_TRIM = 0.0;
@@ -43,10 +43,10 @@ public class Drive extends SubsystemBase {
     private static final double STICK_DEADBAND = 0.02;
 
     public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.5;
-    public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 1.0;
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 0.75;
 
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.6;
-    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.6;
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.3;
+    public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.3;
 
     private double m_moveInput = 0.0;
     private double m_steerInput = 0.0;

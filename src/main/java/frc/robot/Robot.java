@@ -84,6 +84,7 @@ public class Robot extends TimedRobot
         turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES);
         magazine.resetHomePosition();
         shooter.resetHoodHomePosition();
+        drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES);
         drive.setControlMode(Drive.DriveControlMode.PATH_FOLLOWING);
         drive.resetOdometry(new Pose2d());
 

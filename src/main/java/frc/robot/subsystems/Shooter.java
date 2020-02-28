@@ -261,10 +261,12 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setCachedHoodAngle(double angle) {
+        System.out.println("set Hood angle cache = " + cachedHoodAngle);
         this.cachedHoodAngle = angle;
     }
 
     public double getCachedHoodAngle() {
+        System.out.println("get Hood angle cache = " + cachedHoodAngle);
         return cachedHoodAngle;
     }
 

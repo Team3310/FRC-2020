@@ -15,9 +15,9 @@ public class ShooterAutoShot extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                         new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_AUTO_RPM, Constants.SHOOTER_KICKER_AUTO_RPM),
                         new TurretSetAngle(turret, Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES),
-                        new HoodSetAngle(shooter, Constants.HOOD_AUTO_ANGLE_DEGREES),
-                        new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM)
+                        new HoodSetAngle(shooter, Constants.HOOD_AUTO_ANGLE_DEGREES)
                 ),
+                new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
                 new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_RPM, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES)
         );
     }

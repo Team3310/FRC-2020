@@ -110,11 +110,12 @@ public class RobotContainer {
         climbLevel1Button.whenPressed(new ClimbLevelOne(intake, turret, magazine));
 
         Button magazineForwardButton = m_operator.getDPadLeft();
-        magazineForwardButton.whenPressed(new MagazineSetRPMLimit(magazine, Constants.INTAKE_COLLECT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT));
+        magazineForwardButton.whenPressed(new MagazineForward(intake, magazine));
 
         Button magazineReverseButton = m_operator.getDPadRight();
-        magazineReverseButton.whenPressed(new MagazineSetRPMLimit(magazine, -Constants.INTAKE_COLLECT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT));
+        magazineReverseButton.whenPressed(new MagazineReverse(intake, magazine));
 
+        // Driver
         Button resetHomeButton = m_driver.getStartButton();
         resetHomeButton.whenPressed(new ResetAllHomePositions(drive, turret, magazine, shooter));
 

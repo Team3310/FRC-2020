@@ -123,10 +123,14 @@ public final class Constants
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES = 360.0;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
+    public static final double MAGAZINE_FORWARD_RPM = 10;
+    public static final double MAGAZINE_REVERSE_RPM = -10;
+
 
     // Intake
     public static final double INTAKE_COLLECT_RPM = 1500;
     public static final double INTAKE_REVERSE_RPM = -1500;
+    public static final double INTAKE_SLOW_RPM = 500;
 
     // Drive
     public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;

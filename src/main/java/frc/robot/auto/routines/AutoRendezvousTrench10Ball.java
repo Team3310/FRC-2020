@@ -18,36 +18,40 @@ import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
 import frc.robot.auto.commands.StopTrajectory;
-import frc.robot.subsystems.Drive;
+import frc.robot.commands.IntakeExtendAll;
+import frc.robot.subsystems.*;
 
 public class AutoRendezvousTrench10Ball extends ParallelCommandGroup {
         TrajectoryGenerator mTrajectories = TrajectoryGenerator.getInstance();
         Drive mDrive = Drive.getInstance();
-        /**
+        Shooter mShooter = Shooter.getInstance();
+        Magazine mMagazine = Magazine.getInstance();
+        Turret mTurret = Turret.getInstance();
+        Intake mIntake = Intake.getInstance();
+        Limelight mLimelight = Limelight.getInstance();        /**
          * Add your docs here.
          */
         public AutoRendezvousTrench10Ball() {
                 addCommands(new SequentialCommandGroup(
                         new ResetOdometryAuto(),
-                        //Intake In Parallel
-                        new RamseteCommand(
-                                mTrajectories.getCenterStartToRendezvous2ball(),
-                                mDrive::getPose,
-                                new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-                                new SimpleMotorFeedforward(Constants.ksVolts,
-                                        Constants.kvVoltSecondsPerMeter,
-                                        Constants.kaVoltSecondsSquaredPerMeter),
-                                Constants.kDriveKinematics,
-                                mDrive::getWheelSpeeds,
-                                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
-                                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
-                                // RamseteCommand passes volts to the callback
-                                mDrive::tankDriveVolts,
-                                mDrive),
-
+                        new ParallelCommandGroup(
+                                new IntakeExtendAll(mIntake,mMagazine),
+                                new RamseteCommand(
+                                        mTrajectories.getCenterStartToRendezvous2ball(),
+                                        mDrive::getPose,
+                                        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+                                        new SimpleMotorFeedforward(Constants.ksVolts,
+                                                Constants.kvVoltSecondsPerMeter,
+                                                Constants.kaVoltSecondsSquaredPerMeter),
+                                        Constants.kDriveKinematics,
+                                        mDrive::getWheelSpeeds,
+                                        new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
+                                        new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
+                                        // RamseteCommand passes volts to the callback
+                                        mDrive::tankDriveVolts,
+                                        mDrive)),
                         new StopTrajectory(),
                         new WaitCommand(.25),
-                        //Shoot
                         new RamseteCommand(
                                 mTrajectories.getRendezvous2BallToStartOfTrench(),
                                 mDrive::getPose,
@@ -83,7 +87,7 @@ public class AutoRendezvousTrench10Ball extends ParallelCommandGroup {
                         new StopTrajectory(),
                         new WaitCommand(.25),
                         new RamseteCommand(
-                                mTrajectories.getEndOfTrenchToStartOfTrenchShot(),
+                                mTrajectories.getEndOfTrenchToStartOfTrench(),
                                 mDrive::getPose,
                                 new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                                 new SimpleMotorFeedforward(Constants.ksVolts,

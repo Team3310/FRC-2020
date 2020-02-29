@@ -15,19 +15,28 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
+import frc.robot.commands.ShooterAutoShot;
 import frc.robot.subsystems.Drive;
 import frc.robot.auto.commands.ResetOdometryAuto;
 import frc.robot.auto.commands.StopTrajectory;
+import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
 public class AutoSafe extends ParallelCommandGroup {
   TrajectoryGenerator mTrajectories = TrajectoryGenerator.getInstance();
   Drive mDrive = Drive.getInstance();
+  Shooter mShooter = Shooter.getInstance();
+  Magazine mMagazine = Magazine.getInstance();
+  Turret mTurret = Turret.getInstance();
+
   /**
    * Add your docs here.
    */
   public AutoSafe() {
     addCommands(new SequentialCommandGroup(
             new ResetOdometryAuto(),
+            new ShooterAutoShot(mShooter,mMagazine,mTurret, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES),
             new RamseteCommand(
                     mTrajectories.getLeftStartToSafe(),
                     mDrive::getPose,

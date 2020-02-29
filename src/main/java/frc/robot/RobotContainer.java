@@ -69,7 +69,7 @@ public class RobotContainer {
         autonTaskChooser = new SendableChooser<Command>();
 
         autonTaskChooser.setDefaultOption("None", null);
-        autonTaskChooser.addOption("Shoot 3 from Auton Line", new ShooterAutoShot(shooter, magazine, turret));
+        autonTaskChooser.addOption("Shoot 3 from Auton Line", new ShooterAutoShot(shooter, magazine, turret, 360));
         autonTaskChooser.addOption("Path test", getPathTestAutonomousCommand());
 
         SmartDashboard.putData("Autonomous", autonTaskChooser);

@@ -10,7 +10,7 @@ import frc.robot.subsystems.Turret;
 
 public class ShooterAutoShot extends SequentialCommandGroup {
 
-    public ShooterAutoShot(Shooter shooter, Magazine magazine, Turret turret) {
+    public ShooterAutoShot(Shooter shooter, Magazine magazine, Turret turret, double magazineRotations) {
         addCommands(
                 new ParallelCommandGroup(
                         new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_AUTO_RPM, Constants.SHOOTER_KICKER_AUTO_RPM),
@@ -18,7 +18,8 @@ public class ShooterAutoShot extends SequentialCommandGroup {
                         new HoodSetAngle(shooter, Constants.HOOD_AUTO_ANGLE_DEGREES)
                 ),
                 new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
-                new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_RPM, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES)
+                new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_RPM,
+                        magazineRotations)
         );
     }
 }

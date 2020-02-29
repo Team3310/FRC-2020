@@ -224,7 +224,7 @@ public class Turret extends SubsystemBase {
         this.cachedLimelightTurretOffset = angle;
     }
 
-    public double getCachesLimelightTurretOffset() {
+    public double getTurretCachedLimelightAngle() {
         return cachedLimelightTurretOffset;
     }
 

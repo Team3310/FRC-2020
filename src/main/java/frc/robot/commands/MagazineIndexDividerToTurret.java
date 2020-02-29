@@ -8,7 +8,6 @@ import frc.robot.utilities.Util;
 public class MagazineIndexDividerToTurret extends ExtraTimeoutCommand {
     private final Magazine magazine;
     private final Turret turret;
-    public static final double dividerDeltaAngle = 72.0;
 
     public MagazineIndexDividerToTurret(Magazine magazine, Turret turret) {
         this.magazine = magazine;
@@ -34,7 +33,8 @@ public class MagazineIndexDividerToTurret extends ExtraTimeoutCommand {
         return false;
     }
 
-    private double closestDividerDeltaAngle(double turretAngle, double magazineAngle) {
+    public static double closestDividerDeltaAngle(double turretAngle, double magazineAngle) {
+        final double dividerDeltaAngle = 72.0;
         System.out.println("closestDividerDeltaAngle magazineAngle = " + magazineAngle);
         double normalizedDividerAngle = Util.normalizeAngle90ToMinus270(magazineAngle);
         System.out.println("normalizedDividerAngle = " + normalizedDividerAngle + ", magazineAngle = " + magazineAngle);

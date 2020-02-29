@@ -71,6 +71,7 @@ public final class Constants
     public static final int INTAKE_OUTER_ARM_PCM_ID = 2;
     public static final int INTAKE_INNER_ARM_PCM_ID = 1;
     public static final int CLIMB_ARM_RELEASE_PCM_ID = 4;
+    public static final int CLIMB_PTO_PCM_ID = 3;
 
     // DIO
     public static final int TURRET_MAX_REV_SENSOR_DIO_ID = 0;
@@ -96,7 +97,7 @@ public final class Constants
     public static final double HOOD_AUTO_ZERO_SPEED = -0.1;
     public static final double HOOD_MIN_ANGLE_DEGREES = 0.0;
     public static final double HOOD_MAX_ANGLE_DEGREES = 55.0;
-    public static final double HOOD_FENDER_ANGLE_DEGREES = 3.0;
+    public static final double HOOD_FENDER_ANGLE_DEGREES = 8.0; //3.0
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
     public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
@@ -139,8 +140,8 @@ public final class Constants
     public static final int LIMELIGHT_PIPELINE = 0;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
-    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -2.0;
-    public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -1.0;
+    public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -4.0;
+    public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -2.0;
 
     // Climb
     public static final double CLIMB_MIN_INCHES = 0.0;

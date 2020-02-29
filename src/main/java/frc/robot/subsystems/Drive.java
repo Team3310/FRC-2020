@@ -449,8 +449,8 @@ public class Drive extends SubsystemBase {
      * @param rightVolts the commanded right output
      */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        mLeftMaster.setVoltage(-leftVolts);
-        mRightMaster.setVoltage(rightVolts);
+        mLeftMaster.setVoltage(leftVolts);
+        mRightMaster.setVoltage(-rightVolts);
         m_drive.feed();
     }
 

@@ -9,8 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.auto.routines.*;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
@@ -25,7 +29,8 @@ import frc.robot.subsystems.Turret;
  */
 public class Robot extends TimedRobot
 {
-    private Command autonomousCommand;
+    private Command m_autonomousCommand;
+    private SendableChooser<ParallelCommandGroup> autonTaskChooser;
 
     private RobotContainer robotContainer;
     private static final Drive drive = Drive.getInstance();
@@ -43,6 +48,21 @@ public class Robot extends TimedRobot
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+        drive.resetOdometry(new Pose2d());
+
+        autonTaskChooser = new SendableChooser<>();
+
+        autonTaskChooser.setDefaultOption("Do Nothing", new AutoDoNothing());
+
+        autonTaskChooser.addOption("Trench 8 Ball Auto", new AutoTrench8Ball());
+        autonTaskChooser.addOption("Trench Steal 5 Ball Auto", new AutoTrenchSteal());
+
+        autonTaskChooser.addOption("Rendezvous/Trench 10 Ball Auto", new AutoRendezvousTrench10Ball());
+        autonTaskChooser.addOption("Safe 3 Ball Auto", new AutoSafe());
+
+        autonTaskChooser.addOption("Test", new AutoTest());
+
+        SmartDashboard.putData("Autonomous", autonTaskChooser);
     }
 
     /**
@@ -88,11 +108,19 @@ public class Robot extends TimedRobot
         drive.setControlMode(Drive.DriveControlMode.PATH_FOLLOWING);
         drive.resetOdometry(new Pose2d());
 
+        m_autonomousCommand = autonTaskChooser.getSelected();
+
+
+        /*
+         * String autoSelected = SmartDashboard.getString("Auto Selector",
+         * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+         * = new MyAutoCommand(); break; case "Default Auto": default:
+         * autonomousCommand = new ExampleCommand(); break; }
+         */
+
         // schedule the autonomous command (example)
-        autonomousCommand = robotContainer.getAutonomousCommand();
-        if (autonomousCommand != null)
-        {
-            autonomousCommand.schedule();
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
         }
     }
 
@@ -107,16 +135,14 @@ public class Robot extends TimedRobot
     @Override
     public void teleopInit()
     {
-       drive.setControlMode(Drive.DriveControlMode.JOYSTICK);
-
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null)
-        {
-            autonomousCommand.cancel();
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.cancel();
         }
+        drive.setControlMode(Drive.DriveControlMode.JOYSTICK);
     }
 
     /**

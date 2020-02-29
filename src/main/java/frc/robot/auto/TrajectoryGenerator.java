@@ -1,6 +1,5 @@
 package frc.robot.auto;
 
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -82,7 +81,9 @@ public class TrajectoryGenerator {
                     new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
                     List.of(
                             new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(40)),
-                            new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(60))
+                            new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(60)),
+                            new Translation2d(Units.inchesToMeters(160), Units.inchesToMeters(60)),
+                            new Translation2d(Units.inchesToMeters(240), Units.inchesToMeters(60))
                     ),
                     new Pose2d(Units.inchesToMeters(300), Units.inchesToMeters(66), new Rotation2d(0)),
                     // Pass config
@@ -198,11 +199,11 @@ public class TrajectoryGenerator {
         public Trajectory getLeftStartToSafe(){
             Trajectory leftStartToSafe;
             leftStartToSafe = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(0))),
+                    new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
                     List.of(
-                            new Translation2d(Units.inchesToMeters(100), Units.inchesToMeters(60))
+                            new Translation2d(Units.inchesToMeters(-40), Units.inchesToMeters(0))
                     ),
-                    new Pose2d(Units.inchesToMeters(82), Units.inchesToMeters(60), new Rotation2d(Units.degreesToRadians(0))),
+                    new Pose2d(Units.inchesToMeters(-60), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
                     // Pass config
                     reverseConfig
             );

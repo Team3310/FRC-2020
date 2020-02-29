@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
     private Solenoid intakeOuterArm;
     private Solenoid intakeInnerArm;
     private Solenoid climbRelease;
-
+    private Solenoid climbPTO;
     // Misc
     private static final int kIntakeVelocitySlot = 0;
     private static final int kClimbMotionMagicSlot = 1;
@@ -42,6 +42,7 @@ public class Intake extends SubsystemBase {
         intakeOuterArm = new Solenoid(Constants.INTAKE_OUTER_ARM_PCM_ID);
         intakeInnerArm = new Solenoid(Constants.INTAKE_INNER_ARM_PCM_ID);
         climbRelease = new Solenoid(Constants.CLIMB_ARM_RELEASE_PCM_ID);
+        climbPTO = new Solenoid(Constants.CLIMB_PTO_PCM_ID);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         configs.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
@@ -161,6 +162,14 @@ public class Intake extends SubsystemBase {
 
     public void climbLock() {
         climbRelease.set(false);
+    }
+
+    public void climbPTOEngage() {
+        climbPTO.set(true);
+    }
+
+    public void climbPTOLock() {
+        climbPTO.set(false);
     }
 
     public void periodic() {

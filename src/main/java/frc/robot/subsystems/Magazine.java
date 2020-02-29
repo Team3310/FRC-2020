@@ -7,9 +7,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.MagazineIndexDividerToTurret;
 import frc.robot.utilities.Util;
 
 public class Magazine extends SubsystemBase {
+
+    public static enum MagazineControlMode {
+        MOTION_MAGIC, MOTION_MAGIC_TRACK_TURRET, VELOCITY, MANUAL
+    };
 
     // Conversions
     private static final double MAGAZINE_OUTPUT_TO_ENCODER_RATIO = 500.0 / 11.0;
@@ -24,6 +29,8 @@ public class Magazine extends SubsystemBase {
     private static final int kMagazineMotionMagicSlot = 1;
     private double homePositionAngleDegrees = Constants.MAGAZINE_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
+
+    private MagazineControlMode magazineControlMode;
 
     private final static Magazine INSTANCE = new Magazine();
 
@@ -65,7 +72,17 @@ public class Magazine extends SubsystemBase {
         return INSTANCE;
     }
 
+
+    private synchronized void setMagazineControlMode(MagazineControlMode controlMode) {
+        this.magazineControlMode = controlMode;
+    }
+
+    private synchronized MagazineControlMode getTurretControlMode() {
+        return this.magazineControlMode;
+    }
+
     public void setMagazineSpeed(double speed) {
+        setMagazineControlMode(MagazineControlMode.MANUAL);
         this.magMotor.set(ControlMode.PercentOutput, speed);
         System.out.println("Set Magazine Speed");
     }
@@ -81,6 +98,7 @@ public class Magazine extends SubsystemBase {
         return magMotor.getSelectedSensorPosition() / Constants.ENCODER_TICKS_PER_MOTOR_REVOLUTION / MAGAZINE_OUTPUT_TO_ENCODER_RATIO;
     }
     public void setMagazineRPM(double rpm) {
+        setMagazineControlMode(MagazineControlMode.VELOCITY);
         this.magMotor.set(ControlMode.Velocity, this.MagazineRPMToNativeUnits(rpm));
     }
 
@@ -90,6 +108,13 @@ public class Magazine extends SubsystemBase {
 
     // Motion Magic
     public synchronized void setMagazineMotionMagicPositionAbsolute(double angle) {
+        setMagazineControlMode(MagazineControlMode.MOTION_MAGIC);
+        magMotor.selectProfileSlot(kMagazineMotionMagicSlot, 0);
+        targetPositionTicks = getMagazineEncoderTicksAbsolute(angle);
+        magMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
+    }
+
+    public synchronized void setMagazineMotionMagicPositionAbsoluteInternal(double angle) {
         magMotor.selectProfileSlot(kMagazineMotionMagicSlot, 0);
         targetPositionTicks = getMagazineEncoderTicksAbsolute(angle);
         magMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
@@ -112,7 +137,20 @@ public class Magazine extends SubsystemBase {
         return magMotor.getStatorCurrent();
     }
 
+    public void setTurretTrackMode() {
+        setMagazineControlMode(MagazineControlMode.MOTION_MAGIC_TRACK_TURRET);
+        updateTurretTrack();
+    }
+
+    private void updateTurretTrack() {
+        double magazineAngle = MagazineIndexDividerToTurret.closestDividerDeltaAngle(Turret.getInstance().getTurretAngleAbsoluteDegrees(), getMagazineAngleAbsoluteDegrees());
+        setMagazineMotionMagicPositionAbsoluteInternal(magazineAngle);
+    }
+
     public void periodic() {
+        if (getTurretControlMode() == MagazineControlMode.MOTION_MAGIC_TRACK_TURRET) {
+            updateTurretTrack();
+        }
  //       SmartDashboard.putNumber("Magazine RPM", this.getMagazineRPM());
  //       SmartDashboard.putNumber("Magazine Roller Rotations", this.getMagazineRotations());
  //       SmartDashboard.putNumber("Magazine Current", magMotor.getStatorCurrent());

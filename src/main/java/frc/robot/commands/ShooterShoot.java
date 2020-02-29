@@ -14,7 +14,7 @@ public class ShooterShoot extends SequentialCommandGroup {
         addCommands(
             new HoodSetCachedAngle(shooter),
  //           new ShooterIsReady(shooter),
-            new TurretSetToLimelightAngle(turret, turret.getCachesLimelightTurretOffset()),
+            new TurretSetToCachedLimelightAngle(turret),
             new MagazineIndexDividerToTurret(magazine, turret),
             new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
             new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)

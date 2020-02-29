@@ -107,8 +107,21 @@ public class RobotContainer {
         Button climbReleaseButton = m_operator.getStartButton();
         climbReleaseButton.whenPressed(new ClimbRelease(intake, turret, magazine));
 
-        Button climbLevel1Button = m_operator.getDPadUp();
-        climbLevel1Button.whenPressed(new ClimbLevelOne(intake, turret, magazine));
+        Button climbUpButton = m_operator.getDPadUp();
+        climbUpButton.whenPressed(new IntakeSetSpeed(intake,0.5));
+        climbUpButton.whenReleased(new IntakeSetSpeed(intake,0.0));
+
+        Button climbDownButton = m_operator.getDPadDown();
+        climbDownButton.whenPressed(new IntakeSetSpeed(intake,-0.5));
+        climbDownButton.whenReleased(new IntakeSetSpeed(intake,0.0));
+
+        SmartDashboard.putData("Climb Arm Lock", new InstantCommand(() -> intake.climbLock()));
+        SmartDashboard.putData("Climb Arm Release", new InstantCommand(() -> intake.climbRelease()));
+        SmartDashboard.putData("Intake Inner Extend", new InstantCommand(() -> intake.extendIntakeInnerArms()));
+        SmartDashboard.putData("Intake OuterExtend", new InstantCommand(() -> intake.extendIntakeOuterArms()));
+
+        SmartDashboard.putData("Climb PTO Lock", new InstantCommand(() -> intake.climbPTOLock()));
+        SmartDashboard.putData("Climb PTO Engage", new InstantCommand(() -> intake.climbPTOEngage()));
 
         Button magazineForwardButton = m_operator.getDPadLeft();
         magazineForwardButton.whenPressed(new MagazineForward(intake, magazine));

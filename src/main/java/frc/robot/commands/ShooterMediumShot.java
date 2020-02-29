@@ -16,8 +16,8 @@ public class ShooterMediumShot extends ParallelCommandGroup {
                 new ShooterSetReady(shooter,false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
                 new SequentialCommandGroup(
-                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
-                        new MagazineIndexDividerToTurret(magazine, turret)
+                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
+                        new MagazineIndexDividerToTurretTrack(magazine)
                 ),
                 new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES),
                 new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),

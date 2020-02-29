@@ -11,10 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Magazine;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -68,6 +65,7 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
+        AirCompressor.getInstance().turnCompressorOff();
     }
 
     @Override
@@ -81,6 +79,8 @@ public class Robot extends TimedRobot
     @Override
     public void autonomousInit()
     {
+        AirCompressor.getInstance().turnCompressorOff();
+        Limelight.getInstance().setLedMode(Limelight.LightMode.OFF);
         turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES);
         magazine.resetHomePosition();
         shooter.resetHoodHomePosition();

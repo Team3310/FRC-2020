@@ -14,8 +14,9 @@ public class ClimbRelease extends SequentialCommandGroup {
     public ClimbRelease(Intake intake, Turret turret, Magazine magazine) {
         addCommands(
                 new ParallelCommandGroup(
+                        new InstantCommand(() -> intake.extendIntakeInnerArms()),
                         new TurretSetAngle(turret, Constants.TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES),
-                        new IntakeRetractAll(intake, magazine)
+                        new InstantCommand(() -> intake.climbPTOEngage())
                 ),
                 new InstantCommand(()-> intake.climbRelease())
         );

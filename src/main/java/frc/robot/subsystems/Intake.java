@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utilities.Util;
@@ -174,8 +173,8 @@ public class Intake extends SubsystemBase {
 
     public void periodic() {
 //        SmartDashboard.putNumber("Intake Roller Rotations", this.getRollerRotations());
-        SmartDashboard.putNumber("Intake Roller RPM", this.getRollerRPM());
-        SmartDashboard.putNumber("Climb Inches", this.getClimbInches());
+//        SmartDashboard.putNumber("Intake Roller RPM", this.getRollerRPM());
+//        SmartDashboard.putNumber("Climb Inches", this.getClimbInches());
     }
 }
 

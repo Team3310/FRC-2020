@@ -53,7 +53,6 @@ public class RobotContainer {
     private final Drive drive = Drive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
 
-    private SendableChooser<Command> autonTaskChooser;
 
     /**
      * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -62,17 +61,7 @@ public class RobotContainer {
         // Pass the driver controller to the drive subsystem for teleop control
         drive.setDriverController(m_driver);
 
-        configureAutonTasks();
         configureButtonBindings();
-    }
-    private void configureAutonTasks() {
-        autonTaskChooser = new SendableChooser<Command>();
-
-        autonTaskChooser.setDefaultOption("None", null);
-        autonTaskChooser.addOption("Shoot 3 from Auton Line", new ShooterAutoShot(shooter, magazine, turret, 360));
-        autonTaskChooser.addOption("Path test", getPathTestAutonomousCommand());
-
-        SmartDashboard.putData("Autonomous", autonTaskChooser);
     }
 
     /**
@@ -133,19 +122,19 @@ public class RobotContainer {
 //        Button resetHomeButton = m_driver.getStartButton();
 //        resetHomeButton.whenPressed(new ResetAllHomePositions(drive, turret, magazine, shooter));
 
-        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
-        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
-        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
-        SmartDashboard.putData("Climb Arm Lock", new InstantCommand(() -> intake.climbLock()));
-        SmartDashboard.putData("Climb Arm Release", new InstantCommand(() -> intake.climbRelease()));
-        SmartDashboard.putData("Intake Inner Extend", new InstantCommand(() -> intake.extendIntakeInnerArms()));
-        SmartDashboard.putData("Intake OuterExtend", new InstantCommand(() -> intake.extendIntakeOuterArms()));
-
-        SmartDashboard.putData("Climb PTO Lock", new InstantCommand(() -> intake.climbPTOLock()));
-        SmartDashboard.putData("Climb PTO Engage", new InstantCommand(() -> intake.climbPTOEngage()));
-
-        SmartDashboard.putData("Limelight LED off", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.OFF)));
-        SmartDashboard.putData("Limelight LED on", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.ON)));
+//        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
+//        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
+//        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
+//        SmartDashboard.putData("Climb Arm Lock", new InstantCommand(() -> intake.climbLock()));
+//        SmartDashboard.putData("Climb Arm Release", new InstantCommand(() -> intake.climbRelease()));
+//        SmartDashboard.putData("Intake Inner Extend", new InstantCommand(() -> intake.extendIntakeInnerArms()));
+//        SmartDashboard.putData("Intake OuterExtend", new InstantCommand(() -> intake.extendIntakeOuterArms()));
+//
+//        SmartDashboard.putData("Climb PTO Lock", new InstantCommand(() -> intake.climbPTOLock()));
+//        SmartDashboard.putData("Climb PTO Engage", new InstantCommand(() -> intake.climbPTOEngage()));
+//
+//        SmartDashboard.putData("Limelight LED off", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.OFF)));
+//        SmartDashboard.putData("Limelight LED on", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.ON)));
 
 //        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
 //        SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(() -> intake.setRollerSpeed(0.0)));
@@ -206,70 +195,5 @@ public class RobotContainer {
 
 //        SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
 //        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
-    }
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        return autonTaskChooser.getSelected();
-    }
-
-    public Command getPathTestAutonomousCommand()
-    {
-        // Create a voltage constraint to ensure we don't accelerate too fast
-        var autoVoltageConstraint =
-                new DifferentialDriveVoltageConstraint(
-                        new SimpleMotorFeedforward(Constants.ksVolts,
-                                Constants.kvVoltSecondsPerMeter,
-                                Constants.kaVoltSecondsSquaredPerMeter),
-                        Constants.kDriveKinematics,
-                        10);
-
-        // Create config for trajectory
-        TrajectoryConfig config =
-                new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
-                        Constants.kMaxAccelerationMetersPerSecondSquared)
-                        // Add kinematics to ensure max speed is actually obeyed
-                        .setKinematics(Constants.kDriveKinematics)
-                        // Apply the voltage constraint
-                        .addConstraint(autoVoltageConstraint);
-
-        // An example trajectory to follow.  All units in meters.
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(-180)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                List.of(
-                        new Translation2d(Units.inchesToMeters(42.856), Units.inchesToMeters(35))//162.856 //-58.085
-                ),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(Units.inchesToMeters(86.57), Units.inchesToMeters(65.66), new Rotation2d(-180)),
-                // Pass config
-                config
-        );
-
-
-
-        RamseteCommand ramseteCommand = new RamseteCommand(
-                exampleTrajectory,
-                drive::getPose,
-                new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-                new SimpleMotorFeedforward(Constants.ksVolts,
-                        Constants.kvVoltSecondsPerMeter,
-                        Constants.kaVoltSecondsSquaredPerMeter),
-                Constants.kDriveKinematics,
-                drive::getWheelSpeeds,
-                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
-                new PIDController(Constants.kPDriveVel, 0, Constants.kDDriveVel),
-                // RamseteCommand passes volts to the callback
-                drive::tankDriveVolts,
-                drive
-        );
-
-        // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> drive.tankDriveVolts(0, 0));
     }
 }

@@ -115,7 +115,7 @@ public class TrajectoryGenerator {
                     List.of(
                             new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(0))
                     ),
-                    new Pose2d(Units.inchesToMeters(150), Units.inchesToMeters(0), new Rotation2d(0)),
+                    new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(0), new Rotation2d(0)),
                     // Pass config
                     forwardConfig
             );
@@ -125,7 +125,7 @@ public class TrajectoryGenerator {
         public Trajectory getStealBallToCenterShot() {
             Trajectory stealSpotToCenterShot;
             stealSpotToCenterShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(Units.inchesToMeters(150), Units.inchesToMeters(0), new Rotation2d(0)),
+                    new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(0), new Rotation2d(0)),
                     List.of(
                             new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(60))
                     ),
@@ -145,7 +145,7 @@ public class TrajectoryGenerator {
                     List.of(
                             new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(40))
                     ),
-                    new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(-10), new Rotation2d(Units.degreesToRadians(-60))),
+                    new Pose2d(Units.inchesToMeters(155), Units.inchesToMeters(-10), new Rotation2d(Units.degreesToRadians(-60))),
                     // Pass config
                     forwardConfig
             );
@@ -155,7 +155,7 @@ public class TrajectoryGenerator {
         public Trajectory getRendezvous2BallToStartOfTrench() {
             Trajectory rendezvous2BallToStartOfTrench;
             rendezvous2BallToStartOfTrench = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(Units.inchesToMeters(130), Units.inchesToMeters(-10), new Rotation2d(Units.degreesToRadians(-60))),
+                    new Pose2d(Units.inchesToMeters(155), Units.inchesToMeters(-10), new Rotation2d(Units.degreesToRadians(-60))),
                     List.of(
                             new Translation2d(Units.inchesToMeters(100), Units.inchesToMeters(30))
                     ),
@@ -194,6 +194,20 @@ public class TrajectoryGenerator {
             );
             return leftStartToSafe;
         }
+
+    public Trajectory getLeftStartToSafeForward(){
+        Trajectory leftStartToSafe;
+        leftStartToSafe = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(40), Units.inchesToMeters(0))
+                ),
+                new Pose2d(Units.inchesToMeters(60), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
+                // Pass config
+                reverseConfig
+        );
+        return leftStartToSafe;
+    }
         //End 3 Ball Safe Auto
     }
 //}

@@ -13,10 +13,11 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
+import frc.robot.auto.commands.ShooterAutoMediumShotTrack;
+import frc.robot.auto.commands.ShooterAutoShot;
 import frc.robot.auto.commands.StopTrajectory;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -36,7 +37,7 @@ public class AutoTrench8Ball extends ParallelCommandGroup {
     public AutoTrench8Ball() {
         addCommands(new SequentialCommandGroup(
                 new ResetOdometryAuto(),
-                new ShooterAutoShot(mShooter,mMagazine,mTurret, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES),
+        new ShooterAutoShot(mShooter,mMagazine,mTurret, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new ParallelCommandGroup(
                         new IntakeExtendAll(mIntake, mMagazine),
                         new RamseteCommand(
@@ -54,7 +55,6 @@ public class AutoTrench8Ball extends ParallelCommandGroup {
                         mDrive::tankDriveVolts,
                         mDrive)),
                 new StopTrajectory(),
-                new WaitCommand(.25),
                 new RamseteCommand(
                         mTrajectories.getEndOfTrenchToStartOfTrench(),
                         mDrive::getPose,
@@ -71,8 +71,8 @@ public class AutoTrench8Ball extends ParallelCommandGroup {
                         mDrive),
                 new StopTrajectory(),
                 new IntakeRetractAll(mIntake,mMagazine),
-                new ShooterMediumShot(mShooter,mMagazine,mTurret),
-                new ShooterShoot(mShooter,mMagazine,mTurret,mLimelight)
+                new ShooterAutoMediumShotTrack(mShooter,mMagazine,mTurret,
+                        Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL)
         ));
     }
 }

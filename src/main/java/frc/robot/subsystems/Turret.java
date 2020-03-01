@@ -164,10 +164,6 @@ public class Turret extends SubsystemBase {
     }
 
     // Reset methods
-    public synchronized void resetHomePosition() {
-        resetHomePosition(0);
-    }
-
     public synchronized void resetHomePosition(double homePositionAngleDegrees) {
         turretMotor.setSelectedSensorPosition(0);
         this.homePositionAngleDegrees = homePositionAngleDegrees;

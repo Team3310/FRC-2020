@@ -295,6 +295,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Hood Angle", getHoodAngleAbsoluteDegrees());
 //        SmartDashboard.putNumber("Hood Velocity", shooterHood.getSelectedSensorVelocity());
 //        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
+        SmartDashboard.putBoolean("Shooter Ready", isReady);
     }
 }
 

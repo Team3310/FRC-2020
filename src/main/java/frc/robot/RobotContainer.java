@@ -9,22 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.*;
@@ -32,8 +18,6 @@ import frc.robot.controller.GameController;
 import frc.robot.controller.Playstation;
 import frc.robot.controller.Xbox;
 import frc.robot.subsystems.*;
-
-import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -90,7 +74,7 @@ public class RobotContainer {
         Button mediumShotButton = m_operator.getButtonB();
         mediumShotButton.whenPressed(new ShooterMediumShot(shooter, magazine, turret));
 
-        Button fenderShotButton = m_operator.getButtonA();
+        Button fenderShotButton = m_operator.getButtonX();
         fenderShotButton.whenPressed(new ShooterFenderShot(shooter, magazine, turret));
 
         Button keyShotButton = m_operator.getButtonA();
@@ -118,10 +102,19 @@ public class RobotContainer {
         Button climbArmReleaseButton = m_operator.getStartButton();
         climbArmReleaseButton.whenPressed(new InstantCommand(() -> intake.climbRelease()));
 
+        Button climbLockButton = m_operator.getOptionsButton();
+        climbLockButton.whenPressed(new InstantCommand(() -> intake.climbPTOLock()));
+
+        Button driveGyroResetButton = m_driver.getButtonY();
+        driveGyroResetButton.whenPressed(new SequentialCommandGroup(
+                new TurretAutoZero(turret)
+        ));
+
         // Driver
 //        Button resetHomeButton = m_driver.getStartButton();
 //        resetHomeButton.whenPressed(new ResetAllHomePositions(drive, turret, magazine, shooter));
-
+//        SmartDashboard.putData("Auton Short", new ShooterAutonShortShot(shooter, magazine, turret));
+//
 //        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
 //        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
 //        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
@@ -171,7 +164,7 @@ public class RobotContainer {
 //        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
 //        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
 //        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
-//        SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
+//          SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
 //        SmartDashboard.putData("Turret Turn Gyro", new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES));
 //        SmartDashboard.putData("Turret Turn Limelight", new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES));
 
@@ -195,5 +188,12 @@ public class RobotContainer {
 
 //        SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
 //        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
+
+        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
+        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
+        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
+        SmartDashboard.putData("Reset Gyro", new InstantCommand(() ->
+                drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
+        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
     }
 }

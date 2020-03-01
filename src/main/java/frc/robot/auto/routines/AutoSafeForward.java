@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
-import frc.robot.auto.commands.StopTrajectory;
 import frc.robot.auto.commands.ShooterAutoShortShotTrack;
+import frc.robot.auto.commands.StopTrajectory;
 import frc.robot.commands.ShooterReset;
 import frc.robot.subsystems.*;
 
-public class AutoSafe extends SequentialCommandGroup {
+public class AutoSafeForward extends SequentialCommandGroup {
   TrajectoryGenerator mTrajectories = TrajectoryGenerator.getInstance();
   Drive mDrive = Drive.getInstance();
   Shooter mShooter = Shooter.getInstance();
@@ -30,12 +30,12 @@ public class AutoSafe extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public AutoSafe() {
+  public AutoSafeForward() {
     addCommands(
             new ResetOdometryAuto(),
             new ShooterAutoShortShotTrack(mShooter,mMagazine,mTurret, Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_3_BALL),
             new RamseteCommand(
-                    mTrajectories.getLeftStartToSafe(),
+                    mTrajectories.getLeftStartToSafeForward(),
                     mDrive::getPose,
                     new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                     new SimpleMotorFeedforward(Constants.ksVolts,

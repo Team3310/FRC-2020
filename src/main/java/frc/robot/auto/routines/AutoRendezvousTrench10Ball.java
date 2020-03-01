@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
@@ -51,7 +50,6 @@ public class AutoRendezvousTrench10Ball extends ParallelCommandGroup {
                                         mDrive::tankDriveVolts,
                                         mDrive)),
                         new StopTrajectory(),
-                        new WaitCommand(.25),
                         new RamseteCommand(
                                 mTrajectories.getRendezvous2BallToStartOfTrench(),
                                 mDrive::getPose,
@@ -66,9 +64,7 @@ public class AutoRendezvousTrench10Ball extends ParallelCommandGroup {
                                 // RamseteCommand passes volts to the callback
                                 mDrive::tankDriveVolts,
                                 mDrive),
-
                         new StopTrajectory(),
-                        new WaitCommand(.25),
                         //Intake in Parallel
                         new RamseteCommand(
                                 mTrajectories.getStartOfTrenchToEndOfTrench(),
@@ -85,7 +81,6 @@ public class AutoRendezvousTrench10Ball extends ParallelCommandGroup {
                                 mDrive::tankDriveVolts,
                                 mDrive),
                         new StopTrajectory(),
-                        new WaitCommand(.25),
                         new RamseteCommand(
                                 mTrajectories.getEndOfTrenchToStartOfTrench(),
                                 mDrive::getPose,

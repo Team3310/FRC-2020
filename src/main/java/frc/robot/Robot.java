@@ -154,12 +154,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.auto.routines.*;
 import frc.robot.subsystems.*;
 
@@ -173,7 +171,7 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot
 {
     private Command m_autonomousCommand;
-    private SendableChooser<ParallelCommandGroup> autonTaskChooser;
+    private SendableChooser<Command> autonTaskChooser;
 
     private RobotContainer robotContainer;
     private static final Drive drive = Drive.getInstance();
@@ -202,6 +200,7 @@ public class Robot extends TimedRobot
 
         autonTaskChooser.addOption("Rendezvous/Trench 10 Ball Auto", new AutoRendezvousTrench10Ball());
         autonTaskChooser.addOption("Safe 3 Ball Auto", new AutoSafe());
+        autonTaskChooser.addOption("Safe 3 Ball Auto Forward", new AutoSafeForward());
 
 //        autonTaskChooser.addOption("Test", new AutoTest());
 
@@ -231,6 +230,9 @@ public class Robot extends TimedRobot
     @Override
     public void disabledInit()
     {
+        AirCompressor.getInstance().turnCompressorOn();
+        Limelight.getInstance().setLedMode(Limelight.LightMode.OFF);
+        Limelight.getInstance().setPipeline(Constants.LIMELIGHT_AUTO_PIPELINE);
     }
 
     @Override
@@ -243,18 +245,16 @@ public class Robot extends TimedRobot
      */
     @Override
     public void autonomousInit() {
-        AirCompressor.getInstance().turnCompressorOff();
-        Limelight.getInstance().setLedMode(Limelight.LightMode.OFF);
+        Limelight.getInstance().setPipeline(Constants.LIMELIGHT_AUTO_PIPELINE);
+        Limelight.getInstance().setLedMode(Limelight.LightMode.ON);
+        drive.resetOdometry(new Pose2d());
         turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES);
         magazine.resetHomePosition();
         shooter.resetHoodHomePosition();
         drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES);
         drive.setControlMode(Drive.DriveControlMode.PATH_FOLLOWING);
-        drive.resetOdometry(new Pose2d());
-
 
         m_autonomousCommand = autonTaskChooser.getSelected();
-
 
         /*
          * String autoSelected = SmartDashboard.getString("Auto Selector",

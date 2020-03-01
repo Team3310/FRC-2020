@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -13,6 +14,7 @@ public class ShooterMediumShot extends ParallelCommandGroup {
 
     public ShooterMediumShot(Shooter shooter, Magazine magazine, Turret turret) {
         addCommands(
+                new InstantCommand(()->Limelight.getInstance().setPipeline(Constants.LIMELIGHT_MEDIUM_PIPELINE)),
                 new ShooterSetReady(shooter,false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
                 new SequentialCommandGroup(

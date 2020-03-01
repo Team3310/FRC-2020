@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Limelight;
@@ -17,10 +16,11 @@ public class ShooterReset extends SequentialCommandGroup {
             new ShooterSetSpeed(shooter, 0, 0),
             new ShooterIntakeSetSpeed(shooter, 0),
             new LimelightSetLED(limelight, Limelight.LightMode.OFF),
-            new ParallelCommandGroup(
-                new HoodSetAngle(shooter,Constants.HOOD_RETRACT_HOME_POSITION_DEGREES),
-                new TurretSetAngle(turret, Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)
-            )
-        );
+            new HoodSetAngle(shooter,Constants.HOOD_RETRACT_HOME_POSITION_DEGREES),
+            new ShooterSetReady(shooter,false),
+            new TurretAutoZero(turret),
+            new TurretSetAngle(turret, Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES),
+            new ShooterSetReady(shooter,true)
+            );
     }
 }

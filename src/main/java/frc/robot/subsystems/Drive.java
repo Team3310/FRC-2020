@@ -42,8 +42,8 @@ public class Drive extends SubsystemBase {
 
     private static final double STICK_DEADBAND = 0.02;
 
-    public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.5;
-    public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 0.75;
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_LO = 0.6;
+    public static final double OPEN_LOOP_PERCENT_OUTPUT_HI = 1.0;
 
     public static final double OPEN_LOOP_VOLTAGE_RAMP_HI = 0.3;
     public static final double OPEN_LOOP_VOLTAGE_RAMP_LO = 0.3;

@@ -201,6 +201,10 @@ public class Robot extends TimedRobot
         autonTaskChooser.addOption("Rendezvous/Trench 10 Ball Auto", new AutoRendezvousTrench10Ball());
         autonTaskChooser.addOption("Safe 3 Ball Auto", new AutoSafe());
         autonTaskChooser.addOption("Safe 3 Ball Auto Forward", new AutoSafeForward());
+        autonTaskChooser.addOption("Trench 6 Ball Auto", new AutoTrench6Ball());
+        autonTaskChooser.addOption("Safe 6 Ball Auto", new AutoSafe6Ball());
+
+
 
 //        autonTaskChooser.addOption("Test", new AutoTest());
 

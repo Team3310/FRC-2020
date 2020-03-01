@@ -18,7 +18,7 @@ public class ShooterAutoMediumShotTrack extends SequentialCommandGroup {
                 new InstantCommand(()-> Limelight.getInstance().setPipeline(Constants.LIMELIGHT_MEDIUM_PIPELINE)),
                 new ParallelCommandGroup(
                         new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_AUTON_SHORT_RPM),
-                        new TurretSetAngle(turret, Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES),
+                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
                         new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES)
                 ),
                 new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),

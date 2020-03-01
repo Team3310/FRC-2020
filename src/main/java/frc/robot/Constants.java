@@ -90,7 +90,7 @@ public final class Constants
     public static final double TURRET_GYRO_OFFSET_AUTON_SHORT_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 14.0;
-    public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 8.0;
+    public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 12.3;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
@@ -126,11 +126,12 @@ public final class Constants
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
     // Magazine
-    public static final double MAGAZINE_INTAKE_RPM = 10;
+    public static final double MAGAZINE_INTAKE_RPM = 20;
     public static final double MAGAZINE_SHOOT_RPM = 60;
     public static final double MAGAZINE_SHOOT_AUTO_RPM = 40;
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_3_BALL = 360.0;
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL = 1080.0;
+    public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_6_ROTATIONS = 1800.0;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
     public static final double MAGAZINE_FORWARD_RPM = 15;

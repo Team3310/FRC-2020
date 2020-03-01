@@ -17,8 +17,8 @@ public class ShooterLongShot extends SequentialCommandGroup {
 //                new ShooterSetReady(shooter, false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_LONG_RPM, Constants.SHOOTER_KICKER_LONG_RPM),
                 new SequentialCommandGroup(
-                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES),
-                        new MagazineIndexDividerToTurretTrack(magazine)
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES)
+//                        new MagazineIndexDividerToTurretTrack(magazine)
                 ),
                 new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_LONG_ANGLE_DEGREES),
                 new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_LONG_SHOT_DEGREES),

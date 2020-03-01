@@ -16,8 +16,8 @@ public class ShooterKeyShot extends ParallelCommandGroup {
 //                new ShooterSetReady(shooter,false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_KEY_RPM, Constants.SHOOTER_KICKER_KEY_RPM),
                 new SequentialCommandGroup(
-                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_KEY_SHOT_ANGLE_DEGREES),
-                        new MagazineIndexDividerToTurretTrack(magazine)
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_KEY_SHOT_ANGLE_DEGREES)
+ //                       new MagazineIndexDividerToTurretTrack(magazine)
                 ),
                 new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_KEY_ANGLE_DEGREES),
                 new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_KEY_SHOT_DEGREES),

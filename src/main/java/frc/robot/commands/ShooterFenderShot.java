@@ -15,8 +15,8 @@ public class ShooterFenderShot extends SequentialCommandGroup {
                 new ShooterSetReady(shooter,false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_FENDER_RPM, Constants.SHOOTER_KICKER_FENDER_RPM),
                 new SequentialCommandGroup(
-                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES),
-                        new MagazineIndexDividerToTurretTrack(magazine)
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES)
+//                        new MagazineIndexDividerToTurretTrack(magazine)
                 ),
                 new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_FENDER_ANGLE_DEGREES),
                 new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES),

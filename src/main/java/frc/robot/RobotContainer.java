@@ -107,6 +107,7 @@ public class RobotContainer {
 
         Button driveGyroResetButton = m_driver.getButtonY();
         driveGyroResetButton.whenPressed(new SequentialCommandGroup(
+                new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)),
                 new TurretAutoZero(turret)
         ));
 
@@ -136,7 +137,7 @@ public class RobotContainer {
 //        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
 //        SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(() -> magazine.setMagazineSpeed(0.0)));
 //        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
-//        SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
+        SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
 //        SmartDashboard.putData("Mag Set MM", new InstantCommand(()-> magazine.setMagazineMotionMagicPositionAbsolute(-180.0 + 72.0)));
 //        SmartDashboard.putData("Mag Reset", new InstantCommand(() -> magazine.resetHomePosition()));
 //        SmartDashboard.putData("Mag Index Divider", new MagazineIndexDividerToTurret(magazine, turret));
@@ -154,7 +155,7 @@ public class RobotContainer {
 //
 //        SmartDashboard.putData("Shooter Intake Set Speed", new InstantCommand(()-> shooter.setIntakeSpeed(0.2)));
 //        SmartDashboard.putData("Shooter Intake Set OFF", new InstantCommand(()-> shooter.setIntakeSpeed(0.0)));
-//        SmartDashboard.putData("Shooter Intake Set RPM Fender", new InstantCommand(()-> shooter.seIntakeRPM(2000)));
+//        SmartDashboard.putData("Shooter Intake Set RPM Reverse", new InstantCommand(()-> shooter.seIntakeRPM(-300)));
 //        SmartDashboard.putData("Shooter Intake Set RPM Auto", new InstantCommand(() -> shooter.seIntakeRPM(3000)));
 //        SmartDashboard.putData("Shooter Intake Set RPM Long", new InstantCommand(()-> shooter.seIntakeRPM(4000)));
 
@@ -173,6 +174,7 @@ public class RobotContainer {
 //        SmartDashboard.putData("Shoot Long Shot", new ShooterLongShot(shooter, magazine, turret));
 //        SmartDashboard.putData("Shoot Fender Shot", new ShooterFenderShot(shooter, magazine, turret));
 
+        SmartDashboard.putData("Intake RPM reverse", new IntakeSetRPM(intake, -300));
 //        SmartDashboard.putData("Intake Extend All", new IntakeExtendAll(intake, magazine));
 //        SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
 //        SmartDashboard.putData("Intake Extend Inner", new InstantCommand(() -> intake.extendIntakeInnerArms()));

@@ -81,7 +81,7 @@ public final class Constants
     public static final double TURRET_COMPETITION_HOME_POSITION_DEGREES = -180.0;
     public static final double TURRET_AUTO_HOME_POSITION_DEGREES = -214.1;
     public static final double TURRET_AUTO_ZERO_SPEED = -0.1;
-    public static final double TURRET_MIN_ANGLE_DEGREES = -225.0;
+    public static final double TURRET_MIN_ANGLE_DEGREES = -250.0;
     public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
     public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
     public static final double TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES = -180.0;

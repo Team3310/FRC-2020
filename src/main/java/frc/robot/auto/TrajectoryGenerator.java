@@ -76,21 +76,37 @@ public class TrajectoryGenerator {
 
         //Start 8 Ball Trench Auto
         public Trajectory getCenterStartToEndOfTrench() {
-            Trajectory centerStartToEndOfTrench;
-            centerStartToEndOfTrench = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                    new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
-                    List.of(
-                            new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(40)),
-                            new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(60)),
-                            new Translation2d(Units.inchesToMeters(160), Units.inchesToMeters(63)),
-                            new Translation2d(Units.inchesToMeters(240), Units.inchesToMeters(63))
-                    ),
-                    new Pose2d(Units.inchesToMeters(300), Units.inchesToMeters(65.66), new Rotation2d(0)),
-                    // Pass config
-                    forwardConfig
-            );
-            return centerStartToEndOfTrench;
-        }
+        Trajectory centerStartToEndOfTrench;
+        centerStartToEndOfTrench = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(40)),
+                        new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(60)),
+                        new Translation2d(Units.inchesToMeters(160), Units.inchesToMeters(63)),
+                        new Translation2d(Units.inchesToMeters(240), Units.inchesToMeters(63))
+                ),
+                new Pose2d(Units.inchesToMeters(300), Units.inchesToMeters(65.66), new Rotation2d(0)),
+                // Pass config
+                forwardConfig
+        );
+        return centerStartToEndOfTrench;
+    }
+    public Trajectory getToStartTrench() {
+        Trajectory ToStartTrench;
+        ToStartTrench = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(40)),
+                        new Translation2d(Units.inchesToMeters(80), Units.inchesToMeters(60)),
+                        new Translation2d(Units.inchesToMeters(160), Units.inchesToMeters(63)),
+                        new Translation2d(Units.inchesToMeters(240), Units.inchesToMeters(63))
+                ),
+                new Pose2d(Units.inchesToMeters(70), Units.inchesToMeters(0), new Rotation2d(0)),
+                // Pass config
+                forwardConfig
+        );
+        return ToStartTrench;
+    }
 
     public Trajectory getEndOfTrenchToStartOfTrench() {
             Trajectory endOfTrenchToStartOfTrench;

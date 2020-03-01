@@ -105,6 +105,10 @@ public class RobotContainer {
         Button climbLockButton = m_operator.getOptionsButton();
         climbLockButton.whenPressed(new InstantCommand(() -> intake.climbPTOLock()));
 
+        Button shooterEjectButton = m_operator.getLeftBumper();
+        shooterEjectButton.whenPressed(new ShooterEject(shooter));
+        shooterEjectButton.whenReleased(new ShooterReset(shooter, magazine, turret, limelight));
+
         Button driveGyroResetButton = m_driver.getButtonY();
         driveGyroResetButton.whenPressed(new SequentialCommandGroup(
                 new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)),

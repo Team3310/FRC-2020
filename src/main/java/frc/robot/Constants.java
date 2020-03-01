@@ -138,8 +138,7 @@ public final class Constants
 
 
     // Intake
-    public static final double INTAKE_COLLECT_RPM = 1200; // 1500
-    public static final double INTAKE_REVERSE_RPM = -1200; // -1500
+    public static final double INTAKE_COLLECT_RPM = 1000; // 1500
     public static final double INTAKE_SLOW_RPM = 500;
 
     // Drive
@@ -148,6 +147,7 @@ public final class Constants
     // Vision
     public static final int LIMELIGHT_AUTO_PIPELINE = 2;
     public static final int LIMELIGHT_MEDIUM_PIPELINE = 0;
+    public static final double INTAKE_REVERSE_RPM = -1000; // -1500
     public static final int LIMELIGHT_LONG_PIPELINE = 1;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_KEY_SHOT_DEGREES = 0.0;

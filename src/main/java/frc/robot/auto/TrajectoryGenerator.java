@@ -37,6 +37,14 @@ public class TrajectoryGenerator {
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint);
 
+    TrajectoryConfig forwardConfigSlow =
+            new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
+                    Constants.kMaxAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.kDriveKinematics)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint);
+
     TrajectoryConfig reverseConfig =
             new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
                     Constants.kMaxAccelerationMetersPerSecondSquared)
@@ -165,6 +173,34 @@ public class TrajectoryGenerator {
             return stealStartToStealSpot;
         }
 
+        public Trajectory getStealStartToStealBallV2() {
+            Trajectory stealStartToStealSpot;
+            stealStartToStealSpot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(75), Units.inchesToMeters(-19))
+                ),
+                new Pose2d(Units.inchesToMeters(139), Units.inchesToMeters(-55), Rotation2d.fromDegrees(-45.0)),
+                // Pass config
+                forwardConfigSlow
+            );
+            return stealStartToStealSpot;
+        }
+
+        public Trajectory getStealStartToStealBallV3() {
+            Trajectory stealStartToStealSpot;
+            stealStartToStealSpot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                    new Pose2d(Units.inchesToMeters(126), Units.inchesToMeters(-245), new Rotation2d(0)),
+                    List.of(
+                            new Translation2d(Units.inchesToMeters(201), Units.inchesToMeters(-264))
+                    ),
+                    new Pose2d(Units.inchesToMeters(265), Units.inchesToMeters(-290), Rotation2d.fromDegrees(-45.0)),
+                    // Pass config
+                    forwardConfigSlow
+            );
+            return stealStartToStealSpot;
+        }
+
         public Trajectory getStealBallToCenterShot() {
             Trajectory stealSpotToCenterShot;
             stealSpotToCenterShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
@@ -178,6 +214,20 @@ public class TrajectoryGenerator {
             );
             return stealSpotToCenterShot;
         }
+
+    public Trajectory getStealBallToCenterShotV2() {
+        Trajectory stealSpotToCenterShot;
+        stealSpotToCenterShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(139), Units.inchesToMeters(-55), new Rotation2d(-45)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(107), Units.inchesToMeters(5))
+                ),
+                new Pose2d(Units.inchesToMeters(56), Units.inchesToMeters(125), new Rotation2d(-70)),
+                // Pass config
+                reverseConfig
+        );
+        return stealSpotToCenterShot;
+    }
         //End 5 Ball Steal Auto
 
         //Start 10 Ball Rendezvous/Trench Auto

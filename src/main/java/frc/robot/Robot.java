@@ -197,7 +197,7 @@ public class Robot extends TimedRobot
 
         autonTaskChooser.addOption("Trench 8 Ball Auto", new AutoTrench8Ball());
         autonTaskChooser.addOption("Trench Steal 5 Ball Auto", new AutoTrenchSteal());
-
+        autonTaskChooser.addOption("Trench Steal 5 Ball Auto V2", new AutoTrenchStealV2());
         autonTaskChooser.addOption("Rendezvous/Trench 10 Ball Auto", new AutoRendezvousTrench10Ball());
         autonTaskChooser.addOption("Safe 3 Ball Auto", new AutoSafe());
         autonTaskChooser.addOption("Safe 3 Ball Auto Forward", new AutoSafeForward());
@@ -209,6 +209,8 @@ public class Robot extends TimedRobot
 //        autonTaskChooser.addOption("Test", new AutoTest());
 
         SmartDashboard.putData("Autonomous", autonTaskChooser);
+
+       // Limelight.getInstance().setLedMode(Limelight.LightMode.OFF);
     }
 
     /**

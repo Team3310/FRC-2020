@@ -131,7 +131,7 @@ public final class Constants
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
     // Magazine
-    public static final double MAGAZINE_INTAKE_RPM = 60;
+    public static final double MAGAZINE_INTAKE_RPM = 40;
     public static final double MAGAZINE_SHOOT_RPM = 60;
     public static final double MAGAZINE_SHOOT_AUTO_RPM = 40;
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_3_BALL = 360.0;

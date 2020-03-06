@@ -235,9 +235,9 @@ public class TrajectoryGenerator {
             Trajectory stealFarSideRendezvousPoint2Balls = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
                new Pose2d(Units.inchesToMeters(56), Units.inchesToMeters(125), new Rotation2d(-70)),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(-32))
+                        new Translation2d(Units.inchesToMeters(71), Units.inchesToMeters(69))
                 ),
-                new Pose2d(Units.inchesToMeters(-45), Units.inchesToMeters(0), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(101), Units.inchesToMeters(72), new Rotation2d(24)),
                 // Pass config
                 forwardConfig
             );
@@ -246,11 +246,11 @@ public class TrajectoryGenerator {
 
         public Trajectory getStealFarSideRendezvousPointRetreat() {
         Trajectory stealFarSideRendezvousPointRetreat = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                new Pose2d(Units.inchesToMeters(-45), Units.inchesToMeters(0), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(101), Units.inchesToMeters(72), new Rotation2d(24)),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(22), Units.inchesToMeters(0))
+                        new Translation2d(Units.inchesToMeters(87), Units.inchesToMeters(63))
                 ),
-                new Pose2d(Units.inchesToMeters(47), Units.inchesToMeters(0), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(54), Units.inchesToMeters(52), new Rotation2d(30)),
                 // Pass config
                 reverseConfig
              );
@@ -259,11 +259,11 @@ public class TrajectoryGenerator {
 
         public Trajectory getStealFarSideRendezvousPointThirdBall() {
         Trajectory stealFarSideRendezvousPointThirdBall = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                new Pose2d(Units.inchesToMeters(47), Units.inchesToMeters(0), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(54), Units.inchesToMeters(52), new Rotation2d(30)),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(-24), Units.inchesToMeters(32))
+                        new Translation2d(Units.inchesToMeters(77), Units.inchesToMeters(76))
                 ),
-                new Pose2d(Units.inchesToMeters(-55), Units.inchesToMeters(26), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(91), Units.inchesToMeters(92), new Rotation2d(36)),
                 // Pass config
                 forwardConfig
         );
@@ -272,11 +272,11 @@ public class TrajectoryGenerator {
 
         public Trajectory getStealFarSideRendezvousPointThreeBallShot() {
         Trajectory stealFarSideRendezvousPointThreeBallShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                new Pose2d(Units.inchesToMeters(-55), Units.inchesToMeters(26), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(91), Units.inchesToMeters(92), new Rotation2d(36)),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(40), Units.inchesToMeters(-9))
+                        new Translation2d(Units.inchesToMeters(74), Units.inchesToMeters(93))
                 ),
-                new Pose2d(Units.inchesToMeters(53), Units.inchesToMeters(-57), new Rotation2d(0)),
+                new Pose2d(Units.inchesToMeters(46), Units.inchesToMeters(100), new Rotation2d(-12)),
                 // Pass config
                 reverseConfig
         );

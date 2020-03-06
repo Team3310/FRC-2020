@@ -230,6 +230,60 @@ public class TrajectoryGenerator {
     }
         //End 5 Ball Steal Auto
 
+        // Start 8 Ball Steal Auto
+        public Trajectory getStealFarSideRendezvousPoint2Balls() {
+            Trajectory stealFarSideRendezvousPoint2Balls = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+               new Pose2d(Units.inchesToMeters(56), Units.inchesToMeters(125), new Rotation2d(-70)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(-12), Units.inchesToMeters(-32))
+                ),
+                new Pose2d(Units.inchesToMeters(-45), Units.inchesToMeters(0), new Rotation2d(0)),
+                // Pass config
+                forwardConfig
+            );
+            return stealFarSideRendezvousPoint2Balls;
+        }
+
+        public Trajectory getStealFarSideRendezvousPointRetreat() {
+        Trajectory stealFarSideRendezvousPointRetreat = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(-45), Units.inchesToMeters(0), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(22), Units.inchesToMeters(0))
+                ),
+                new Pose2d(Units.inchesToMeters(47), Units.inchesToMeters(0), new Rotation2d(0)),
+                // Pass config
+                reverseConfig
+             );
+            return stealFarSideRendezvousPointRetreat;
+        }
+
+        public Trajectory getStealFarSideRendezvousPointThirdBall() {
+        Trajectory stealFarSideRendezvousPointThirdBall = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(47), Units.inchesToMeters(0), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(-24), Units.inchesToMeters(32))
+                ),
+                new Pose2d(Units.inchesToMeters(-55), Units.inchesToMeters(26), new Rotation2d(0)),
+                // Pass config
+                forwardConfig
+        );
+        return stealFarSideRendezvousPointThirdBall;
+    }
+
+        public Trajectory getStealFarSideRendezvousPointThreeBallShot() {
+        Trajectory stealFarSideRendezvousPointThreeBallShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(-55), Units.inchesToMeters(26), new Rotation2d(0)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(40), Units.inchesToMeters(-9))
+                ),
+                new Pose2d(Units.inchesToMeters(53), Units.inchesToMeters(-57), new Rotation2d(0)),
+                // Pass config
+                reverseConfig
+        );
+        return stealFarSideRendezvousPointThreeBallShot;
+        }
+        // End 8 Ball Steal Auto
+
         //Start 10 Ball Rendezvous/Trench Auto
         public Trajectory getCenterStartToRendezvous2ball() {
             Trajectory centerStartToRendezvous2Ball;

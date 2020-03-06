@@ -73,6 +73,7 @@ public class AutoTrenchStealV2 extends SequentialCommandGroup {
                                 Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL)
                 ),
                 new StopTrajectory(),
+
                // new IntakeRetractAll(mIntake,mMagazine),
                 new ShooterAutoShoot(mShooter,mMagazine,mTurret,
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),

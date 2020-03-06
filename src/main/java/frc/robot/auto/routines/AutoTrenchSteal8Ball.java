@@ -14,6 +14,7 @@ import frc.robot.auto.commands.ShooterAutoLegShotTrack;
 import frc.robot.auto.commands.ShooterAutoShoot;
 import frc.robot.auto.commands.StopTrajectory;
 import frc.robot.commands.IntakeExtendAll;
+import frc.robot.commands.IntakeExtendAllAuto;
 import frc.robot.commands.ShooterReset;
 import frc.robot.subsystems.*;
 
@@ -44,7 +45,7 @@ public class AutoTrenchSteal8Ball extends SequentialCommandGroup {
                                 // RamseteCommand passes volts to the callback
                                 mDrive::tankDriveVolts,
                                 mDrive),
-                        new IntakeExtendAll(mIntake, mMagazine)
+                        new IntakeExtendAllAuto(mIntake, mTurret)
                 ),
                 new StopTrajectory(),
                 new ParallelDeadlineGroup(

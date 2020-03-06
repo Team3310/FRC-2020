@@ -19,7 +19,7 @@ import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
 import frc.robot.auto.commands.ShooterAutoShortShotTrack;
 import frc.robot.auto.commands.StopTrajectory;
-import frc.robot.commands.IntakeExtendAllAuto;
+import frc.robot.commands.IntakeExtendAll;
 import frc.robot.commands.IntakeRetractAll;
 import frc.robot.commands.ShooterReset;
 import frc.robot.subsystems.*;
@@ -52,7 +52,7 @@ public class AutoTrenchSteal extends ParallelCommandGroup {
                         // RamseteCommand passes volts to the callback
                         mDrive::tankDriveVolts,
                         mDrive),
-                        new IntakeExtendAllAuto(mIntake,mMagazine)
+                        new IntakeExtendAll(mIntake, mMagazine)
 ),
                 new StopTrajectory(),
                 new RamseteCommand(

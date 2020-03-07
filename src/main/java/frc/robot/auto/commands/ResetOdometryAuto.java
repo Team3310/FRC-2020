@@ -10,10 +10,20 @@ public class ResetOdometryAuto extends CommandBase {
 
     private static final Drive mDrive = Drive.getInstance();
     private static final Turret mTurret = Turret.getInstance();
+    private Pose2d startPose;
+
+    public ResetOdometryAuto(Pose2d startPose) {
+        this.startPose = startPose;
+    }
+
+    public ResetOdometryAuto() {
+        this.startPose = new Pose2d();
+    }
+
     @Override
     public void initialize() {
         System.out.println("Reset Odometry Started");
-        mDrive.resetOdometry(new Pose2d());
+        mDrive.resetOdometry(startPose);
         mDrive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES);
         mTurret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES);
 

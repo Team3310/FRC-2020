@@ -470,11 +470,11 @@ public class Drive extends SubsystemBase {
             }
         }
 
-//        SmartDashboard.putNumber("Left Distance Inches: ", getLeftWheelDistanceInches());
-//        SmartDashboard.putNumber("Right Distance Inches: ", getRightWheelDistanceInches());
-//
-//        SmartDashboard.putNumber("Left Distance Meters: ", getLeftWheelDistanceMeters());
-//        SmartDashboard.putNumber("Right Distance Meters: ", getRightWheelDistanceMeters());
+        SmartDashboard.putNumber("Left Distance Inches: ", getLeftWheelDistanceInches());
+       SmartDashboard.putNumber("Right Distance Inches: ", getRightWheelDistanceInches());
+
+       SmartDashboard.putNumber("Left Distance Meters: ", getLeftWheelDistanceMeters());
+        SmartDashboard.putNumber("Right Distance Meters: ", getRightWheelDistanceMeters());
 
         SmartDashboard.putNumber("Heading: ", getGyroFusedHeadingAngleDeg());
 

@@ -92,7 +92,7 @@ public final class Constants
     public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 14.0;
     public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 12.3;
-    public static final double TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES = -3.0;
+    public static final double TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES = -34.0;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
@@ -107,7 +107,7 @@ public final class Constants
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
     public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
-    public static final double HOOD_LEG_ANGLE_DEGREES = 47.0;
+    public static final double HOOD_LEG_ANGLE_DEGREES = 45.5;
 
     // Shooter
     public static final double SHOOTER_MAIN_FENDER_RPM = 2000;
@@ -117,7 +117,7 @@ public final class Constants
     public static final double SHOOTER_MAIN_MEDIUM_RPM = 3500;
     public static final double SHOOTER_MAIN_LONG_RPM = 4300;
     public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
-    public static final double SHOOTER_MAIN_LEG_RPM = 3500;
+    public static final double SHOOTER_MAIN_LEG_RPM = 3400;
 
     public static final double SHOOTER_KICKER_FENDER_RPM = 2000;
     public static final double SHOOTER_KICKER_KEY_RPM = 2200;
@@ -126,7 +126,7 @@ public final class Constants
     public static final double SHOOTER_KICKER_MEDIUM_RPM = 3500;
     public static final double SHOOTER_KICKER_LONG_RPM = 4300;
     public static final double SHOOTER_KICKER_RPM_EPSILON = 100;
-    public static final double SHOOTER_KICKER_LEG_RPM = 3500;
+    public static final double SHOOTER_KICKER_LEG_RPM = 3400;
 
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
@@ -134,8 +134,9 @@ public final class Constants
     public static final double MAGAZINE_INTAKE_RPM = 40;
     public static final double MAGAZINE_SHOOT_RPM = 60;
     public static final double MAGAZINE_SHOOT_AUTO_RPM = 40;
+    public static final double MAGAZINE_SHOOT_AUTO_LEG_RPM = 80;
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_3_BALL = 360.0;
-    public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL = 1080.0;
+    public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL = 500.0;
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_6_ROTATIONS = 1800.0;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
@@ -153,7 +154,7 @@ public final class Constants
     // Vision
     public static final int LIMELIGHT_AUTO_PIPELINE = 2;
     public static final int LIMELIGHT_MEDIUM_PIPELINE = 0;
-    public static final int LIMELIGHT_LEG_PIPELINE = 0;
+    public static final int LIMELIGHT_LEG_PIPELINE = 3;
     public static final double INTAKE_REVERSE_RPM = -1000; // -1500
     public static final int LIMELIGHT_LONG_PIPELINE = 1;
     public static final double LIMELIGHT_OFFSET_FENDER_SHOT_DEGREES = 0.0;
@@ -162,7 +163,7 @@ public final class Constants
     public static final double LIMELIGHT_OFFSET_AUTO_SHOT_DEGREES = 0.0;
     public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -3.5;
     public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -2.0;
-    public static final double LIMELIGHT_OFFSET_LEG_SHOT_DEGREES = 20.0; // 7.0
+    public static final double LIMELIGHT_OFFSET_LEG_SHOT_DEGREES = -1.5;
 
     // Climb
     public static final double CLIMB_MIN_INCHES = 0.0;

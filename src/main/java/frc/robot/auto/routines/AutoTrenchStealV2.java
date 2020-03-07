@@ -69,8 +69,7 @@ public class AutoTrenchStealV2 extends SequentialCommandGroup {
                         // RamseteCommand passes volts to the callback
                         mDrive::tankDriveVolts,
                         mDrive),
-                        new ShooterAutoLegShotTrack(mShooter,mMagazine,mTurret,
-                                Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL)
+                        new ShooterAutoLegShotTrack(mShooter,mTurret)
                 ),
                 new StopTrajectory(),
 

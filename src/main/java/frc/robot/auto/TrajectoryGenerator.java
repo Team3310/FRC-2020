@@ -240,10 +240,11 @@ public class TrajectoryGenerator {
                         new Translation2d(Units.inchesToMeters(195), Units.inchesToMeters(-159))
 
                 ),
-                new Pose2d(Units.inchesToMeters(237), Units.inchesToMeters(-159), new Rotation2d(10)),
+                new Pose2d(Units.inchesToMeters(232), Units.inchesToMeters(-159), new Rotation2d(5)), // 10
                 // Pass config
                 forwardConfig
             );
+
             return stealFarSideRendezvousPoint2Balls;
         }
 

@@ -14,17 +14,23 @@ public class ShooterMediumShot extends ParallelCommandGroup {
 
     public ShooterMediumShot(Shooter shooter, Magazine magazine, Turret turret) {
         addCommands(
+                new LimelightSetLED(Limelight.getInstance(), Limelight.LightMode.ON),
                 new InstantCommand(()->Limelight.getInstance().setPipeline(Constants.LIMELIGHT_MEDIUM_PIPELINE)),
                 new ShooterSetReady(shooter,false),
                 new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
+                new MagazineSetRPM(magazine, Constants.MAGAZINE_SHOOT_RPM),
+                //               new SequentialCommandGroup(
+ //                       new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES)
+ //                       new MagazineIndexDividerToTurretTrack(magazine)
+ //               ),
+ //               new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES),
+ //               new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),
+                new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES),
                 new SequentialCommandGroup(
-                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES)
-//                        new MagazineIndexDividerToTurretTrack(magazine)
-                ),
-                new ShooterSetCachedHoodAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES),
-                new TurretSetCachedLimelightOffset(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),
-                new LimelightSetLED(Limelight.getInstance(), Limelight.LightMode.ON),
-                new ShooterSetReady(shooter, true)
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
+                        new TurretSetToTrackLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),
+                        new ShooterSetReady(shooter, true)
+                )
         );
     }
 }

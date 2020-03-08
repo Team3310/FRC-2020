@@ -12,12 +12,12 @@ public class ShooterShoot extends SequentialCommandGroup {
 
     public ShooterShoot(Shooter shooter, Magazine magazine, Turret turret, Limelight limelight) {
         addCommands(
-            new HoodSetCachedAngle(shooter),
+ //           new HoodSetCachedAngle(shooter),
  //           new ShooterIsReady(shooter),
-            new TurretSetToCachedLimelightAngle(turret),
+ //           new TurretSetToCachedLimelightAngle(turret),
  //           new MagazineIndexDividerToTurret(magazine, turret),
-            new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
-            new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
+            new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM)
+ //           new MagazineSetRPMLimit(magazine, Constants.MAGAZINE_SHOOT_RPM, Constants.MAGAZINE_JAM_STATOR_CURRENT)
         );
     }
 }

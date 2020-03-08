@@ -83,7 +83,7 @@ public final class Constants
     public static final double TURRET_AUTO_HOME_POSITION_DEGREES = -214.1;
     public static final double TURRET_AUTO_ZERO_SPEED = -0.1;
     public static final double TURRET_MIN_ANGLE_DEGREES = -250.0;
-    public static final double TURRET_MAX_ANGLE_DEGREES = 45.0;
+    public static final double TURRET_MAX_ANGLE_DEGREES = -45.0;
     public static final double TURRET_INTAKE_ANGLE_DEGREES = -180.0;
     public static final double TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES = -180.0;
     public static final double TURRET_GYRO_OFFSET_FENDER_SHOT_ANGLE_DEGREES = 0.0;
@@ -93,6 +93,8 @@ public final class Constants
     public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 14.0;
     public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 12.3;
     public static final double TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES = -34.0;
+    public static final double TURRET_GYRO_OFFSET_AUTO_DOUBLE_SHOT_ANGLE_DEGREES = -34.0;
+    public static final double TURRET_GYRO_OFFSET_ALL_FIELD_ANGLE_DEGREES = 0.0;
 
     // Hood
     public static final double HOOD_COMPETITION_HOME_POSITION_DEGREES = 0.0;
@@ -108,6 +110,9 @@ public final class Constants
     public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
     public static final double HOOD_LEG_ANGLE_DEGREES = 45.5;
+    public static final double HOOD_AUTO_DOUBLE_ANGLE_DEGREES = 46;
+    public static final double HOOD_ALL_FIELD_ANGLE_DEGREES = 0.0;
+    public static final double HOOD_GYRO_OFFSET_ALL_FIELD_DEGREES = -34.0;
 
     // Shooter
     public static final double SHOOTER_MAIN_FENDER_RPM = 2000;
@@ -118,6 +123,8 @@ public final class Constants
     public static final double SHOOTER_MAIN_LONG_RPM = 4300;
     public static final double SHOOTER_MAIN_RPM_EPSILON = 100;
     public static final double SHOOTER_MAIN_LEG_RPM = 3400;
+    public static final double SHOOTER_MAIN_AUTO_DOUBLE_RPM = 3600;
+    public static final double SHOOTER_MAIN_ALL_FIELD_RPM = 3600;
 
     public static final double SHOOTER_KICKER_FENDER_RPM = 2000;
     public static final double SHOOTER_KICKER_KEY_RPM = 2200;
@@ -127,6 +134,8 @@ public final class Constants
     public static final double SHOOTER_KICKER_LONG_RPM = 4300;
     public static final double SHOOTER_KICKER_RPM_EPSILON = 100;
     public static final double SHOOTER_KICKER_LEG_RPM = 3400;
+    public static final double SHOOTER_KICKER_AUTO_DOUBLE_RPM = 3600;
+    public static final double SHOOTER_KICKER_ALL_FIELD_RPM = 3600;
 
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
@@ -164,6 +173,8 @@ public final class Constants
     public static final double LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES = -3.5;
     public static final double LIMELIGHT_OFFSET_LONG_SHOT_DEGREES = -2.0;
     public static final double LIMELIGHT_OFFSET_LEG_SHOT_DEGREES = -1.5;
+    public static final double LIMELIGHT_OFFSET_AUTO_DOUBLE_SHOT_DEGREES = 1.0;
+    public static final double LIMELIGHT_OFFSET_ALL_FIELD_DEGREES = 1.0;
 
     // Climb
     public static final double CLIMB_MIN_INCHES = 0.0;

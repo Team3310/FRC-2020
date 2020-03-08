@@ -204,7 +204,7 @@ public class Robot extends TimedRobot
         autonTaskChooser.addOption("Safe 3 Ball Auto Forward", new AutoSafeForward());
         autonTaskChooser.addOption("Trench 6 Ball Auto", new AutoTrench6Ball());
         autonTaskChooser.addOption("Safe 6 Ball Auto", new AutoSafe6Ball());
-        autonTaskChooser.addOption("Trench Steal 8 Ball Auto", new AutoTrenchSteal8Ball());
+        autonTaskChooser.addOption("Trench Steal 7 Ball Auto", new AutoTrenchSteal7Ball());
 
 
 

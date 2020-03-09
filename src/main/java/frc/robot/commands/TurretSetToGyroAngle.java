@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Turret;
+import frc.robot.utilities.Util;
 
 public class TurretSetToGyroAngle extends ExtraTimeoutCommand
 {
@@ -24,14 +25,14 @@ public class TurretSetToGyroAngle extends ExtraTimeoutCommand
 
     @Override
     public void initialize() {
-        double gyroMirror = Drive.getInstance().getGyroFusedHeadingAngleDeg();
+        double gyroMirror = Util.normalizeAngle90ToMinus270(Drive.getInstance().getGyroFusedHeadingAngleDeg());
         if (Math.abs(gyroMirror) < 90) {
             gyroMirror = -gyroMirror;
         }
         else {
             gyroMirror = (-180 - gyroMirror) - 180;
         }
-        turret.setTurretMotionMagicPositionAbsolute(gyroMirror + offsetAngleDeg);
+        turret.setTurretMotionMagicPositionAbsolute(Util.normalizeAngle90ToMinus270(gyroMirror) + offsetAngleDeg);
         resetExtraOneTimer();
         startExtraOneTimeout(0.1);
     }

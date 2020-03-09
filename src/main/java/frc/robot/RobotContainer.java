@@ -166,7 +166,8 @@ public class RobotContainer {
 //        SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
 //        SmartDashboard.putData("Turret Set OFF", new InstantCommand(() -> turret.setTurretSpeed(0.0)));
 //        SmartDashboard.putData("Turret Reset", new InstantCommand(() -> turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
-//        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
+        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
+        SmartDashboard.putData("Turret MM 180", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-180)));
 //        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
 //        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
 //          SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
@@ -190,7 +191,9 @@ public class RobotContainer {
 //        SmartDashboard.putData("Hood Set Forward", new InstantCommand(()-> shooter.setHoodSpeed(0.3)));
 //        SmartDashboard.putData("Hood Set OFF", new InstantCommand(() -> shooter.setHoodSpeed(0.0)));
 //        SmartDashboard.putData("Hood Reset", new InstantCommand(() -> shooter.resetHoodHomePosition()));
-//        SmartDashboard.putData("Hood MM", new InstantCommand(() -> shooter.setHoodMotionMagicPositionAbsolute(20)));
+        SmartDashboard.putData("Hood MM", new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES));
+        SmartDashboard.putData("Hood MM V2", new HoodSetAngle(shooter, 2));
+
 
 //        SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
 //        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));

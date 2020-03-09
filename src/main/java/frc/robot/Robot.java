@@ -194,6 +194,7 @@ public class Robot extends TimedRobot
         autonTaskChooser = new SendableChooser<>();
 
         autonTaskChooser.setDefaultOption("Do Nothing", new AutoDoNothing());
+        autonTaskChooser.addOption("Test 8 Feet Auto", new AutoTest8Feet());
 
         autonTaskChooser.addOption("Trench 8 Ball Auto", new AutoTrench8Ball());
         autonTaskChooser.addOption("Trench Steal 5 Ball Auto", new AutoTrenchSteal());
@@ -203,6 +204,7 @@ public class Robot extends TimedRobot
         autonTaskChooser.addOption("Safe 3 Ball Auto Forward", new AutoSafeForward());
         autonTaskChooser.addOption("Trench 6 Ball Auto", new AutoTrench6Ball());
         autonTaskChooser.addOption("Safe 6 Ball Auto", new AutoSafe6Ball());
+        autonTaskChooser.addOption("Trench Steal 7 Ball Auto", new AutoTrenchSteal7Ball());
 
 
 
@@ -294,6 +296,7 @@ public class Robot extends TimedRobot
             m_autonomousCommand.cancel();
         }
         drive.setControlMode(Drive.DriveControlMode.JOYSTICK);
+        Limelight.getInstance().setLedMode(Limelight.LightMode.ON);
     }
 
     /**

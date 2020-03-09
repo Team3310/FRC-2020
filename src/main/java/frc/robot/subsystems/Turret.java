@@ -72,7 +72,7 @@ public class Turret extends SubsystemBase {
 
         turretMotor.config_kF(kTurretMotionMagicSlot, 0.04);
         turretMotor.config_kP(kTurretMotionMagicSlot, 0.9);
-        turretMotor.config_kI(kTurretMotionMagicSlot, 0.002);
+        turretMotor.config_kI(kTurretMotionMagicSlot, 0.004);
         turretMotor.config_kD(kTurretMotionMagicSlot, 0.0);
         turretMotor.config_IntegralZone(kTurretMotionMagicSlot, (int)(5.0 * TURRET_DEGREES_TO_ENCODER_TICKS));
 
@@ -231,14 +231,14 @@ public class Turret extends SubsystemBase {
     }
 
     private void updateGyroTrack() {
-        double gyroMirror = Drive.getInstance().getGyroFusedHeadingAngleDeg();
+        double gyroMirror = Util.normalizeAngle90ToMinus270(Drive.getInstance().getGyroFusedHeadingAngleDeg());
         if (Math.abs(gyroMirror) < 90) {
             gyroMirror = -gyroMirror;
         }
         else {
             gyroMirror = (-180 - gyroMirror) - 180;
         }
-        setTurretMotionMagicPositionAbsoluteInternal(gyroMirror + gyroTrackOffsetAngle);
+        setTurretMotionMagicPositionAbsoluteInternal(Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
     }
 
     public void setLimelightTrackMode(double limelightTrackOffsetAngle) {

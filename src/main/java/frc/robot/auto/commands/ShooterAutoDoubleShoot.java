@@ -12,11 +12,11 @@ import frc.robot.subsystems.Magazine;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-public class ShooterAutoShoot extends SequentialCommandGroup {
+public class ShooterAutoDoubleShoot extends SequentialCommandGroup {
 
-    public ShooterAutoShoot(Shooter shooter, Magazine magazine, Turret turret, double magazineRotations) {
+    public ShooterAutoDoubleShoot(Shooter shooter, Magazine magazine, Turret turret, double magazineRotations) {
         addCommands(
-                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_LEG_SHOT_DEGREES),
+                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_AUTO_DOUBLE_SHOT_DEGREES),
                 new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
                 new WaitCommand(2),
                 new ShooterIntakeSetSpeed(shooter, 0),

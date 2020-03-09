@@ -10,14 +10,14 @@ import frc.robot.subsystems.Turret;
 
 public class IntakeExtendAllAuto extends SequentialCommandGroup {
 
-    public IntakeExtendAllAuto(Intake intake, Magazine magazine) {
+    public IntakeExtendAllAuto(Intake intake, Turret turret, Magazine magazine) {
 
         addCommands(
-                new TurretSetAngle(Turret.getInstance(), Constants.TURRET_INTAKE_ANGLE_DEGREES),
+                new TurretSetAngle(turret, Constants.TURRET_INTAKE_ANGLE_DEGREES),
                 new IntakeExtendArms(intake),
                 new WaitCommand(0.25),
                 new IntakeSetRPM(intake, Constants.INTAKE_COLLECT_RPM),
-                new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_INTAKE_RPM, 180)
+                new MagazineSetRPM(magazine, Constants.MAGAZINE_INTAKE_RPM)
         );
     }
 }

@@ -13,18 +13,16 @@ import frc.robot.subsystems.Shooter;
 public class HoodSetToTrackLimelightAngle extends CommandBase
 {
     private final Shooter shooter;
-    private double offsetAngleDeg;
 
-    public HoodSetToTrackLimelightAngle(Shooter subsystem, double offsetAngleDeg)
+    public HoodSetToTrackLimelightAngle(Shooter subsystem)
     {
         this.shooter = subsystem;
-        this.offsetAngleDeg = offsetAngleDeg;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        shooter.setLimelightTrackMode(offsetAngleDeg);
+        shooter.setLimelightTrackMode();
     }
 
     @Override

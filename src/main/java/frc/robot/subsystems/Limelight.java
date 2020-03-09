@@ -6,6 +6,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
+
+    private static final double CAMERA_ANGLE_DEGREES = 31.0;
+    private static final double TARGET_HEIGHT_INCHES = 81.25;
+    private static final double CAMERA_HEIGHT_INCHES = 24.0;
+
     private NetworkTableInstance table = null;
 
     public enum LightMode {
@@ -103,6 +108,17 @@ public class Limelight extends SubsystemBase {
      */
     public void setPipeline(int number) {
         getValue("pipeline").setNumber(number);
+    }
+
+    public double getDistanceFromTargetInches() {
+        double angle = CAMERA_ANGLE_DEGREES + getTy();
+        if (angle < 1 || angle > 89) {
+            return 0;
+        }
+        double tanTerm = Math.tan(Math.toRadians(angle));
+        double distance = (TARGET_HEIGHT_INCHES - CAMERA_HEIGHT_INCHES) / tanTerm;
+
+        return distance;
     }
 
     /**

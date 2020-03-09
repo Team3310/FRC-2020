@@ -12,7 +12,7 @@ import frc.robot.utilities.Util;
 public class Shooter extends SubsystemBase {
 
     public static enum HoodControlMode {
-        MOTION_MAGIC, VELOCITY, MANUAL, MOTION_MAGIC_TRACK_GYRO, MOTION_MAGIC_TRACK_LIMELIGHT
+        MOTION_MAGIC, VELOCITY, MANUAL, MOTION_MAGIC_TRACK_LIMELIGHT
     };
 
     // Conversions
@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
     private double gyroTrackOffsetAngle;
     private double limelightTrackOffsetAngle;
     private boolean limelightTargetFound;
-    private double previousLimelightAngle;
+    private double previousLimelightDistance;
     private int maxNumInvalidLimelightAttempts = 100;
     private int currentNumInvalidLimelightAttempts;
     private double cachedLimelightHoodOffset;
@@ -296,27 +296,17 @@ public class Shooter extends SubsystemBase {
         return cachedHoodAngle;
     }
 
-    public void setGyroTrackMode(double gyroOffsetAngle) {
-        this.gyroTrackOffsetAngle = gyroOffsetAngle;
-        setHoodControlMode(HoodControlMode.MOTION_MAGIC_TRACK_GYRO);
-        updateGyroTrack();
+    public void setHoodAngleBasedOnDistance(double distanceInches) {
+        setHoodMotionMagicPositionAbsolute(getInterpolatedHoodAngle(distanceInches));
     }
 
-    private void updateGyroTrack() {
-        double gyroMirror = Util.normalizeAngle180ToMinus180(Drive.getInstance().getGyroFusedHeadingAngleDeg());
-        if (Math.abs(gyroMirror) < 90) {
-            gyroMirror = -gyroMirror;
-        }
-        else {
-            gyroMirror = (-180 - gyroMirror) - 180;
-        }
-        setHoodMotionMagicPositionAbsoluteInternal(gyroMirror + gyroTrackOffsetAngle);
+    public double getInterpolatedHoodAngle(double distanceInches) {
+        return (distanceInches * Constants.HOOD_DISTANCE_SLOPE * Constants.HOOD_DISTANCE_INTERCEPT);
     }
 
-    public void setLimelightTrackMode(double limelightTrackOffsetAngle) {
+    public void setLimelightTrackMode() {
         limelightTargetFound = false;
         currentNumInvalidLimelightAttempts = 0;
-        this.limelightTrackOffsetAngle = limelightTrackOffsetAngle;
         setHoodControlMode(HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT);
         updateLimelightTrack();
     }
@@ -325,8 +315,8 @@ public class Shooter extends SubsystemBase {
         Limelight limelight = Limelight.getInstance();
         if (limelight.isOnTarget()) {
             limelightTargetFound = true;
-            previousLimelightAngle = -limelight.getTx() + limelightTrackOffsetAngle;
-            setHoodMotionMagicPositionRelativeInternal(previousLimelightAngle);
+            previousLimelightDistance = limelight.getDistanceFromTargetInches();
+            setHoodAngleBasedOnDistance(previousLimelightDistance);
         }
         else if (limelightTargetFound) {
             currentNumInvalidLimelightAttempts++;
@@ -335,41 +325,9 @@ public class Shooter extends SubsystemBase {
             }
         }
         else {
-            updateGyroTrack();
+            setHoodMotionMagicPositionAbsolute(Constants.HOOD_AUTO_ANGLE_DEGREES);
         }
     }
-
-        public synchronized void setHoodMotionMagicPositionRelativeInternal(double delta_angle) {
-            shooterHood.selectProfileSlot(kHoodMotionMagicSlot, 0);
-            targetPositionTicks = getHoodEncoderTicksRelative(delta_angle);
-//        System.out.println("Set point MM relative encoder ticks = " + targetPositionTicks);
-            shooterHood.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
-        }
-
-    private int getHoodEncoderTicksRelative(double delta_angle) {
-        double positionDegrees = limitHoodAngle(getHoodAngleAbsoluteDegrees() + delta_angle) - homePositionAngleDegrees;
-        return (int) (positionDegrees * HOOD_DEGREES_TO_ENCODER_TICKS);
-    }
-
-    public synchronized void setHoodMotionMagicPositionAbsoluteInternal(double angle) {
-        shooterHood.selectProfileSlot(kHoodMotionMagicSlot, 0);
-        targetPositionTicks = getHoodEncoderTicksAbsolute(limitHoodAngle(angle));
-        System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
-        shooterHood.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
-    }
-
-    public synchronized void setHoodMotionMagicPositionRelative(double delta_angle) {
-        if (getHoodControlMode() != HoodControlMode.MOTION_MAGIC) {
-            setHoodControlMode(HoodControlMode.MOTION_MAGIC);
-        }
-        setHoodMotionMagicPositionRelativeInternal(delta_angle);
-    }
-
-    public synchronized boolean hasFinishedTrajectory() {
-        return hoodControlMode == hoodControlMode.MOTION_MAGIC
-                && Util.epsilonEquals(shooterHood.getActiveTrajectoryPosition(), targetPositionTicks, 100);
-    }
-
 
     @Override
     public void periodic() {
@@ -398,10 +356,7 @@ public class Shooter extends SubsystemBase {
 //        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
         SmartDashboard.putBoolean("Shooter Ready", isReady);
 
-        if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_GYRO) {
-            updateGyroTrack();
-        }
-        else if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
+        if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
             updateLimelightTrack();
         }
     }

@@ -97,6 +97,14 @@ public class Shooter extends SubsystemBase {
         shooterKicker.configStatorCurrentLimit(statorCurrentConfigs);
         shooterIntake.configStatorCurrentLimit(statorCurrentConfigs);
 
+        StatorCurrentLimitConfiguration statorCurrentHoodConfigs = new StatorCurrentLimitConfiguration();
+        statorCurrentHoodConfigs.currentLimit = 30;
+        statorCurrentHoodConfigs.enable = true;
+        statorCurrentHoodConfigs.triggerThresholdCurrent = 60;
+        statorCurrentHoodConfigs.triggerThresholdTime = 0.5;
+
+        shooterHood.configStatorCurrentLimit(statorCurrentHoodConfigs);
+
         shooterMainMaster.config_kF(0, 0.05);
         shooterMainMaster.config_kP(0, 0.5);
         shooterMainMaster.config_kI(0, 0.0);

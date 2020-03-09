@@ -150,6 +150,8 @@ public class Drive extends SubsystemBase {
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 60;
+        statorCurrentConfigs.triggerThresholdCurrent = 80;
+        statorCurrentConfigs.triggerThresholdTime = 0.5;
         statorCurrentConfigs.enable = true;
 
         mLeftMaster.configStatorCurrentLimit(statorCurrentConfigs);
@@ -341,7 +343,8 @@ public class Drive extends SubsystemBase {
         }
 
         boolean isHighGearPrevious = isHighGear;
-        isHighGear = m_driverController.getRightBumper().get();
+ //       isHighGear = m_driverController.getRightBumper().get();
+        isHighGear = m_driverController.getRightTrigger().get();
         if (isHighGearPrevious != isHighGear) {
             updateOpenLoopVoltageRamp();
         }

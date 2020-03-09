@@ -68,6 +68,8 @@ public class Turret extends SubsystemBase {
         final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
         statorCurrentConfigs.currentLimit = 40;
         statorCurrentConfigs.enable = true;
+        statorCurrentConfigs.triggerThresholdCurrent = 80;
+        statorCurrentConfigs.triggerThresholdTime = 0.5;
         turretMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         turretMotor.config_kF(kTurretMotionMagicSlot, 0.04);

@@ -65,8 +65,8 @@ public class RobotContainer {
         intakeTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
 
         Button intakeReverseTrigger = m_operator.getLeftTrigger();
-        intakeReverseTrigger.whenPressed(new IntakeReverseExtendAll(intake, magazine));
-        intakeReverseTrigger.whenReleased(new IntakeRetractAll(intake, magazine));
+        intakeReverseTrigger.whenPressed(new IntakeSetRPM(intake, Constants.INTAKE_REVERSE_RPM));
+        intakeReverseTrigger.whenReleased(new IntakeSetRPM(intake, Constants.INTAKE_COLLECT_RPM));
 
         Button longShotButton = m_operator.getButtonY();
         longShotButton.whenPressed(new ShooterLongShot(shooter, magazine, turret));

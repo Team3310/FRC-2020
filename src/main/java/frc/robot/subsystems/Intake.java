@@ -54,8 +54,8 @@ public class Intake extends SubsystemBase {
         intakeMotor.configMotionSCurveStrength(4);
 
         final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
-        statorCurrentConfigs.currentLimit = 30;
-        statorCurrentConfigs.enable = false;
+        statorCurrentConfigs.currentLimit = 40;
+        statorCurrentConfigs.enable = true;
         intakeMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         intakeMotor.config_kF(kIntakeVelocitySlot, 0.055);

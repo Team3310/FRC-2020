@@ -137,7 +137,7 @@ public class Drive extends SubsystemBase {
         mRightMaster.configPeakOutputReverse(-1.0f);
 
         SupplyCurrentLimitConfiguration supplyCurrentConfigs = new SupplyCurrentLimitConfiguration();
-        supplyCurrentConfigs.currentLimit = 100;
+        supplyCurrentConfigs.currentLimit = 60;
         supplyCurrentConfigs.enable = false;
 
         mLeftMaster.configSupplyCurrentLimit(supplyCurrentConfigs);
@@ -149,8 +149,8 @@ public class Drive extends SubsystemBase {
         mRightSlave2.configSupplyCurrentLimit(supplyCurrentConfigs);
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
-        statorCurrentConfigs.currentLimit = 100;
-        statorCurrentConfigs.enable = false;
+        statorCurrentConfigs.currentLimit = 60;
+        statorCurrentConfigs.enable = true;
 
         mLeftMaster.configStatorCurrentLimit(statorCurrentConfigs);
         mLeftSlave1.configStatorCurrentLimit(statorCurrentConfigs);
@@ -160,9 +160,7 @@ public class Drive extends SubsystemBase {
         mRightSlave1.configStatorCurrentLimit(statorCurrentConfigs);
         mRightSlave2.configStatorCurrentLimit(statorCurrentConfigs);
 
-
         m_drive = new DifferentialDrive(mLeftMaster, mRightMaster);
-//        m_drive.setRightSideInverted(true);
         m_drive.setSafetyEnabled(false);
 
         gyroPigeon = new PigeonIMU(Constants.GYRO_CAN_ID);

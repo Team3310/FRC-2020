@@ -49,10 +49,10 @@ public class Magazine extends SubsystemBase {
         magMotor.configMotionSCurveStrength(4);
 
         final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
-        statorCurrentConfigs.currentLimit = 20;
-        statorCurrentConfigs.triggerThresholdCurrent = 30;
-        statorCurrentConfigs.triggerThresholdTime = 1.0;
-        statorCurrentConfigs.enable = false;
+        statorCurrentConfigs.currentLimit = 40;
+        statorCurrentConfigs.triggerThresholdCurrent = 60;
+        statorCurrentConfigs.triggerThresholdTime = 0.5;
+        statorCurrentConfigs.enable = true;
         magMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         magMotor.config_kF(kMagazineVelocitySlot, 0.040);

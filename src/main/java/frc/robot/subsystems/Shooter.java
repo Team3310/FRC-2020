@@ -77,15 +77,15 @@ public class Shooter extends SubsystemBase {
  //       shooterHood.configMotionSCurveStrength(4);
 
         StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
-        statorCurrentConfigs.currentLimit = 70;
+        statorCurrentConfigs.currentLimit = 60;
         statorCurrentConfigs.enable = true;
         statorCurrentConfigs.triggerThresholdCurrent = 80;
         statorCurrentConfigs.triggerThresholdTime = 0.5;
 
- //       shooterMainMaster.configStatorCurrentLimit(statorCurrentConfigs);
-  //      shooterMainSlave.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterMainMaster.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterMainSlave.configStatorCurrentLimit(statorCurrentConfigs);
         shooterKicker.configStatorCurrentLimit(statorCurrentConfigs);
- //       shooterIntake.configStatorCurrentLimit(statorCurrentConfigs);
+        shooterIntake.configStatorCurrentLimit(statorCurrentConfigs);
 
         shooterMainMaster.config_kF(0, 0.05);
         shooterMainMaster.config_kP(0, 0.5);

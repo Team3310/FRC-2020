@@ -66,8 +66,8 @@ public class Turret extends SubsystemBase {
         maxRevTurretSensor = new DigitalInput(Constants.TURRET_MAX_REV_SENSOR_DIO_ID);
 
         final StatorCurrentLimitConfiguration statorCurrentConfigs = new StatorCurrentLimitConfiguration();
-        statorCurrentConfigs.currentLimit = 100;
-        statorCurrentConfigs.enable = false;
+        statorCurrentConfigs.currentLimit = 40;
+        statorCurrentConfigs.enable = true;
         turretMotor.configStatorCurrentLimit(statorCurrentConfigs);
 
         turretMotor.config_kF(kTurretMotionMagicSlot, 0.04);

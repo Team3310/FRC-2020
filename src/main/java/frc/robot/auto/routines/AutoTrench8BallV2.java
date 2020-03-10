@@ -28,10 +28,10 @@ public class AutoTrench8BallV2 extends SequentialCommandGroup {
 
     public AutoTrench8BallV2() {
         addCommands(
-                new ResetOdometryAuto(new Pose2d(Units.inchesToMeters(147), Units.inchesToMeters(-245), new Rotation2d(0))),
+                new ResetOdometryAuto(new Pose2d(Units.inchesToMeters(136), Units.inchesToMeters(-60), new Rotation2d(0))),
                 new IntakeExtendAllAuto(mIntake, mTurret, mMagazine),
                 new RamseteCommand(
-                        mTrajectories.getStealStartToStealBallV2(),
+                        mTrajectories.getFirstTwoBalls(),
                         mDrive::getPose,
                         new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                         new SimpleMotorFeedforward(Constants.ksVolts,
@@ -47,7 +47,7 @@ public class AutoTrench8BallV2 extends SequentialCommandGroup {
                 new StopTrajectory(),
                 new ParallelDeadlineGroup(
                         new RamseteCommand(
-                                mTrajectories.getStealBallToCenterShotV2(),
+                                mTrajectories.getFirstTwoBallsReversed(),
                                 mDrive::getPose,
                                 new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                                 new SimpleMotorFeedforward(Constants.ksVolts,
@@ -67,7 +67,7 @@ public class AutoTrench8BallV2 extends SequentialCommandGroup {
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new IntakeExtendAllAuto(mIntake, mTurret, mMagazine),
                 new RamseteCommand(
-                            mTrajectories.getStealFarSideRendezvousPoint2Balls(),
+                            mTrajectories.getTrench3Ball(),
                             mDrive::getPose,
                             new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                             new SimpleMotorFeedforward(Constants.ksVolts,
@@ -83,7 +83,7 @@ public class AutoTrench8BallV2 extends SequentialCommandGroup {
                 new StopTrajectory(),
                 new ParallelDeadlineGroup(
                         new RamseteCommand(
-                                mTrajectories.getStealBallToCenterShotV2Reversed(),
+                                mTrajectories.getToMediumFromPanel(),
                                 mDrive::getPose,
                                 new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                                 new SimpleMotorFeedforward(Constants.ksVolts,

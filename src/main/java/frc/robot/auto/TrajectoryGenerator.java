@@ -1,15 +1,20 @@
 package frc.robot.auto;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 public class TrajectoryGenerator {
@@ -45,8 +50,8 @@ public class TrajectoryGenerator {
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint);
 
-    TrajectoryConfig forwardFastConfig =
-            new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond * 0.5,
+    TrajectoryConfig forwardConfigFast =
+            new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
                     Constants.kMaxAccelerationMetersPerSecondSquared)
                     // Add kinematics to ensure max speed is actually obeyed
                     .setKinematics(Constants.kDriveKinematics)
@@ -61,6 +66,15 @@ public class TrajectoryGenerator {
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint)
                     .setReversed(true);
+
+    TrajectoryConfig reverseConfigSlow =
+            new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond * 0.5,
+                    Constants.kMaxAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.kDriveKinematics)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint);
+
     TrajectoryConfig reverseFastConfig =
             new TrajectoryConfig(Constants.kMaxFastSpeedMetersPerSecond,
                     Constants.kMaxFastAccelerationMetersPerSecondSquared)
@@ -158,6 +172,7 @@ public class TrajectoryGenerator {
         );
         return PanelToTrench;
     }
+
 
 
     public Trajectory getEndOfTrenchToStartOfTrench() {
@@ -260,7 +275,7 @@ public class TrajectoryGenerator {
                 ),
                 new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(-305), Rotation2d.fromDegrees(-45)),
                 // Pass config
-                forwardFastConfig
+                forwardConfigFast
         );
         return stealSpotToCenterShotReversed;
     }
@@ -407,6 +422,75 @@ public class TrajectoryGenerator {
         );
         return testAuton;
     }
+    public Trajectory getFirstTwoBalls() {
+        Trajectory FirstTwoBalls;
+        FirstTwoBalls = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(136), Units.inchesToMeters(-60), new Rotation2d(Units.degreesToRadians(0))),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(213.098), Units.inchesToMeters(-77.632))
+                ),
+                new Pose2d(Units.inchesToMeters(242.661), Units.inchesToMeters(-124.337), new Rotation2d(Units.degreesToRadians(-60))),
+                forwardConfig
+        );
+        return FirstTwoBalls;
 
     }
+    public Trajectory getFirstTwoBallsReversed() {
+        Trajectory FirstTwoBallsReversed;
+        FirstTwoBallsReversed = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(242.661), Units.inchesToMeters(-124.337), new Rotation2d(Units.degreesToRadians(-60))),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(213.098), Units.inchesToMeters(-77.632))
+                ),
+                new Pose2d(Units.inchesToMeters(136), Units.inchesToMeters(-60), new Rotation2d(Units.degreesToRadians(0))),
+                reverseConfig
+        );
+        return FirstTwoBallsReversed;
+    }
+    public Trajectory getTrench3Ball() {
+        Trajectory Trench3Ball;
+        Trench3Ball = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(136), Units.inchesToMeters(-60), new Rotation2d(Units.degreesToRadians(0))),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(181.547), Units.inchesToMeters(-39.622)),
+                        new Translation2d(Units.inchesToMeters(212.104), Units.inchesToMeters(-30.927))
+
+                ),
+
+                new Pose2d(Units.inchesToMeters(316.694), Units.inchesToMeters(-28.691), new Rotation2d(Units.degreesToRadians(0))),
+                forwardConfig
+        );
+        return Trench3Ball;
+
+    }
+    public Trajectory getToMediumFromPanel() {
+        Trajectory ToMediumFromPanel;
+        ToMediumFromPanel = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(316.694), Units.inchesToMeters(-28.691), new Rotation2d(Units.degreesToRadians(0))),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(290.000), Units.inchesToMeters(-28.691))
+
+                ),
+
+                new Pose2d(Units.inchesToMeters(227.755), Units.inchesToMeters(-28.691), new Rotation2d(Units.degreesToRadians(0))),
+                reverseFastConfig
+        );
+        return ToMediumFromPanel;
+
+    }
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
 //}

@@ -17,7 +17,6 @@ public class HoodSetToTrackLimelightAngle extends CommandBase
     public HoodSetToTrackLimelightAngle(Shooter subsystem)
     {
         this.shooter = subsystem;
-        addRequirements(subsystem);
     }
 
     @Override

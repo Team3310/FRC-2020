@@ -16,12 +16,13 @@ public class ShooterAutoShoot extends SequentialCommandGroup {
 
     public ShooterAutoShoot(Shooter shooter, Magazine magazine, Turret turret, double magazineRotations) {
         addCommands(
+                new WaitCommand(0.25),
                 new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_LEG_SHOT_DEGREES),
                 new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
                 new WaitCommand(2),
-                new ShooterIntakeSetSpeed(shooter, 0),
-                new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_LEG_RPM,
-                        magazineRotations)
+                new ShooterIntakeSetSpeed(shooter, 0)
+ //               new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_LEG_RPM,
+ //                       magazineRotations)
         );
     }
 }

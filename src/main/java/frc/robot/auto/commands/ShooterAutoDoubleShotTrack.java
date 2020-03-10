@@ -16,11 +16,11 @@ public class ShooterAutoDoubleShotTrack extends ParallelCommandGroup {
         addCommands(
                 new InstantCommand(()-> Limelight.getInstance().setPipeline(Constants.LIMELIGHT_LEG_PIPELINE)),
                 new LimelightSetLED(Limelight.getInstance(), Limelight.LightMode.ON),
-                new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_AUTO_DOUBLE_RPM, Constants.SHOOTER_KICKER_AUTO_DOUBLE_RPM),
-                new HoodSetAngle(shooter, Constants.HOOD_AUTO_DOUBLE_ANGLE_DEGREES),
+                new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_LEG_RPM, Constants.SHOOTER_KICKER_LEG_RPM),
+                new HoodSetAngle(shooter, Constants.HOOD_LEG_ANGLE_DEGREES),
                 new SequentialCommandGroup(
-                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_AUTO_DOUBLE_SHOT_ANGLE_DEGREES),
-                        new TurretSetToTrackLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_AUTO_DOUBLE_SHOT_DEGREES)
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES),
+                        new TurretSetToTrackLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_LEG_SHOT_DEGREES, Constants.TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES)
                 )
         );
     }

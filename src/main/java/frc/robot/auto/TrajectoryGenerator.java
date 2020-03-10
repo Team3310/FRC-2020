@@ -45,6 +45,14 @@ public class TrajectoryGenerator {
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint);
 
+    TrajectoryConfig forwardFastConfig =
+            new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond * 0.5,
+                    Constants.kMaxAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.kDriveKinematics)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint);
+
     TrajectoryConfig reverseConfig =
             new TrajectoryConfig(Constants.kMaxSpeedMetersPerSecond,
                     Constants.kMaxAccelerationMetersPerSecondSquared)
@@ -53,8 +61,17 @@ public class TrajectoryGenerator {
                     // Apply the voltage constraint
                     .addConstraint(autoVoltageConstraint)
                     .setReversed(true);
+    TrajectoryConfig reverseFastConfig =
+            new TrajectoryConfig(Constants.kMaxFastSpeedMetersPerSecond,
+                    Constants.kMaxFastAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.kDriveKinematics)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint)
+                    .setReversed(true);
 
-        public Trajectory getDriveStraight(){
+
+    public Trajectory getDriveStraight(){
             return edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
                     new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0),
                             new Rotation2d(Units.radiansToDegrees(0))),
@@ -218,29 +235,44 @@ public class TrajectoryGenerator {
     public Trajectory getStealBallToCenterShotV2() {
         Trajectory stealSpotToCenterShot;
         stealSpotToCenterShot = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(-305), new Rotation2d(-45)),
+                new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(-305), Rotation2d.fromDegrees(-45)),
                 List.of(
                         new Translation2d(Units.inchesToMeters(228), Units.inchesToMeters(-254)),
                         new Translation2d(Units.inchesToMeters(196), Units.inchesToMeters(-192))
 //                        new Translation2d(Units.inchesToMeters(185), Units.inchesToMeters(-171))
                 ),
-                new Pose2d(Units.inchesToMeters(185), Units.inchesToMeters(-120), new Rotation2d(-71)),
+                new Pose2d(Units.inchesToMeters(185), Units.inchesToMeters(-120), Rotation2d.fromDegrees(-71)),
                 // Pass config
-                reverseConfig
+                reverseFastConfig
         );
         return stealSpotToCenterShot;
     }
         //End 5 Ball Steal Auto
 
+    public Trajectory getStealBallToCenterShotV2Reversed() {
+        Trajectory stealSpotToCenterShotReversed;
+        stealSpotToCenterShotReversed = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
+                new Pose2d(Units.inchesToMeters(185), Units.inchesToMeters(-120), Rotation2d.fromDegrees(-71)),
+                List.of(
+                        new Translation2d(Units.inchesToMeters(196), Units.inchesToMeters(-194)),
+                        new Translation2d(Units.inchesToMeters(228), Units.inchesToMeters(-254))
+//                        new Translation2d(Units.inchesToMeters(185), Units.inchesToMeters(-171))
+                ),
+                new Pose2d(Units.inchesToMeters(270), Units.inchesToMeters(-305), Rotation2d.fromDegrees(-45)),
+                // Pass config
+                forwardFastConfig
+        );
+        return stealSpotToCenterShotReversed;
+    }
         // Start 8 Ball Steal Auto
         public Trajectory getStealFarSideRendezvousPoint2Balls() {
             Trajectory stealFarSideRendezvousPoint2Balls = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-               new Pose2d(Units.inchesToMeters(185), Units.inchesToMeters(-120), new Rotation2d(-71)),
+               new Pose2d(Units.inchesToMeters(185), Units.inchesToMeters(-120), Rotation2d.fromDegrees(-71)),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(195), Units.inchesToMeters(-159))
+                        new Translation2d(Units.inchesToMeters(199), Units.inchesToMeters(-149))
 
                 ),
-                new Pose2d(Units.inchesToMeters(232), Units.inchesToMeters(-159), new Rotation2d(5)), // 10
+                new Pose2d(Units.inchesToMeters(237), Units.inchesToMeters(-150), Rotation2d.fromDegrees(25)), // 10
                 // Pass config
                 forwardConfig
             );

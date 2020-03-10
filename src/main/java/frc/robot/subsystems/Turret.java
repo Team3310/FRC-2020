@@ -241,9 +241,11 @@ public class Turret extends SubsystemBase {
             gyroMirror = (-180 - gyroMirror) - 180;
         }
         setTurretMotionMagicPositionAbsoluteInternal(Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
+        System.out.println ("Gyro Track angle = " + Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
     }
 
-    public void setLimelightTrackMode(double limelightTrackOffsetAngle) {
+    public void setLimelightTrackMode(double limelightTrackOffsetAngle, double gyroOffsetAngle) {
+        this.gyroTrackOffsetAngle = gyroOffsetAngle;
         limelightTargetFound = false;
         currentNumInvalidLimelightAttempts = 0;
         this.limelightTrackOffsetAngle = limelightTrackOffsetAngle;
@@ -256,15 +258,19 @@ public class Turret extends SubsystemBase {
         if (limelight.isOnTarget()) {
             limelightTargetFound = true;
             previousLimelightAngle = -limelight.getTx() + limelightTrackOffsetAngle;
+            System.out.println("Target angle = " + previousLimelightAngle);
             setTurretMotionMagicPositionRelativeInternal(previousLimelightAngle);
         }
         else if (limelightTargetFound) {
-             currentNumInvalidLimelightAttempts++;
+            System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
+
+            currentNumInvalidLimelightAttempts++;
              if (currentNumInvalidLimelightAttempts > maxNumInvalidLimelightAttempts) {
                  limelightTargetFound = false;
              }
         }
         else {
+            System.out.println("Target not found");
             updateGyroTrack();
         }
     }

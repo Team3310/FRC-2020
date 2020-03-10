@@ -43,6 +43,8 @@ public final class Constants
 
     public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(7.0);
     public static final double kMaxAccelerationMetersPerSecondSquared = Math.pow(Units.feetToMeters(7.0), 2);
+    public static final double kMaxFastSpeedMetersPerSecond = Units.feetToMeters(10.0);
+    public static final double kMaxFastAccelerationMetersPerSecondSquared = Math.pow(Units.feetToMeters(7.0), 2);
     public static final double kSlowAccelerationMetersPerSecondSquared = Units.feetToMeters(7.0);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
@@ -92,8 +94,8 @@ public final class Constants
     public static final double TURRET_GYRO_OFFSET_AUTO_SHOT_ANGLE_DEGREES = 0.0;
     public static final double TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES = 14.0;
     public static final double TURRET_GYRO_OFFSET_LONG_SHOT_ANGLE_DEGREES = 12.3;
-    public static final double TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES = -34.0;
-    public static final double TURRET_GYRO_OFFSET_AUTO_DOUBLE_SHOT_ANGLE_DEGREES = -34.0;
+    public static final double TURRET_GYRO_OFFSET_LEG_SHOT_ANGLE_DEGREES = -10.0;
+    public static final double TURRET_GYRO_OFFSET_AUTO_DOUBLE_SHOT_ANGLE_DEGREES = -10.0;
     public static final double TURRET_GYRO_OFFSET_ALL_FIELD_SHOT_ANGLE_DEGREES = 0.0;
 
     // Hood

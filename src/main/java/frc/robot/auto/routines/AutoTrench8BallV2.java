@@ -10,17 +10,14 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.*;
-import frc.robot.commands.IntakeExtendAll;
 import frc.robot.commands.IntakeExtendAllAuto;
 import frc.robot.commands.ShooterReset;
-import frc.robot.commands.TurretSetAngle;
 import frc.robot.subsystems.*;
 
-public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
+public class AutoTrench8BallV2 extends SequentialCommandGroup {
     TrajectoryGenerator mTrajectories = TrajectoryGenerator.getInstance();
     Drive mDrive = Drive.getInstance();
     Shooter mShooter = Shooter.getInstance();
@@ -29,7 +26,7 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
     Intake mIntake = Intake.getInstance();
     Limelight mLimelight = Limelight.getInstance();
 
-    public AutoTrenchSteal7Ball() {
+    public AutoTrench8BallV2() {
         addCommands(
                 new ResetOdometryAuto(new Pose2d(Units.inchesToMeters(147), Units.inchesToMeters(-245), new Rotation2d(0))),
                 new IntakeExtendAllAuto(mIntake, mTurret, mMagazine),

@@ -13,18 +13,20 @@ import frc.robot.subsystems.Turret;
 public class TurretSetToTrackLimelightAngle extends CommandBase
 {
     private final Turret turret;
-    private double offsetAngleDeg;
+    private double limelightOffsetAngleDeg;
+    private double gyroOffsetAngleDeg;
 
-    public TurretSetToTrackLimelightAngle(Turret subsystem, double offsetAngleDeg)
+    public TurretSetToTrackLimelightAngle(Turret subsystem, double limelightOffsetAngleDeg, double gyroOffsetAngleDeg)
     {
         this.turret = subsystem;
-        this.offsetAngleDeg = offsetAngleDeg;
+        this.limelightOffsetAngleDeg = limelightOffsetAngleDeg;
+        this.gyroOffsetAngleDeg = gyroOffsetAngleDeg;
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        turret.setLimelightTrackMode(offsetAngleDeg);
+        turret.setLimelightTrackMode(limelightOffsetAngleDeg, gyroOffsetAngleDeg);
     }
 
     @Override

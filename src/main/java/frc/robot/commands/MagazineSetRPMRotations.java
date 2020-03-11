@@ -34,6 +34,8 @@ public class MagazineSetRPMRotations extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        magazine.setMagazineRPM(Constants.MAGAZINE_INTAKE_RPM);
+//        magazine.setMagazineRPM(Constants.MAGAZINE_INTAKE_RPM);
+        magazine.setMagazineSpeed(0);
+
     }
 }

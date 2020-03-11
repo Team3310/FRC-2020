@@ -236,6 +236,10 @@ public class Shooter extends SubsystemBase {
         if (getHoodControlMode() != HoodControlMode.MOTION_MAGIC) {
             setHoodControlMode(HoodControlMode.MOTION_MAGIC);
         }
+        setHoodMotionMagicPositionAbsoluteInternal(angle);
+    }
+
+    public synchronized void setHoodMotionMagicPositionAbsoluteInternal(double angle) {
         shooterHood.selectProfileSlot(kHoodMotionMagicSlot, 0);
         double limitedAngle = limitHoodAngle(angle);
         targetPositionTicks = getHoodEncoderTicksAbsolute(limitedAngle);
@@ -297,18 +301,19 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setHoodAngleBasedOnDistance(double distanceInches) {
-        setHoodMotionMagicPositionAbsolute(getInterpolatedHoodAngle(distanceInches));
+        setHoodMotionMagicPositionAbsoluteInternal(getInterpolatedHoodAngle(distanceInches));
     }
 
     public double getInterpolatedHoodAngle(double distanceInches) {
-        return (distanceInches * Constants.HOOD_DISTANCE_SLOPE * Constants.HOOD_DISTANCE_INTERCEPT);
+        return (distanceInches * Constants.HOOD_DISTANCE_SLOPE + Constants.HOOD_DISTANCE_INTERCEPT);
     }
 
-    public void setLimelightTrackMode() {
+    public void setLimelightHoodTrackMode() {
         limelightTargetFound = false;
         currentNumInvalidLimelightAttempts = 0;
         setHoodControlMode(HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT);
         updateLimelightTrack();
+        System.out.println("Set track mode");
     }
 
     private void updateLimelightTrack() {
@@ -317,20 +322,28 @@ public class Shooter extends SubsystemBase {
             limelightTargetFound = true;
             previousLimelightDistance = limelight.getDistanceFromTargetInches();
             setHoodAngleBasedOnDistance(previousLimelightDistance);
+            System.out.println("Hood track distance = " + previousLimelightDistance);
         }
         else if (limelightTargetFound) {
             currentNumInvalidLimelightAttempts++;
             if (currentNumInvalidLimelightAttempts > maxNumInvalidLimelightAttempts) {
                 limelightTargetFound = false;
             }
+            System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
         }
         else {
-            setHoodMotionMagicPositionAbsolute(Constants.HOOD_AUTO_ANGLE_DEGREES);
+            setHoodMotionMagicPositionAbsoluteInternal(Constants.HOOD_AUTO_ANGLE_DEGREES);
+            System.out.println("Target not found");
         }
     }
 
-    @Override
     public void periodic() {
+        SmartDashboard.putString("Hood Control Mode", getHoodControlMode().toString());
+        System.out.println("Hood Mode = " + getHoodControlMode().toString());
+        if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
+            System.out.println("Update Track");
+            updateLimelightTrack();
+        }
  //       SmartDashboard.putNumber("Shooters Rotations", getMainRotations());
 //        SmartDashboard.putNumber("Shooters RPM", getMainRPM());
 //        SmartDashboard.putNumber("Shooters RPM Graph", getShooterRPM());
@@ -355,10 +368,6 @@ public class Shooter extends SubsystemBase {
 //        SmartDashboard.putNumber("Hood Velocity", shooterHood.getSelectedSensorVelocity());
 //        SmartDashboard.putNumber("Hood Position", shooterHood.getSelectedSensorPosition());
         SmartDashboard.putBoolean("Shooter Ready", isReady);
-
-        if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
-            updateLimelightTrack();
-        }
     }
 }
 

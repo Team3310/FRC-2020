@@ -125,7 +125,7 @@ public class Turret extends SubsystemBase {
     public synchronized void setTurretMotionMagicPositionAbsoluteInternal(double angle) {
         turretMotor.selectProfileSlot(kTurretMotionMagicSlot, 0);
         targetPositionTicks = getTurretEncoderTicksAbsolute(limitTurretAngle(angle));
-        System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
+ //       System.out.println("Set point MM absolute encoder ticks = " + targetPositionTicks);
         turretMotor.set(ControlMode.MotionMagic, targetPositionTicks, DemandType.ArbitraryFeedForward, 0.04);
     }
 
@@ -241,7 +241,7 @@ public class Turret extends SubsystemBase {
             gyroMirror = (-180 - gyroMirror) - 180;
         }
         setTurretMotionMagicPositionAbsoluteInternal(Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
-        System.out.println ("Gyro Track angle = " + Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
+//        System.out.println ("Gyro Track angle = " + Util.normalizeAngle90ToMinus270(gyroMirror) + gyroTrackOffsetAngle);
     }
 
     public void setLimelightTrackMode(double limelightTrackOffsetAngle, double gyroOffsetAngle) {
@@ -258,11 +258,11 @@ public class Turret extends SubsystemBase {
         if (limelight.isOnTarget()) {
             limelightTargetFound = true;
             previousLimelightAngle = -limelight.getTx() + limelightTrackOffsetAngle;
-            System.out.println("Target angle = " + previousLimelightAngle);
+    //        System.out.println("Target angle = " + previousLimelightAngle);
             setTurretMotionMagicPositionRelativeInternal(previousLimelightAngle);
         }
         else if (limelightTargetFound) {
-            System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
+  //          System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
 
             currentNumInvalidLimelightAttempts++;
              if (currentNumInvalidLimelightAttempts > maxNumInvalidLimelightAttempts) {
@@ -270,7 +270,7 @@ public class Turret extends SubsystemBase {
              }
         }
         else {
-            System.out.println("Target not found");
+    //        System.out.println("Target not found");
             updateGyroTrack();
         }
     }

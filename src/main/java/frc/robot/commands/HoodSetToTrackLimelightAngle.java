@@ -21,7 +21,7 @@ public class HoodSetToTrackLimelightAngle extends CommandBase
 
     @Override
     public void initialize() {
-        shooter.setLimelightTrackMode();
+        shooter.setLimelightHoodTrackMode();
     }
 
     @Override

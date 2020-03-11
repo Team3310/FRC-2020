@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Magazine;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
 public class ClimbRelease extends SequentialCommandGroup {
@@ -17,7 +18,8 @@ public class ClimbRelease extends SequentialCommandGroup {
                         new InstantCommand(() -> intake.extendIntakeInnerArms()),
                         new InstantCommand(() -> intake.extendIntakeOuterArms()),
                         new TurretSetAngle(turret, Constants.TURRET_CLIMB_LEVEL_1_ANGLE_DEGREES),
-                        new InstantCommand(() -> intake.climbPTOEngage())
+                        new InstantCommand(() -> intake.climbPTOEngage()),
+                        new ShooterSetSpeed(Shooter.getInstance(), 0, 0)
                 ),
                 new InstantCommand(()-> intake.climbRelease())
         );

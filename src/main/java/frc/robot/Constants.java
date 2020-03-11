@@ -109,12 +109,12 @@ public final class Constants
     public static final double HOOD_KEY_ANGLE_DEGREES = 8.0;
     public static final double HOOD_AUTON_SHORT_ANGLE_DEGREES = 35.0;
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
-    public static final double HOOD_MEDIUM_ANGLE_DEGREES = 49.0;
+    public static final double HOOD_MEDIUM_ANGLE_DEGREES = 47.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
-    public static final double HOOD_LEG_ANGLE_DEGREES = 45.5;
+    public static final double HOOD_LEG_ANGLE_DEGREES = 46.0;
     public static final double HOOD_AUTO_DOUBLE_ANGLE_DEGREES = 46;
     public static final double HOOD_DISTANCE_SLOPE = 3.5/59.0;
-    public static final double HOOD_DISTANCE_INTERCEPT = 34.88;
+    public static final double HOOD_DISTANCE_INTERCEPT = 35;
 
     // Shooter
     public static final double SHOOTER_MAIN_FENDER_RPM = 2000;
@@ -127,6 +127,8 @@ public final class Constants
     public static final double SHOOTER_MAIN_LEG_RPM = 3400;
     public static final double SHOOTER_MAIN_AUTO_DOUBLE_RPM = 3600;
     public static final double SHOOTER_MAIN_ALL_FIELD_RPM = 3400;
+    public static final double SHOOTER_DISTANCE_SLOPE = 6.53;
+    public static final double SHOOTER_DISTANCE_INTERCEPT = 2090.74;
 
     public static final double SHOOTER_KICKER_FENDER_RPM = 2000;
     public static final double SHOOTER_KICKER_KEY_RPM = 2200;
@@ -138,6 +140,7 @@ public final class Constants
     public static final double SHOOTER_KICKER_LEG_RPM = 3400;
     public static final double SHOOTER_KICKER_AUTO_DOUBLE_RPM = 3600;
     public static final double SHOOTER_KICKER_ALL_FIELD_RPM = 3400;
+
 
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
@@ -151,13 +154,15 @@ public final class Constants
     public static final double MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_6_ROTATIONS = 1800.0;
     public static final double MAGAZINE_JAM_STATOR_CURRENT = 40;
     public static final double MAGAZINE_COMPETITION_HOME_POSITION_DEGREES = -180.0;
-    public static final double MAGAZINE_FORWARD_RPM = 15;
-    public static final double MAGAZINE_REVERSE_RPM = -15;
+    public static final double MAGAZINE_FORWARD_RPM = 40;
+    public static final double MAGAZINE_REVERSE_RPM = -40;
 
 
     // Intake
     public static final double INTAKE_COLLECT_RPM = 2000; // 1500
     public static final double INTAKE_SLOW_RPM = 500;
+    public static final double INTAKE_RETRACT_RPM = 1000;
+    public static final double INTAKE_COLLECT_AUTO_RPM = 1200; // 1500
 
     // Drive
     public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;

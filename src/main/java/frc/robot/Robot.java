@@ -296,7 +296,8 @@ public class Robot extends TimedRobot
             m_autonomousCommand.cancel();
         }
         drive.setControlMode(Drive.DriveControlMode.JOYSTICK);
-        Limelight.getInstance().setLedMode(Limelight.LightMode.ON);
+        Limelight.getInstance().setLedMode(Limelight.LightMode.OFF);
+      //  shooter.setHoodMotionMagicPositionAbsolute(Constants.HOOD_COMPETITION_HOME_POSITION_DEGREES);
     }
 
     /**

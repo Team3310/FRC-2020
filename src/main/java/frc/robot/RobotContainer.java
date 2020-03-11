@@ -77,10 +77,10 @@ public class RobotContainer {
 //        Button fenderShotButton = m_operator.getButtonX();
 //        fenderShotButton.whenPressed(new ShooterFenderShot(shooter, magazine, turret));
 
-        Button autoShotButton = m_operator.getButtonX();
+        Button autoShotButton = m_operator.getButtonA();
         autoShotButton.whenPressed(new ShooterAllFieldShot(shooter, magazine, turret, limelight));
 
-        Button keyShotButton = m_operator.getButtonA();
+        Button keyShotButton = m_operator.getButtonX();
         keyShotButton.whenPressed(new ShooterKeyShot(shooter, magazine, turret));
 
         Button climbReleaseButton = m_operator.getStartButton();

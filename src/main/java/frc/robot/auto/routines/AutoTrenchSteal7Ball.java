@@ -7,10 +7,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.*;
@@ -48,7 +45,7 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
                         mDrive::tankDriveVolts,
                         mDrive),
                 new StopTrajectory(),
-                new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
                         new RamseteCommand(
                                 mTrajectories.getStealBallToCenterShotV2(),
                                 mDrive::getPose,
@@ -84,9 +81,9 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
                             mDrive::tankDriveVolts,
                             mDrive),
                 new StopTrajectory(),
-                new ParallelDeadlineGroup(
+                new ParallelCommandGroup(
                         new RamseteCommand(
-                                mTrajectories.getStealBallToCenterShotV2Reversed(),
+                                mTrajectories.getStealFarSideRendezvousPoint2BallsReverse(),
                                 mDrive::getPose,
                                 new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
                                 new SimpleMotorFeedforward(Constants.ksVolts,
@@ -99,10 +96,10 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
                                 // RamseteCommand passes volts to the callback
                                 mDrive::tankDriveVolts,
                                 mDrive),
-                        new ShooterAutoDoubleShotTrack(mShooter, mTurret)
+                        new ShooterAutoLegShotTrack(mShooter, mTurret)
                 ),
                 new StopTrajectory(),
-                new ShooterAutoDoubleShoot(mShooter,mMagazine,mTurret,
+                new ShooterAutoShoot(mShooter,mMagazine,mTurret,
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new ShooterReset(mShooter, mMagazine, mTurret, Limelight.getInstance())
         );

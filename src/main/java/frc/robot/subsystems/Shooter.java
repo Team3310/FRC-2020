@@ -313,7 +313,7 @@ public class Shooter extends SubsystemBase {
         currentNumInvalidLimelightAttempts = 0;
         setHoodControlMode(HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT);
         updateLimelightTrack();
-        System.out.println("Set track mode");
+ //       System.out.println("Set track mode");
     }
 
     private void updateLimelightTrack() {
@@ -322,26 +322,26 @@ public class Shooter extends SubsystemBase {
             limelightTargetFound = true;
             previousLimelightDistance = limelight.getDistanceFromTargetInches();
             setHoodAngleBasedOnDistance(previousLimelightDistance);
-            System.out.println("Hood track distance = " + previousLimelightDistance);
+//           System.out.println("Hood track distance = " + previousLimelightDistance);
         }
         else if (limelightTargetFound) {
             currentNumInvalidLimelightAttempts++;
             if (currentNumInvalidLimelightAttempts > maxNumInvalidLimelightAttempts) {
                 limelightTargetFound = false;
             }
-            System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
+ //           System.out.println("Target not found attempts = " + currentNumInvalidLimelightAttempts);
         }
         else {
             setHoodMotionMagicPositionAbsoluteInternal(Constants.HOOD_AUTO_ANGLE_DEGREES);
-            System.out.println("Target not found");
+ //           System.out.println("Target not found");
         }
     }
 
     public void periodic() {
-        SmartDashboard.putString("Hood Control Mode", getHoodControlMode().toString());
-        System.out.println("Hood Mode = " + getHoodControlMode().toString());
+//        SmartDashboard.putString("Hood Control Mode", getHoodControlMode().toString());
+ //       System.out.println("Hood Mode = " + getHoodControlMode().toString());
         if (getHoodControlMode() == HoodControlMode.MOTION_MAGIC_TRACK_LIMELIGHT) {
-            System.out.println("Update Track");
+ //           System.out.println("Update Track");
             updateLimelightTrack();
         }
  //       SmartDashboard.putNumber("Shooters Rotations", getMainRotations());

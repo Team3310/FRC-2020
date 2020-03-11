@@ -114,7 +114,7 @@ public final class Constants
     public static final double HOOD_LEG_ANGLE_DEGREES = 46.0;
     public static final double HOOD_AUTO_DOUBLE_ANGLE_DEGREES = 46;
     public static final double HOOD_DISTANCE_SLOPE = 3.5/59.0;
-    public static final double HOOD_DISTANCE_INTERCEPT = 35;
+    public static final double HOOD_DISTANCE_INTERCEPT = 38.0;
 
     // Shooter
     public static final double SHOOTER_MAIN_FENDER_RPM = 2000;

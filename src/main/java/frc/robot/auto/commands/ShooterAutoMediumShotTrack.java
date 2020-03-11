@@ -16,15 +16,13 @@ public class ShooterAutoMediumShotTrack extends SequentialCommandGroup {
     public ShooterAutoMediumShotTrack(Shooter shooter, Magazine magazine, Turret turret, double magazineRotations) {
         addCommands(
                 new InstantCommand(()-> Limelight.getInstance().setPipeline(Constants.LIMELIGHT_MEDIUM_PIPELINE)),
-                new ParallelCommandGroup(
-                        new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
-                        new TurretSetToTrackGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
-                        new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES)
-                ),
-                new TurretSetToLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES),
-                new ShooterIntakeSetRPM(shooter, Constants.SHOOTER_INTAKE_RPM),
-                new MagazineSetRPMRotations(magazine, Constants.MAGAZINE_SHOOT_AUTO_RPM,
-                        magazineRotations)
+                new LimelightSetLED(Limelight.getInstance(), Limelight.LightMode.ON),
+                new ShooterSetRPM(shooter, Constants.SHOOTER_MAIN_MEDIUM_RPM, Constants.SHOOTER_KICKER_MEDIUM_RPM),
+                new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES),
+                new SequentialCommandGroup(
+                        new TurretSetToGyroAngle(turret, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES),
+                        new TurretSetToTrackLimelightAngle(turret, Constants.LIMELIGHT_OFFSET_MEDIUM_SHOT_DEGREES, Constants.TURRET_GYRO_OFFSET_MEDIUM_SHOT_ANGLE_DEGREES)
+                )
         );
     }
 }

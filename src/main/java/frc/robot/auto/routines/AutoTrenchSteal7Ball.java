@@ -11,10 +11,8 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.*;
-import frc.robot.commands.IntakeExtendAll;
 import frc.robot.commands.IntakeExtendAllAuto;
 import frc.robot.commands.ShooterReset;
-import frc.robot.commands.TurretSetAngle;
 import frc.robot.subsystems.*;
 
 public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
@@ -63,7 +61,7 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
                        new ShooterAutoLegShotTrack(mShooter, mTurret)
                 ),
                 new StopTrajectory(),
-                new ShooterAutoShoot(mShooter,mMagazine,mTurret,
+                new ShooterAutoLegShoot(mShooter,mMagazine,mTurret,
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new IntakeExtendAllAuto(mIntake, mTurret, mMagazine),
                 new RamseteCommand(
@@ -99,7 +97,7 @@ public class AutoTrenchSteal7Ball extends SequentialCommandGroup {
                         new ShooterAutoLegShotTrack(mShooter, mTurret)
                 ),
                 new StopTrajectory(),
-                new ShooterAutoShoot(mShooter,mMagazine,mTurret,
+                new ShooterAutoLegShoot(mShooter,mMagazine,mTurret,
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new ShooterReset(mShooter, mMagazine, mTurret, Limelight.getInstance())
         );

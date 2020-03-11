@@ -17,7 +17,7 @@ import frc.robot.Constants;
 import frc.robot.auto.TrajectoryGenerator;
 import frc.robot.auto.commands.ResetOdometryAuto;
 import frc.robot.auto.commands.ShooterAutoLegShotTrack;
-import frc.robot.auto.commands.ShooterAutoShoot;
+import frc.robot.auto.commands.ShooterAutoLegShoot;
 import frc.robot.auto.commands.StopTrajectory;
 import frc.robot.commands.IntakeExtendAll;
 import frc.robot.commands.ShooterReset;
@@ -74,7 +74,7 @@ public class AutoTrenchStealV2 extends SequentialCommandGroup {
                 new StopTrajectory(),
 
                // new IntakeRetractAll(mIntake,mMagazine),
-                new ShooterAutoShoot(mShooter,mMagazine,mTurret,
+                new ShooterAutoLegShoot(mShooter,mMagazine,mTurret,
                         Constants.MAGAZINE_SHOOT_AUTO_ROTATIONS_DEGREES_5_BALL),
                 new ShooterReset(mShooter, mMagazine, mTurret, Limelight.getInstance())
         ));

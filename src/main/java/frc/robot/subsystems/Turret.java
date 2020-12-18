@@ -275,6 +275,29 @@ public class Turret extends SubsystemBase {
         }
     }
 
+    // Drive while shooting code
+    // Need to find other variables later
+    double goalPositionX = 0.0;
+    double goalPositionY = 0.0;
+    double robotPositionX = 0.0; // Translation2d getX()
+    double robotPositionY = 0.0; // Translation2d getY()
+
+    public double getRobotToGoalAngle() {
+        return Math.toDegrees(Math.acos(Math.sqrt(Math.pow(goalPositionX - robotPositionX, 2) + Math.pow(goalPositionY - robotPositionY, 2))));
+    }
+
+    public double getTurretDriveShootAngle() {
+        return 180 - (getRobotToGoalAngle() + Drive.getInstance().getGyroFusedHeadingAngleDeg());
+    }
+
+    public double getDriveShootOffsetDistance() {
+        return 0;
+    }
+
+    public double getDriveShootOffSetAngle() {
+        return 0;
+    }
+
     public void periodic() {
         if (getTurretControlMode() == TurretControlMode.MOTION_MAGIC_TRACK_GYRO) {
             updateGyroTrack();

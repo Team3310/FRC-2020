@@ -20,7 +20,7 @@ public final class Constants
     public static final int OPERATOR_JOYSTICK_1_USB_ID = 1;
 
     // 2020 Drive Constants
-    public static final double kWheelDiameterInches = 3.922;
+    public static final double kWheelDiameterInches = 4.0;
     public static final double kTrackWidthInches = 27.5;
 
     public static final double kTrackWidthMeters = Units.inchesToMeters(kTrackWidthInches);
@@ -165,7 +165,7 @@ public final class Constants
     public static final double INTAKE_COLLECT_AUTO_RPM = 1200; // 1500
 
     // Drive
-    public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = -180.0;
+    public static final double DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES = 0.0;
 
     // Vision
     public static final int LIMELIGHT_AUTO_PIPELINE = 2;

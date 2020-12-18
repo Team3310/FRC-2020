@@ -1,20 +1,15 @@
 package frc.robot.auto;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.robot.Constants;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public class TrajectoryGenerator {
@@ -419,13 +414,13 @@ public class TrajectoryGenerator {
     public Trajectory getTestAuton(){
         Trajectory testAuton;
         testAuton = edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator.generateTrajectory(
-                new Pose2d(Units.inchesToMeters(100), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.inchesToMeters(76), Units.inchesToMeters(-155), new Rotation2d(Units.degreesToRadians(0))),
                 List.of(
-                        new Translation2d(Units.inchesToMeters(148), Units.inchesToMeters(0))
+                        new Translation2d(Units.inchesToMeters(100), Units.inchesToMeters(-155))
                 ),
-                new Pose2d(Units.inchesToMeters(196), Units.inchesToMeters(0), new Rotation2d(Units.degreesToRadians(0))),
+                new Pose2d(Units.inchesToMeters(120), Units.inchesToMeters(-155), new Rotation2d(Units.degreesToRadians(0))),
                 // Pass config
-                forwardConfigSlow
+                forwardConfig
         );
         return testAuton;
     }

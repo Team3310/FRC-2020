@@ -197,7 +197,7 @@ public class Drive extends SubsystemBase {
 
     //Returns right sensors velocity in ticks per 100ms
     public double getRightVelocityNativeUnits() {
-        return mLeftMaster.getSelectedSensorVelocity(0);
+        return -mRightMaster.getSelectedSensorVelocity(0);
     }
 
     //Returns left sensors position in ticks
@@ -207,7 +207,7 @@ public class Drive extends SubsystemBase {
 
     //Returns right sensors position in ticks
     public double getRightSensorPosition(){
-        return mLeftMaster.getSelectedSensorPosition(0);
+        return -mRightMaster.getSelectedSensorPosition(0);
     }
 
     //Takes that times the wheel has rotated * by the circumference of the wheel to get its distance traveled in inches
@@ -463,13 +463,14 @@ public class Drive extends SubsystemBase {
                     driveWithJoystick();
                     break;
                 case PATH_FOLLOWING:
-                    m_odometry.update(Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()),
-                            getLeftWheelDistanceMeters(),getRightWheelDistanceMeters());
                     break;
                 default:
                     System.out.println("Unknown drive control mode: " + currentControlMode);
             }
+            m_odometry.update(Rotation2d.fromDegrees(getGyroFusedHeadingAngleDeg()),
+                    getLeftWheelDistanceMeters(),getRightWheelDistanceMeters());
         }
+
 
         SmartDashboard.putNumber("Left Distance Inches: ", getLeftWheelDistanceInches());
        SmartDashboard.putNumber("Right Distance Inches: ", getRightWheelDistanceInches());
@@ -478,6 +479,9 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Right Distance Meters: ", getRightWheelDistanceMeters());
 
         SmartDashboard.putNumber("Heading: ", getGyroFusedHeadingAngleDeg());
+        SmartDashboard.putNumber("X Pose", Units.metersToInches(getPose().getTranslation().getX()));
+        SmartDashboard.putNumber("Y Pose", Units.metersToInches(getPose().getTranslation().getY()));
+        SmartDashboard.putNumber("Rotation", getPose().getRotation().getDegrees());
 
     }
 }

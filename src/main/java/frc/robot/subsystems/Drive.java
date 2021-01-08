@@ -482,7 +482,6 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("X Pose", Units.metersToInches(getPose().getTranslation().getX()));
         SmartDashboard.putNumber("Y Pose", Units.metersToInches(getPose().getTranslation().getY()));
         SmartDashboard.putNumber("Rotation", getPose().getRotation().getDegrees());
-
     }
 }
 

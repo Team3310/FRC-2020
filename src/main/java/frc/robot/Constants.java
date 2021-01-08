@@ -144,6 +144,9 @@ public final class Constants
 
     public static final double SHOOTER_INTAKE_RPM = 3000;
 
+    // Calculations
+    public static final double BALL_FLIGHT_TIME = 0.635;
+
     // Magazine
     public static final double MAGAZINE_INTAKE_RPM = 40;
     public static final double MAGAZINE_SHOOT_RPM = 60;

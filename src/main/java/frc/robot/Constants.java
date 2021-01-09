@@ -129,6 +129,7 @@ public final class Constants
     public static final double SHOOTER_MAIN_ALL_FIELD_RPM = 3400;
     public static final double SHOOTER_DISTANCE_SLOPE = 6.53;
     public static final double SHOOTER_DISTANCE_INTERCEPT = 2090.74;
+    public static final double SHOOTER_MAIN_DIAMETER = 7.25;
 
     public static final double SHOOTER_KICKER_FENDER_RPM = 2000;
     public static final double SHOOTER_KICKER_KEY_RPM = 2200;
@@ -191,4 +192,6 @@ public final class Constants
     public static final double CLIMB_MIN_INCHES = 0.0;
     public static final double CLIMB_MAX_INCHES = 30.0;
     public static final double CLIMB_LEVEL_1_INCHES = 10.0;
+
+
 }

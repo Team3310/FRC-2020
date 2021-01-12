@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -32,7 +33,6 @@ public class Turret extends SubsystemBase {
     // Sensors
     private DigitalInput minRevTurretSensor;
     private DigitalInput maxRevTurretSensor;
-
     // Misc
     private double homePositionAngleDegrees = Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES;
     private double targetPositionTicks = 0;
@@ -276,26 +276,9 @@ public class Turret extends SubsystemBase {
     }
 
     // Drive while shooting code
-    // Need to find other variables later
-    double goalPositionX = 0.0;
-    double goalPositionY = 0.0;
-    double robotPositionX = 0.0; // Translation2d getX()
-    double robotPositionY = 0.0; // Translation2d getY()
-
-    public double getRobotToGoalAngle() {
-        return Math.toDegrees(Math.acos(Math.sqrt(Math.pow(goalPositionX - robotPositionX, 2) + Math.pow(goalPositionY - robotPositionY, 2))));
-    }
-
-    public double getTurretDriveShootAngle() {
-        return 180 - (getRobotToGoalAngle() + Drive.getInstance().getGyroFusedHeadingAngleDeg());
-    }
-
-    public double getDriveShootOffsetDistance() {
-        return 0;
-    }
-
     public double getDriveShootOffSetAngle() {
-        return 0;
+        return Math.toDegrees(Math.atan(Drive.getInstance().getLeftMetersPerSecond() * Constants.BALL_FLIGHT_TIME)
+                / new Pose2d().getTranslation().getX());
     }
 
     public void periodic() {
@@ -306,6 +289,7 @@ public class Turret extends SubsystemBase {
             updateLimelightTrack();
         }
         SmartDashboard.putNumber("Turret Angle", this.getTurretAngleAbsoluteDegrees());
+        SmartDashboard.putNumber("Offset Angle", this.getDriveShootOffSetAngle());
  //       SmartDashboard.putNumber("Turret Angle Ticks", turretMotor.getSelectedSensorPosition());
  //       SmartDashboard.putNumber("Turret Output Percent", turretMotor.getMotorOutputPercent());
  //       SmartDashboard.putNumber("Turret Velocity", turretMotor.getSelectedSensorVelocity());

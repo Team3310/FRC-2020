@@ -207,5 +207,8 @@ public class RobotContainer {
         SmartDashboard.putData("Reset Gyro", new InstantCommand(() ->
                 drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
         SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
+
+        SmartDashboard.putData("Set Turret to Offset Drive Angle", new TurretSetToDriveShootOffsetAngle(turret));
+
     }
 }

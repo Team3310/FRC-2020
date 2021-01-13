@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.TurretSetLagAngle;
 import frc.robot.controller.GameController;
 
 public class Drive extends SubsystemBase {
@@ -284,6 +285,8 @@ public class Drive extends SubsystemBase {
         return inchesToMeters(getRightWheelDistanceInches());
     }
 
+    public double getRobotDistanceFromGoal(){ return Units.metersToInches(getPose().getTranslation().getDistance(Constants.GOAL_ORIGIN)); }
+
     public synchronized void resetEncoders() {
         mLeftMaster.setSelectedSensorPosition(0);
         mRightMaster.setSelectedSensorPosition(0);
@@ -481,6 +484,9 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Heading: ", getGyroFusedHeadingAngleDeg());
         SmartDashboard.putNumber("X Pose", Units.metersToInches(getPose().getTranslation().getX()));
         SmartDashboard.putNumber("Y Pose", Units.metersToInches(getPose().getTranslation().getY()));
+        SmartDashboard.putNumber("Robot to Goal Angle: ", Math.toDegrees(Math.acos(Units.metersToInches(getPose().getTranslation().getX())/
+                Units.metersToInches(getPose().getTranslation().getDistance(Constants.GOAL_ORIGIN)))));
+        SmartDashboard.putNumber("Robot to Goal Distance", Units.metersToInches(getPose().getTranslation().getDistance(Constants.GOAL_ORIGIN)));
         SmartDashboard.putNumber("Rotation", getPose().getRotation().getDegrees());
 
     }

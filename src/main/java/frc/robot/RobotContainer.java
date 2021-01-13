@@ -9,10 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import frc.robot.auto.routines.*;
 import frc.robot.commands.*;
 import frc.robot.controller.GameController;
 import frc.robot.controller.Playstation;
@@ -36,6 +38,7 @@ public class RobotContainer {
     private final Shooter shooter = Shooter.getInstance();
     private final Drive drive = Drive.getInstance();
     private final Limelight limelight = Limelight.getInstance();
+
 
 
     /**
@@ -118,6 +121,43 @@ public class RobotContainer {
                 new TurretAutoZero(turret)
         ));
 
+        Button setTurretAngle = m_driver.getRightTrigger();
+      setTurretAngle.whenPressed(new TurretSetLagAngle(drive, turret));
+        setTurretAngle.whenReleased(new TurretSetToGyroAngle(turret, Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES));
+
+
+        SmartDashboard.putData("Limelight LED off", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.OFF)));
+        SmartDashboard.putData("Limelight LED on", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.ON)));
+        SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
+        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
+        SmartDashboard.putData("Turret MM 180", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-180)));
+        SmartDashboard.putData("SetTurretAngle", new TurretSetLagAngle(drive, turret));
+        SmartDashboard.putData("Intake RPM reverse", new IntakeSetRPM(intake, -300));
+        SmartDashboard.putData("Hood MM", new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES));
+        SmartDashboard.putData("Hood MM V2", new HoodSetAngle(shooter, 2));
+        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
+        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
+        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
+        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
+        SmartDashboard.putData("Reset Gyro", new InstantCommand(() ->
+                drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
+        SendableChooser<Object>hoodAngleChooser = new SendableChooser<>();
+        hoodAngleChooser.setDefaultOption("Set Hood Angle 0°", new HoodSetAngle(shooter, 0));
+
+        hoodAngleChooser.addOption("Set Hood Angle 8°", new HoodSetAngle(shooter, 8));
+        hoodAngleChooser.addOption("Set Hood Angle 10°", new HoodSetAngle(shooter, 10));
+        hoodAngleChooser.addOption("Set Hood Angle 15°", new HoodSetAngle(shooter, 15));
+        hoodAngleChooser.addOption("Set Hood Angle 20°", new HoodSetAngle(shooter, 20));
+        hoodAngleChooser.addOption("Set Hood Angle 25°", new HoodSetAngle(shooter, 25));
+        hoodAngleChooser.addOption("Set Hood Angle 30°", new HoodSetAngle(shooter, 30));
+        hoodAngleChooser.addOption("Set Hood Angle 35°", new HoodSetAngle(shooter, 35));
+        hoodAngleChooser.addOption("Set Hood Angle 40°", new HoodSetAngle(shooter, 40));
+        hoodAngleChooser.addOption("Set Hood Angle 45°", new HoodSetAngle(shooter, 45));
+        hoodAngleChooser.addOption("Set Hood Angle 50°", new HoodSetAngle(shooter, 50));
+        hoodAngleChooser.addOption("Set Hood Angle 55°", new HoodSetAngle(shooter, 55));
+
+
+
         // Driver
 //        Button resetHomeButton = m_driver.getStartButton();
 //        resetHomeButton.whenPressed(new ResetAllHomePositions(drive, turret, magazine, shooter));
@@ -133,9 +173,6 @@ public class RobotContainer {
 //
 //        SmartDashboard.putData("Climb PTO Lock", new InstantCommand(() -> intake.climbPTOLock()));
 //        SmartDashboard.putData("Climb PTO Engage", new InstantCommand(() -> intake.climbPTOEngage()));
-//
-      SmartDashboard.putData("Limelight LED off", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.OFF)));
-        SmartDashboard.putData("Limelight LED on", new InstantCommand(() -> limelight.setLedMode(Limelight.LightMode.ON)));
 
 //        SmartDashboard.putData("Intake Set Speed", new InstantCommand(()-> intake.setRollerSpeed(0.2)));
 //        SmartDashboard.putData("Intake Set Speed OFF", new InstantCommand(() -> intake.setRollerSpeed(0.0)));
@@ -144,7 +181,6 @@ public class RobotContainer {
 //        SmartDashboard.putData("Mag Set Speed", new InstantCommand(()-> magazine.setMagazineSpeed(0.2)));
 //        SmartDashboard.putData("Mag Set Speed OFF", new InstantCommand(() -> magazine.setMagazineSpeed(0.0)));
 //        SmartDashboard.putData("Mag Set RPM", new InstantCommand(()-> magazine.setMagazineRPM(60.0)));
-        SmartDashboard.putData("Mag Set RPM Limit", new MagazineSetRPMLimit(magazine, 40, 20));
 //        SmartDashboard.putData("Mag Set MM", new InstantCommand(()-> magazine.setMagazineMotionMagicPositionAbsolute(-180.0 + 72.0)));
 //        SmartDashboard.putData("Mag Reset", new InstantCommand(() -> magazine.resetHomePosition()));
 //        SmartDashboard.putData("Mag Index Divider", new MagazineIndexDividerToTurret(magazine, turret));
@@ -169,8 +205,6 @@ public class RobotContainer {
 //        SmartDashboard.putData("Turret Set Speed", new InstantCommand(()-> turret.setTurretSpeed(0.2)));
 //        SmartDashboard.putData("Turret Set OFF", new InstantCommand(() -> turret.setTurretSpeed(0.0)));
 //        SmartDashboard.putData("Turret Reset", new InstantCommand(() -> turret.resetHomePosition(Constants.TURRET_COMPETITION_HOME_POSITION_DEGREES)));
-        SmartDashboard.putData("Turret MM", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-135)));
-        SmartDashboard.putData("Turret MM 180", new InstantCommand(() -> turret.setTurretMotionMagicPositionAbsolute(-180)));
 //        SmartDashboard.putData("Turret Position", new InstantCommand(()-> turret.setTurretPositionRelative(5)));
 //        SmartDashboard.putData("Turret Position Neg", new InstantCommand(()-> turret.setTurretPositionRelative(-5)));
 //          SmartDashboard.putData("Turret Auto Zero", new TurretAutoZero(turret));
@@ -181,8 +215,6 @@ public class RobotContainer {
 //        SmartDashboard.putData("Shoot Auto Shot", new ShooterAutoShot(shooter, magazine, turret));
 //        SmartDashboard.putData("Shoot Long Shot", new ShooterLongShot(shooter, magazine, turret));
 //        SmartDashboard.putData("Shoot Fender Shot", new ShooterFenderShot(shooter, magazine, turret));
-
-        SmartDashboard.putData("Intake RPM reverse", new IntakeSetRPM(intake, -300));
 //        SmartDashboard.putData("Intake Extend All", new IntakeExtendAll(intake, magazine));
 //        SmartDashboard.putData("Intake Retract All", new IntakeRetractAll(intake, magazine));
 //        SmartDashboard.putData("Intake Extend Inner", new InstantCommand(() -> intake.extendIntakeInnerArms()));
@@ -194,18 +226,10 @@ public class RobotContainer {
 //        SmartDashboard.putData("Hood Set Forward", new InstantCommand(()-> shooter.setHoodSpeed(0.3)));
 //        SmartDashboard.putData("Hood Set OFF", new InstantCommand(() -> shooter.setHoodSpeed(0.0)));
 //        SmartDashboard.putData("Hood Reset", new InstantCommand(() -> shooter.resetHoodHomePosition()));
-        SmartDashboard.putData("Hood MM", new HoodSetAngle(shooter, Constants.HOOD_MEDIUM_ANGLE_DEGREES));
-        SmartDashboard.putData("Hood MM V2", new HoodSetAngle(shooter, 2));
 
 
 //        SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
 //        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
 
-        SmartDashboard.putData("Reset All Home", new ResetAllHomePositions(drive, turret, magazine, shooter));
-        SmartDashboard.putData("Compressor On", new InstantCommand(() -> compressor.turnCompressorOn()));
-        SmartDashboard.putData("Compressor Off", new InstantCommand(() -> compressor.turnCompressorOff()));
-        SmartDashboard.putData("Reset Gyro", new InstantCommand(() ->
-                drive.resetGyroYawAngle(Constants.DRIVE_COMPETITION_GYRO_HOME_ANGLE_DEGREES)));
-        SmartDashboard.putData("Reset Encoders", new InstantCommand(() -> drive.resetEncoders()));
     }
 }

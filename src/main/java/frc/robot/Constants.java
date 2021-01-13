@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
 
@@ -109,16 +112,16 @@ public final class Constants
     public static final double HOOD_KEY_ANGLE_DEGREES = 8.0;
     public static final double HOOD_AUTON_SHORT_ANGLE_DEGREES = 35.0;
     public static final double HOOD_AUTO_ANGLE_DEGREES = 37.0;
+
+    // Shooter
+    public static final double SHOOTER_MAIN_FENDER_RPM = 2000;
+    public static final double SHOOTER_MAIN_KEY_RPM = 2200;
     public static final double HOOD_MEDIUM_ANGLE_DEGREES = 47.0;
     public static final double HOOD_LONG_ANGLE_DEGREES = 55.0;
     public static final double HOOD_LEG_ANGLE_DEGREES = 46.0;
     public static final double HOOD_AUTO_DOUBLE_ANGLE_DEGREES = 46;
     public static final double HOOD_DISTANCE_SLOPE = 3.5/59.0;
     public static final double HOOD_DISTANCE_INTERCEPT = 38.0;
-
-    // Shooter
-    public static final double SHOOTER_MAIN_FENDER_RPM = 2000;
-    public static final double SHOOTER_MAIN_KEY_RPM = 2200;
     public static final double SHOOTER_MAIN_AUTO_RPM = 2500;
     public static final double SHOOTER_MAIN_AUTON_SHORT_RPM = 2350;
     public static final double SHOOTER_MAIN_MEDIUM_RPM = 3500;
@@ -188,4 +191,9 @@ public final class Constants
     public static final double CLIMB_MIN_INCHES = 0.0;
     public static final double CLIMB_MAX_INCHES = 30.0;
     public static final double CLIMB_LEVEL_1_INCHES = 10.0;
+
+    // Score While Driving
+    public static final Translation2d GOAL_ORIGIN = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(-95));
+    public static final Pose2d ROBOT_START_POSITION = new Pose2d(Units.inchesToMeters(136),Units.inchesToMeters(-60), new Rotation2d(Units.degreesToRadians(0)));
+    public static final double FLIGHT_TIME_OF_BALL = 0.635;
 }

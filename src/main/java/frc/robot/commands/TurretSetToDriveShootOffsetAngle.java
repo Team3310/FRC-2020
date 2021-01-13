@@ -2,19 +2,17 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Turret;
 
-public class TurretDriveShootSetAngle extends ExtraTimeoutCommand {
+public class TurretSetToDriveShootOffsetAngle extends ExtraTimeoutCommand {
     private final Turret turret;
-    private double angle;
 
-    public TurretDriveShootSetAngle(Turret subsystem, double angle) {
+    public TurretSetToDriveShootOffsetAngle(Turret subsystem) {
         this.turret = subsystem;
-        this.angle = Turret.getInstance().getDriveShootOffSetAngle();
         addRequirements(subsystem);
     }
 
     @Override
     public void initialize() {
-        turret.setTurretMotionMagicPositionAbsolute(angle);
+        turret.setTurretMotionMagicPositionAbsolute(Turret.getInstance().getDriveShootOffSetAngle());
         resetExtraOneTimer();
         startExtraOneTimeout(0.1);
     }
@@ -27,3 +25,4 @@ public class TurretDriveShootSetAngle extends ExtraTimeoutCommand {
         return false;
     }
 }
+

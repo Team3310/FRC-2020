@@ -488,7 +488,6 @@ public class Drive extends SubsystemBase {
                 Units.metersToInches(getPose().getTranslation().getDistance(Constants.GOAL_ORIGIN)))));
         SmartDashboard.putNumber("Robot to Goal Distance", Units.metersToInches(getPose().getTranslation().getDistance(Constants.GOAL_ORIGIN)));
         SmartDashboard.putNumber("Rotation", getPose().getRotation().getDegrees());
-
     }
 }
 

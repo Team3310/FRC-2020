@@ -1,8 +1,6 @@
 package frc.robot.auto.commands;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drive;
@@ -19,7 +17,7 @@ public class ResetOdometryAuto extends CommandBase {
     }
 
     public ResetOdometryAuto() {
-        this.startPose = Constants.ROBOT_START_POSITION;
+        this.startPose = new Pose2d();
     }
 
     @Override
